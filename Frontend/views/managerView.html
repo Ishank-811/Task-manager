@@ -1,0 +1,132 @@
+<div ng-controller="mangerController">
+  <h1>{{message}}</h1>
+
+  <table class="content-table">
+    <thead>
+      <tr>
+        <th>Projects Assigned</th>
+        <th>Employee Assigned</th>
+        <th>Tickets</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="project in response">
+        <td>{{project.projectName}}</td>
+        <td>
+          <li ng-repeat="item in project.assignedTo">{{item.name}}</li>
+        </td>
+        <td>
+          <button class="displayTicketsClass" ng-click="getTickets(project)">
+            Tickets
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4 ng-show="noTickets" style="text-align: center; color: red">
+    No tickets has been initiated by the employee
+  </h4>
+
+
+  <div ng-hide="ViewTicketLoader" style="margin:auto ;margin-top:10px; height:70px ; width:70px" class="loader"></div>
+
+  <div ng-hide="hideticket">
+    
+    <div class="displayAllTickets">
+      <div class="ticketDetailsClass" ng-repeat="tickets in ticket">
+        <div class="ticketHeader">
+          <h5 class="ticketStatus">{{tickets.status}}</h5>
+          <h5  ng-class="{'highPriority': tickets.priority=='High' ,
+          'MediumPriority':tickets.priority=='Medium' , 'lowPriority':tickets.priority=='Low'}" >{{tickets.priority}}</h5>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-evenly">
+            <h4>Name:-</h4> 
+            <h4>{{tickets.user.name}}</h4>
+          </div>
+        
+          <div style="display: flex; justify-content: space-evenly">
+            <h4>Username:-</h4>
+            <h4>{{tickets.user.username}}</h4>
+          </div>
+          <hr />
+          <div style="display: flex; justify-content: space-evenly">
+            <h4>Created at:-</h4>
+            <h4>{{tickets.createdAt | date:"dd/MM/yyyy"}}</h4>
+          </div>
+        </div>
+        <div class="ticketFooter">
+          <h3
+            ng-click="viewComments(tickets)"
+            data-toggle="modal"
+            data-target="#CreateModal"
+          >
+            <i class="fa-sharp fa-solid fa-comment"></i>
+          </h3>
+          <h4
+            style="
+              background-color: #f1c8db;
+              padding: 10px;
+              border-radius: 10px;
+            "
+          >
+            Project
+          </h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div ng-hide="showComments">
+    
+  </div> -->
+  <div class="modal" id="CreateModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comments</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <h5>{{showNoComments}}</h5>
+          <div ng-repeat="comment in comments">
+
+            <h5>{{comment.comments.comment }}</h5>
+            <h5>By:- {{comment.comments.commentBy.name }}</h5>
+            <h5 style="color: #fb7474">{{comment.comments.commentBy.role }}</h5>
+
+            <hr />
+          </div>
+
+          <form name="addCommentsForm" role="form" autocomplete="off">
+            <input
+              type="text"
+              name="addComments"
+              ng-model="addComments"
+              ng-required="true"
+            />
+            <button
+              ng-click="addCommentsFormSubmit($event)"
+              ng-disabled="addCommentsForm.$invalid"
+              type="submit"
+            >
+              Add Comment
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>

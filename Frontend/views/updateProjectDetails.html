@@ -1,0 +1,88 @@
+<div ng-controller="updateProjectDetailsController">
+  <h1 style="text-align: center;">update form</h1>
+
+  <form class="UpdatedprojectClass" name="updateProjectForm" role="form">
+    <span ng-show="showError" class="formerror"
+      >Project is already present</span>
+    <input
+      type="text"
+      ng-model="updatedProjectName"
+      name="firstName"
+      placeholder="Project name"
+      ng-required="true"
+    />
+
+    <label>project Manger</label>
+    <select 
+      ng-required="true"
+      ng-model="projectManager"
+      ng-change="projectManagerChange(projectManager)"
+    >
+      <option value="" disabled selected>{{managerUsername}}</option>
+      <option
+        ng-repeat="item in response track by $index"
+        value="{{item}}"
+        name="role"
+      >
+        {{item.username}}
+      </option>
+    </select>
+
+    <table class="updateAssignedEmployeeClass">
+      <thead>
+        <tr>
+          <th>Employee name</th>
+          <th>Employee Id</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr ng-repeat = "item in updateAssignedEmployee"  >
+            <td>{{item.name}}</td>
+            <td>{{item.username}}</td>
+            <td><button class="updateProjectDeleteClass" ng-click="deleteAssingedUser(item)">Delete </button></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+
+    
+    <select
+      ng-required="true"
+      ng-change="employeeAddedChange(employeeAdded)"
+      ng-model="employeeAdded"
+    >
+      <option value="" disabled selected>Add Employees</option>
+      <option
+        ng-repeat="item in employeesAsigned track by $index "
+        value="{{item}}"
+        name="role"
+      >
+        {{item.username}}
+      </option>
+    </select>
+    <button
+    type="submit"
+    style="width:35%"
+    ng-click="addEmployeesSubmit($event)" 
+    ng-hide="allEmployeesChanged"
+  >
+  
+    Add employee
+  </button>
+ 
+
+  
+    <button
+      class="createButton"
+      type="submit"
+      style="width:30%"
+      ng-disabled="updateProjectForm.$invalid"
+      ng-click="ProjectFormDetails($event)"
+    >
+      Update Project
+    </button>
+  </form>
+
+</div>

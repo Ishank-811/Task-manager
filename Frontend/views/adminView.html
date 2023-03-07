@@ -1,0 +1,260 @@
+<div ng-controller="adminController">
+  <div class="projectDiv">
+    <h1>Create project</h1>
+
+    <form class="projectClass" name="projectForm" role="form">
+      <span ng-show="showError" class="formerror"
+        >Project is already present</span
+      >
+      <input
+        type="text"
+        ng-model="updatedFirstName"
+        name="firstName"
+        placeholder="Project Name"
+        ng-required="true"
+        style="text-align: center"
+      />
+
+      <select
+        ng-required="true"
+        ng-model="projectManager"
+        ng-change="projectManagerChange(projectManager)"
+      >
+        <option value="" disabled selected>Project manager</option>
+        <option
+          ng-repeat="item in response track by $index"
+          value="{{item}}"
+          name="role"
+        >
+          {{item.username}}
+        </option>
+      </select>
+      <select
+        ng-required="true"
+        ng-change="employeeListed(employeesAssigned)"
+        ng-model="employeesAssigned"
+      >
+        <option value="" disabled selected>Employees assigned</option>
+        <option
+          ng-repeat="item in employeesAsigned track by $index"
+          value="{{item}}"
+          name="role"
+        >
+          {{item.username}}
+        </option>
+      </select>
+      <div ng-repeat="item in employeeList track by $index">
+        <h5>{{item}}</h5>
+      </div>
+      <select ng-required="true" ng-model="priorityStatus">
+        <option value="" disabled selected>Priority</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+      <label>Start Date</label>
+      <input
+        type="Date"
+        ng-model="startDate"
+        name="startDate"
+        placeholder="Start Date"
+        ng-required="true"
+        style="text-align: center"
+      />
+
+      <label>End Date</label>
+      <input
+        type="Date"
+        ng-model="endDate"
+        name="EndDate"
+        placeholder="Start Date"
+        ng-required="true"
+        style="text-align: center"
+      />
+      <button
+        class="createButton"
+        type="submit"
+        style="display: flex; justify-content: center; align-items: center"
+        ng-disabled="projectForm.$invalid"
+        ng-click="ProjectFormDetails($event)"
+      >
+        Create Project
+        <div
+          ng-hide="createProjectLoader"
+          style="margin-left: 20px"
+          class="loader"
+        ></div>
+      </button>
+    </form>
+
+    <button class="displayProjects" ng-click="DisplayProjectList()">
+      show all project list
+      <div
+        ng-hide="allProjectDetailsLoader"
+        style="margin-left: 20px; font-size: 50px"
+        class="loader"
+      ></div>
+    </button>
+
+    <!-- <div ng-hide="false">
+      
+      <div style="display: flex; flex-direction: column"></div>
+ 
+    </div> -->
+  </div>
+  <div ng-hide="displaySearchButton" class="searchingDiv">
+    <input
+      class="searchClass"
+      placeholder="Search Project / Employee"
+      ng-model="searchProject"
+    />
+    <select ng-model="projectSortedBy" class="searchClass">
+      <option value="" disabled selected>SortBy:-</option>
+      <option value="priority" name="role">Priority</option>
+      <option value="projectName" name="role">Name</option>
+      <option value="-createdAt" name="role">Date</option>
+
+      <!-- <option value="priority" name="role"> priority </option> -->
+    </select>
+  </div>
+
+  <div class="allProjectClass">
+    <div
+      class="projectDetailsClass"
+      ng-repeat="project in project | filter : searchProject | orderBy:projectSortedBy "
+    >
+      <div class="projectHeader">
+        <h3 style="font-weight: bold">{{project.projectName}}</h3>
+        <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
+        <div class="projectActions">
+          <h3 style="color: rgb(227, 79, 79)">
+            <i class="fa-sharp fa-solid fa-trash"></i>
+          </h3>
+
+          <h3
+            style="color: rgb(3, 127, 59); cursor: pointer"
+            ui-sref="AdminDashboard.updateProjectDetails({id:project._id})"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </h3>
+        </div>
+      </div>
+      <hr />
+      <div class="Detailing">
+        <h5
+          ng-class="{'highPriority': project.priority=='High' ,
+         'MediumPriority': project.priority=='Medium' , 'lowPriority':project.priority=='Low'}"
+          style="margin-bottom: 20px"
+        >
+          {{project.priority}}
+        </h5>
+        <h6>
+          <i class="fa-sharp fa-solid fa-calendar-days"></i>
+          {{(project.createdAt | date:"dd/MM/yyyy")}}
+        </h6>
+
+        <hr />
+        <div>
+          <h5>Manager:-</h5>
+          <h5
+            style="cursor: pointer"
+            data-toggle="modal"
+            data-target="#myModal"
+            ng-click="showProfile(project.projectManger.projectMangerId)"
+          >
+            {{project.projectManger.name}}
+          </h5>
+        </div>
+        <hr />
+        <h5>Employees Assinged:-</h5>
+        <ul style="margin: 14px">
+          <li
+            style="cursor: pointer; font-size: 19px"
+            data-toggle="modal"
+            data-target="#myModal"
+            ng-click="showProfile(projectAssinged.assignedUserId)"
+            ng-repeat="projectAssinged in project.assignedTo"
+          >
+            {{projectAssinged.name}}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!---------------------------------- modal starts ----------------------------------->
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">View Employee</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+            <div class="card p-4">
+              <div
+                class="imageInModal d-flex flex-column justify-content-center align-items-center"
+              >
+                <button class="avtarbtn btn-secondary">
+                  <img
+                    style="border-radius: 50%"
+                    src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+                    height="100"
+                    width="100"
+                  />
+                </button>
+                <span class="name mt-3">{{employeeFirstName}}</span>
+                <span class="idd">{{employeeUsername}}</span>
+                <div
+                  class="d-flex flex-row justify-content-center align-items-center gap-2"
+                >
+                  <span class="idd1">Oxc4c16a645_b21a</span>
+                  <!-- <span><i class="fa fa-copy"></i></span> -->
+                </div>
+                <!-- <div
+                class="d-flex flex-row justify-content-center align-items-center mt-3"
+              >
+                <span class="number">1069 <span class="follow">Followers</span></span>
+              </div> -->
+                <div disabled="true" class="d-flex mt-2">
+                  <button disabled="true" class="btn1 btn-dark">
+                    Edit Profile
+                  </button>
+                </div>
+                <div class="text mt-3">
+                  <span
+                    >{{employeeFirstName}} is {{employeeRole}}<br />
+                    work in Organization {{employeeOrganization}}
+                    <br />
+                  </span>
+                </div>
+
+                <div class="px-2 rounded mt-4 date">
+                  <span class="join">Joined May,2021</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------------------------------------ modal ends ------------------------------------->
+
+  <ui-view></ui-view>
+</div>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mymodule">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./assets/style/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"
+      integrity="sha512-KZmyTq3PLx9EZl0RHShHQuXtrvdJ+m35tuOiwlcZfs/rE7NZv29ygNA8SFCkMXTnYZQK2OX0Gm2qKGfvWEtRXA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.30/angular-ui-router.js"
+      integrity="sha512-5J08Lq3B2EfuPrNSYckUPHKYHaUhCQ4MdeObdcR0YZnr8eapZ7XMA2ejUyQYpWN+fwO48wuxsL5KDZYIVVVxvg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+   
+    <script src="./controllers/routesController.js"></script>
+    <script src="./imageDirective.js"></script>
+    <script src="./controllers/singinAsOrganizationController.js"></script>
+    <script src="./controllers/signupController.js"></script>
+    <script src="./controllers/organizationController.js"></script>
+    <script src="./controllers/updateProjectDetailsController.js"></script>
+    <script src="./controllers/signinAsUsersController.js"></script>
+    <script src="./controllers/mangerController.js"></script>
+    <script src="./controllers/adminController.js"></script>
+    <script src="./controllers/employeeController.js"></script>
+    <script src="./controllers/ticketDetailsController.js"></script>
+    <script src="./Services/signupServices.js"></script>
+    <script src="./Services/organizationServices.js"></script>
+    <script src="./Services/managerServices.js"></script>
+    <script src="./Services/employeeServices.js"></script>
+    <script src="./Services/signinServices.js"></script>
+    <script src="./Services/adminServices.js"></script>
+    <script src="./Services/updateProjectDetailsServices.js"></script>
+
+    <title>Document</title>
+    <style>
+      header {
+        display: flex;
+        height: 10vh;
+        background-color: white;
+        justify-content: space-between;
+      }
+      .main-nav {
+        display: flex;
+        /* width: 100%; */
+        justify-content: space-between;
+      }
+      .main-nav li {
+        list-style: none;
+        margin-top: 30px;
+        margin-right: 30px;
+      }
+      .main-nav li a {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(91, 88, 88);
+        text-decoration: none !important;
+      }
+      header .logo a {
+        font-family: "Montserrat", sans-serif;
+        color: rgb(91, 88, 88);
+        text-decoration: none !important;
+        font-size: 20px;
+        margin-top: 30px;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body ng-controller="mycontroller">
+    <header class="header">
+      <h1 class="logo"><a href="#">PROJECT MANAGEMENT</a></h1>
+      <div ng-hide="loggedin">
+        <ul class="main-nav">
+          <li><a ui-sref="signinAsOrganization">SIGNIN AS ORGANIZATION</a></li>
+          <li><a ui-sref="signinAsUsers">SIGNIN AS USERS</a></li>
+          <li><a ui-sref="singup">SIGNUP</a></li>
+        </ul>
+      </div>
+      <ul ng-hide="loggedOut" class="main-nav">
+        <li><button ng-click="logout()" class="logoutButton">LOGOUT</button></li>
+      </ul>
+    </header>
+
+    <div>
+      <ui-view></ui-view>
+    </div>
+  </body>
+</html>

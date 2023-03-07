@@ -1,0 +1,742 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@700&family=Poppins:wght@400;500;600&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+body{
+  margin: 0;
+  padding: 0;
+
+  /* background: linear-gradient(120deg,#2980b9, #8e44ad); */
+  height: 100vh;
+ 
+}
+.formerror{
+    color:red;
+
+}
+button[disabled="disabled"]{
+    opacity: 0.5;
+    cursor: not-allowed !important;
+  }
+  .formerror {
+    color: red;
+  }
+  .valid {
+    color: green;
+  }
+
+  .valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+  }
+  #message {
+    display: none;
+  }
+
+  /* Add a red text color and an "x" when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+  table ,td ,th{
+    border:1px solid black ;
+  }
+
+  .invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+  }
+
+.center{
+  position: absolute;
+  top: 50%;
+  left: 50%; 
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: rgb(245, 245, 245);
+  border-radius: 10px;
+  box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
+  opacity: 0.96;
+}
+.center h1{
+  text-align: center;
+  padding: 20px 0;
+  border-bottom: 1px solid silver;
+}
+.center form{
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+form .txt_field{
+  position: relative;
+  border-bottom: 2px solid #adadad;
+  margin: 30px 0;
+}
+.txt_field input{
+  width: 100%;
+  padding: 0 5px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: none;
+  outline: none;
+}
+.txt_field label{
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  color: #adadad;
+  transform: translateY(-50%);
+  font-size: 16px;
+  pointer-events: none;
+  transition: .5s;
+}
+.txt_field span::before{
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: #2691d9;
+  transition: .5s;
+}
+.txt_field input:focus ~ label,
+.txt_field input:valid ~ label{
+  top: -5px;
+  color: #2691d9;
+}
+.txt_field input:focus ~ span::before,
+.txt_field input:valid ~ span::before{
+  width: 100%;
+}
+.pass{
+  margin: -5px 0 20px 5px;
+  color: #a6a6a6;
+  cursor: pointer;
+}
+.pass:hover{
+  text-decoration: underline;
+}
+input[type="submit"]{
+  width: 100%;
+  height: 50px;
+  border: 1px solid;
+  background: #2691d9;
+  border-radius: 25px;
+  font-size: 18px;
+  color: #e9f4fb;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+}
+input[type="submit"]:hover{
+  border-color: #2691d9;
+  transition: .5s;
+}
+.signup_link{
+  margin: 30px 0;
+  text-align: center;
+  font-size: 16px;
+  color: #666666;
+}
+.signup_link a{
+  color: #2691d9;
+  text-decoration: none;
+}
+.signup_link a:hover{
+  text-decoration: underline;
+}
+.organization{
+    /* height:100vh;  */
+    background-color: white;
+}
+button{
+    cursor: pointer
+}
+.projectDiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgb(243, 243, 243);
+}
+.projectClass{
+  display: flex;
+  flex-direction: column;
+  width: 35%;
+  height: 80vh;
+  
+}
+.UpdatedprojectClass{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 70vh;
+  justify-content: center;
+  align-items: center;
+}
+.projectClass input{
+  background-color: rgb(255, 255, 255) ;
+  height: 50px;
+  margin: 10px;
+  border-radius: 10px;
+  text-align: center;
+  width: 100%;
+  box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
+  border: none;
+}
+.searchingDiv{
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  margin:30px;
+  justify-content: center;
+  align-items: center;
+
+}
+.searchClass{
+  background-color: rgb(255, 255, 255) ;
+  height: 50px;
+  margin: 10px;
+  border-radius: 10px;
+  text-align: center;
+  width: 35%;
+  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.418);
+  border: none;
+}
+.UpdatedprojectClass input{
+  background-color: rgb(255, 255, 255) ;
+  height: 50px;
+  margin: 10px;
+  border-radius: 10px;
+  text-align: center;
+  width: 35%;
+  box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
+  border: none;
+}
+.projectClass select{
+  background-color: rgb(255, 255, 255) ;
+  height: 50px;
+  width: 100%;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
+  border: none;
+}
+.updateProjectDeleteClass{
+  border: none;
+  background-color: rgb(255, 38, 38);
+  color:white;
+  font-family: bold;
+  padding:5px;
+  border-radius:10px ;
+}
+.UpdatedprojectClass select{
+  background-color: rgb(255, 255, 255) ;
+  height: 50px;
+  width: 35%;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
+  border: none;
+}
+.createButton{
+  margin: 10px;
+  width: 100%;
+  padding:7px;
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding-left:20px;
+  padding-right:20px;
+}
+.logoutButton{
+  background-color: red;
+  border-radius: 10px;
+  font-size: 15px;
+  border: none;
+  /* box-shadow:1px 4px 5px 0px  red; */
+  color:white;
+  padding: 6px;
+  margin-left: 100px;
+}
+
+.content-table {
+  border-collapse: collapse;
+  margin: auto;
+  font-size: 1.2em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(255, 235, 235, 0.15);
+}
+
+.content-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+  padding: 12px 15px;
+}
+
+.content-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}   
+
+.content-table tbody tr:nth-of-type(odd) {
+  background-color: #e3e2e2;
+}   
+.content-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.content-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+.addUSers{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  
+}
+.addUSers input ,select{
+  width: 90%;
+  text-align: center;
+  height:34px;
+  margin:7px;
+  border-radius: 10px; 
+  border: 1px solid rgb(146, 146, 146);
+}
+.addUSers button{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding:6px;
+  width: 40%;
+  padding-left:20px;
+  margin-top:20px;
+  padding-right:20px; 
+}
+.updateForm{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height:50%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 100px;
+}
+.updateForm input{
+  width: 90%;
+  text-align: center;
+  height:34px;
+  margin:7px;
+  border-radius: 10px; 
+  border: 1px solid rgb(146, 146, 146);
+}
+.updateSelect{
+  width: 90%;
+  text-align: center;
+
+  height:34px;
+  margin:7px;
+  border-radius: 10px;  
+}
+.updateForm button{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding:6px;
+  width: 40%;
+  padding-left:20px;
+  padding-right:20px; 
+}
+.ticketClass{
+
+  width:300px ;
+  background-color: rgb(243, 243, 243);
+  border-radius:22px;
+  margin: auto;
+}
+.ticketHeader{
+  display: flex;
+  justify-content: space-evenly;
+  margin:10px;
+}
+.ticketHeader h3{
+  margin: 10px;
+
+}
+.statusClass{
+  color:red;
+  font-size: 30px;
+  margin:10px;
+}
+.ticketDetails{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ticketDetails h3,h5{
+  margin:5px;
+}
+.employeeCard{
+  display: flex;
+  width: 30%;
+  border : 1px solid rgb(232, 224, 224);
+  border-radius:10px; 
+  margin:30px;
+ 
+}
+.profileAvtar{
+width: 30%;
+margin-top:25px; 
+border-right: 1px solid rgb(198, 195, 195);
+display: flex;
+flex-direction: column;
+justify-content: space-evenly;
+align-items: center;
+}
+.employeeDetails{
+  width: 70%;
+  margin:16px;
+}
+.employeeDetails h2,h5{
+  margin:5px;
+}
+.employeeDetails p{
+  /* font-family: "sans-serif"; */
+  margin:4px;
+  margin-top:10px ;
+  margin-bottom: 10px;
+}
+
+.profileAvtarRatings{
+  display: flex;
+}
+
+.profileAvtarRatings h2{
+  margin-left:20px ;
+  margin-right: 20px;
+}
+
+.imageAvtar{
+  width:80%;
+  border-radius: 50%;
+  padding:2px; 
+  box-shadow: 2px 1px 10px 0px rgb(156, 156, 156);
+}
+.profileRole{
+  width:30%;
+  margin-bottom: 10px;
+  display: flex;
+  padding:3px; 
+  flex-direction: column;
+  align-items: center;
+  border-radius:7px;
+  background-color: #eee5ff;
+}
+.employeeCardButton{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding:6px;
+  padding-left:20px;
+  padding-right:20px; 
+}
+.listOfUsers{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  
+}
+.createUserButton{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding:4px;
+  padding-left:20px;
+  padding-right:20px; 
+}
+.pageHeader{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.projectDetailsClass{
+  width:25% ;
+  border-radius: 20px;
+  background-color: rgb(245, 245, 245);
+  margin:20px;
+
+}
+.allProjectClass{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;  
+}
+.projectHeader{
+  display: flex;
+  justify-content: space-evenly;
+  padding-top:30px;
+}
+.Detailing{
+  padding:10px; 
+}
+.divCenter{
+  font-size:30px;
+  position: relative;
+  bottom:60px;
+  right:20px ;  
+  padding:14px;
+  border-radius: 10px;
+  background-color: #0ff4c6;
+}
+.projectActions{
+  display: flex;
+  justify-content: space-between;
+  width: 20%;
+ 
+}
+.displayProjects{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding:6px;
+  width: 40%;
+  padding-left:20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticketHeader{
+  padding:20px;
+}
+.ticketStatus{
+  background-color:#A0D9B4;
+  padding:5px;
+  border-radius: 10px;
+}
+.priorityStatus{
+  background-color:#ffc400;
+  padding:5px;
+  color:white;
+  border-radius: 10px;
+}
+.ticketDetailsClass{
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.61) ;
+  width:23% ;
+  background-color: rgb(243, 243, 243);
+  border-radius:10px;
+  border-bottom: 10px solid rgb(255, 118, 20);
+ 
+}
+.ticketFooter{
+  display: flex;
+  justify-content: space-evenly;
+}
+.displayAllTickets{
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin:20px;  
+}
+.ticketButton{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:14px;
+  padding:4px;
+  width: 70%;
+  padding-left:20px;  
+  margin:20px;
+  padding-right:20px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  margin-top: 20px;
+}
+.signinAsUsersControllerClass{
+  background-image: url("../image/background.png");
+  background-repeat: no-repeat;
+  background-size: 100vh 100% ;
+  background-position: center;
+  background-color: rgb(243, 243, 243);
+  height: 90vh;
+}
+.highPriority{
+  background-color:rgb(255, 70, 70);
+  padding:5px;
+  width: 28%;
+  border-radius: 6px;
+  text-align: center;
+}
+.lowPriority{
+  background-color:rgb(0, 255, 110);
+  padding:5px;
+  width: 27%;
+  
+  border-radius: 6px;
+  text-align: center;
+}
+.MediumPriority{
+  background-color:rgb(255, 230, 0);
+  padding:5px;
+  width: 34%;
+  border-radius: 6px;
+  text-align: center;
+}
+.displayTicketsClass{
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:14px;
+  padding:4px;
+  width: 70%;
+  padding-left:20px;  
+  margin:20px;
+  padding-right:20px; 
+}
+.updateAssignedEmployeeClass td,th{
+  border-spacing: 30px;
+  padding:10px;
+}
+
+
+ .card {
+  width: 400px;
+  background-color: #efefef;
+  border: none;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.imageInModal img {
+  transition: all 0.5s
+}
+
+.card:hover .imageInModal img {
+  transform: scale(1.5)
+}
+
+.avtarbtn {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%
+}
+
+.name {
+  font-size: 22px;
+  font-weight: bold
+}
+
+.idd {
+  font-size: 14px;
+  font-weight: 600
+}
+
+.idd1 {
+  font-size: 12px
+}
+
+.number {
+  font-size: 22px;
+  font-weight: bold
+}
+
+.follow {
+  font-size: 12px;
+  font-weight: 500;
+  color: #444444
+}
+
+.btn1 {
+  height: 40px;
+  width: 150px;
+  border: none;
+  background-color: #000;
+  color: #aeaeae;
+  font-size: 15px
+}
+
+.btn-dark:disabled{
+  background-color: #888d92c9!important;
+  cursor: not-allowed;
+}
+.text span {
+  font-size: 13px;
+  color: #545454;
+  font-weight: 500
+}
+
+
+
+hr .new1 {
+  border: 1px solid
+}
+
+.join {
+  font-size: 14px;
+  color: #a0a0a0;
+  font-weight: bold
+}
+
+.date {
+  background-color: #ccc
+} 
+.loader {
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  border-top: 4px solid black;
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

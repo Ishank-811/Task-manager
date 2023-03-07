@@ -1,0 +1,103 @@
+<div class="signinAsUsersControllerClass"> 
+    <div class="center">
+      
+        <h1>SIGN UP</h1>
+
+        <form name="signupform" role="form" autocomplete="off">
+          <div class="txt_field" id="firstname" class="form-group">
+            <input
+              ng-required="true"
+              type="text"
+              name="organizationName"
+              ng-model="organizationName"
+            />
+            <label>Organization name</label>
+          </div>
+          <div class="txt_field" id="emailvalid" class="form-group">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              ng-model="emailValid"
+              ng-required="true"
+            />
+            <span class="formerror"></span>
+            <label>Admin Email</label>
+          </div>
+          <div ng-show="signupform.email.$invalid && signupform.email.$touched">
+            <span class="formerror">Fill the vaild email</span>
+          </div>
+  
+          <div class="txt_field" id="passwordc" class="form-group">
+            <input
+              type="password"
+              name="pwd"
+              id="pwd"
+              ng-focus="onfocusfun()"
+              ng-model="Password"
+             ng-blur="onblurfun()"
+              ng-change="passwordFeild(Password)"
+              ng-required="true"
+            />
+            <span ng-style="{'color' : 'red'}" ng-show="passwordValidityFalse" class="formerror"> Enter the valid password</span>
+            <label>Password</label>
+          </div>
+          <div id="message"  ng-style="{'display': displaypasswordMessage ? 'block' : 'none'}">
+            <p  class="{{lowerCaseChecking}}">
+              A <b>lowercase</b> letter
+            </p>
+            <p
+              id="capital"
+                class="{{uppercaseChecking}}"
+            >
+              A <b>capital (uppercase)</b> letter
+            </p>
+            <p
+              id="number"
+              class="{{numberChecking}}"
+            >
+              A <b>number</b>
+            </p>
+            <p
+              id="length"
+              class="{{lengthChecking}}"
+            >
+              Minimum <b>8 characters</b>
+            </p>
+          </div>
+  
+          <div class="txt_field" id="confirmpassword" class="form-group">
+            <input
+              type="password"
+              name="cpwd"
+              id="cpwd"
+              placeholder="Confirm Password"
+              ng-model="confirmPassword"
+              required
+            />
+            <span ng-style="{'color' : 'red'}" ng-show="ConfirmPasswordMatchingFalse"> Passwords does not match </span>
+          </div>
+          <div class="form-group">
+            <button 
+              ng-disabled="signupform.$invalid"
+              style="
+                padding: 10px;
+                font-size: 20px;
+                border-radius: 10%;
+                background-color: rgb(161, 161, 255);
+                color: white;
+                font: bold;
+              "
+              type="submit"
+              ng-click="singupfun($event)"
+            >
+              SIGN UP
+            </button>
+          </div>
+          <!-- <input type="submit" value="Login"> -->
+          <div class="signup_link">
+            already a member? <a href="./signin.html">Signin</a>
+          </div>
+        </form>
+      </div>
+  </div>

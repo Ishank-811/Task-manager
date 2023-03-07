@@ -1,0 +1,31 @@
+<div  ng-controller="signinAsUsersController">
+    <div class="signinAsUsersControllerClass"
+    >
+    <div class="center">
+        <h1> USER SIGNIN </h1>
+    <form name="singininform" role="form" autocomplete="off">
+      <span ng-show="showError" class="formerror">Invalid email and password</span>
+      <div  id="emailvalid" class="txt_field" class="form-group">
+          <input type="email" name="username" id="email" ng-model="username" ng-required="true">
+          
+          <label>Email</label>      
+      </div>
+      <div ng-show="singininform.email.$invalid && singininform.email.$touched">
+          <span class="formerror">Fill the vaild email</span>
+        </div>
+      <div class="txt_field" class="form-group">
+          <input type="password" name="pwds" id="pwds" ng-model="password" ng-required="true">
+          <span></span>
+          <label>Password</label>
+      </div>
+      <div class="txt_field" class="form-group">
+          <button  ng-click ="siginFunAsUser($event)" ng-disabled="singininform.$invalid" style=" padding:7px ; font-size: 15px; border-radius: 10%; background-color:
+          rgb(161, 161, 255); ;color: white; font: bold; " type="submit">{{signinMessage}}</button>
+      </div>
+      <div class="signup_link">
+          Not a member? <a href="./signup.html">Sign up</a>
+        </div>
+  </form>
+  </div>
+  </div>
+</div>
