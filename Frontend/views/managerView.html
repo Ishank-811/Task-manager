@@ -2,6 +2,7 @@
   <h1>{{message}}</h1>
 
   <table class="content-table">
+
     <thead>
       <tr>
         <th>Projects Assigned</th>
@@ -9,8 +10,10 @@
         <th>Progress</th>
         <th>Assigned At</th>
         <th>Tickets</th>
+        <th>Add Tasks</th>
       </tr>
     </thead>
+
     <tbody>
       <tr ng-repeat="project in response">
         <td>{{project.projectName}}</td>
@@ -21,10 +24,17 @@
         <td>{{ project.progress.percentage /project.assignedTo.length }} %</td>
         <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
         <td>
-          <button class="displayTicketsClass" ng-click="getTickets(project)">
+          <button  class="displayTicketsClass" ng-click="getTickets(project)">
             Tickets
           </button>
         </td>
+        <td><button class="displayTicketsClass"
+          data-toggle="modal"
+          data-target="#addTaskModal"
+             ng-click="addTasks(project)">
+          Add Task
+        </button>
+      </td>
       </tr>
     </tbody>
   </table>
@@ -79,19 +89,13 @@
           >
             {{tickets.priority}}
           </h5>
-          <!-- <h5
-            style="background-color: #f1c8db; padding: 7px; border-radius: 10px"
-          >
-            {{tickets.project.ProjectName}}
-          </h5> -->
+          
         </div>
       </div>
     </div>
     <!-- <canvas id="pie-chart" style="width: 10%; max-width: 300px"></canvas> -->
   </div>
-  <!-- <div ng-hide="showComments">
-    
-  </div> -->
+ 
   <div class="modal" id="CreateModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -140,4 +144,116 @@
       </div>
     </div>
   </div>
+  
+  <!---------------------------------- modal starts ----------------------------------->
+
+
+
+  
+  <div class="modal" id="addTaskModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Assign Task</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+  
+          <form class="projectClass" style="height:60vh" name="addTaskForm" role="form">
+            <!-- <span ng-show="showError" class="formerror"
+              >Project is already present</span
+            > -->
+            <input
+            type="text"
+            ng-model="taskName"
+            name="taskName"
+            placeholder="Task Name"
+            ng-required="true"
+            style="text-align: center"
+          />
+            <input
+            type="text"
+            ng-model="taskDescription"
+            name="taskDescription"
+            placeholder="Task Description"
+            ng-required="true"
+            style="text-align: center"
+          />
+            <select
+              ng-required="true"
+              ng-change="taskEmployeeListed(taskeEmployeesAssigned)"
+              ng-model="taskeEmployeesAssigned"
+            >
+            <option value="" disabled selected>Employees assigned</option>
+             
+              <option
+                ng-repeat="item in employeesAssignedToTask track by $index"
+                value="{{item}}"
+                name="role"
+              >
+                {{item.username}}
+              </option>
+            </select>
+
+            <div ng-repeat="item in taskEmployeeListView track by $index">
+              <h5>{{item}}</h5>
+            </div>
+          
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="startDate"
+              name="taskStartDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="endDate"
+              name="TaskendDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-disabled="addTaskForm.$invalid"
+              ng-click="addTaskFunction($event)"
+            >
+              Create Task
+             
+            </button>
+          </form>
+
+
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------------------------------------ modal ends ------------------------------------->
 </div>
+
+
+

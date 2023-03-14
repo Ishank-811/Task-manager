@@ -1,7 +1,7 @@
 var project = require("../../model/projects");
 var ticket = require("../../model/ticketModel");
 var comments = require("../../model/commentsModel");
-
+var task = require("../../model/taskModel");
 var fetchingProjects = function (req, res) {
   project
     .aggregate([
@@ -53,4 +53,38 @@ var viewComments = function (req, res) {
     });
 };
 
-module.exports = { fetchingProjects, viewTicket, viewComments };
+var addTasks = function(req,res){
+console.log(req.user); 
+console.log(req.body); 
+for(var i=0 ; i<req.body.taskeEmployeesAssigned.length ; i++){ 
+  var data  = {
+    organization: {
+      organizationId: req.user.organization.organizationId,
+      name: req.user.organization.name,
+    },
+    user: {
+      userId: req.body.taskeEmployeesAssigned[i].assignedUserId,
+      name: req.body.taskeEmployeesAssigned[i].name,
+      username: req.body.taskeEmployeesAssigned[i].username,
+    },
+    task:{
+      taskName:req.body.taskName,
+      taskDescription:req.body.taskDescription 
+    },
+    project:req.body.project,
+    createdAt:new Date() , 
+    startDate : req.body.startDate , 
+    endDate : req.body.endDate
+  }
+  var response = new task(data); 
+  response.save().then(function(response){
+    console.log(response); 
+    // res.status(202).send(response); 
+  }).catch(function(error){
+    console.log(error); 
+  }) 
+}
+res.status(202).send({taskCreated:true}); 
+}
+
+module.exports = { fetchingProjects, viewTicket, viewComments , addTasks };

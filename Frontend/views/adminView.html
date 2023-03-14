@@ -1,151 +1,150 @@
 <div ng-controller="adminController">
   <div class="projectDiv">
-    <!---------------------------- update modal --------------------------------------------->
-    <div class="modal" id="myModal2">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Create Project</h4>
-            <button type="button" class="close" data-dismiss="modal">
-              &times;
-            </button>
+
+
+<!---------------------------- update modal --------------------------------------------->
+<div class="modal" id="myModal2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Create Project</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form class="projectClass" name="projectForm" role="form">
+          <span ng-show="showError" class="formerror"
+            >Project is already present</span
+          >
+          <input
+            type="text"
+            ng-model="updatedFirstName"
+            name="firstName"
+            placeholder="Project Name"
+            ng-required="true"
+            style="text-align: center"
+          />
+    
+          <select
+            ng-required="true"
+            ng-model="projectManager"
+            ng-change="projectManagerChange(projectManager)"
+          >
+            <option value="" disabled selected>Project manager</option>
+            <option
+              ng-repeat="item in response track by $index"
+              value="{{item}}"
+              name="role"
+            >
+              {{item.username}}
+            </option>
+          </select>
+          <select
+            ng-required="true"
+            ng-change="employeeListed(employeesAssigned)"
+            ng-model="employeesAssigned"
+          >
+            <option value="" disabled selected>Employees assigned</option>
+            <option
+              ng-repeat="item in employeesAsigned track by $index"
+              value="{{item}}"
+              name="role"
+            >
+              {{item.username}}
+            </option>
+          </select>
+          <div ng-repeat="item in employeeList track by $index">
+            <h5>{{item}}</h5>
           </div>
+          <select ng-required="true" ng-model="priorityStatus">
+            <option value="" disabled selected>Priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <label>Start Date</label>
+          <input
+            type="Date"
+            ng-model="startDate"
+            name="startDate"
+            placeholder="Start Date"
+            ng-required="true"
+            style="text-align: center"
+          />
+    
+          <label>End Date</label>
+          <input
+            type="Date"
+            ng-model="endDate"
+            name="EndDate"
+            placeholder="Start Date"
+            ng-required="true"
+            style="text-align: center"
+          />
+          <button
+            class="createButton"
+            type="submit"
+            style="display: flex; justify-content: center; align-items: center"
+            ng-disabled="projectForm.$invalid"
+            ng-click="ProjectFormDetails($event)"
+          >
+            Create Project
+            <div
+              ng-hide="createProjectLoader"
+              style="margin-left: 20px"
+              class="loader"
+            ></div>
+          </button>
+        </form>
+      </div>
 
-          <!-- Modal body -->
-          <div class="modal-body">
-            <form class="projectClass" name="projectForm" role="form">
-              <span ng-show="showError" class="formerror"
-                >Project is already present</span
-              >
-              <input
-                type="text"
-                ng-model="updatedFirstName"
-                name="firstName"
-                placeholder="Project Name"
-                ng-required="true"
-                style="text-align: center"
-              />
-
-              <select
-                ng-required="true"
-                ng-model="projectManager"
-                ng-change="projectManagerChange(projectManager)"
-              >
-                <option value="" disabled selected>Project manager</option>
-                <option
-                  ng-repeat="item in response track by $index"
-                  value="{{item}}"
-                  name="role"
-                >
-                  {{item.username}}
-                </option>
-              </select>
-              <select
-                ng-required="true"
-                ng-change="employeeListed(employeesAssigned)"
-                ng-model="employeesAssigned"
-              >
-                <option value="" disabled selected>Employees assigned</option>
-                <option
-                  ng-repeat="item in employeesAsigned track by $index"
-                  value="{{item}}"
-                  name="role"
-                >
-                  {{item.username}}
-                </option>
-              </select>
-              <div ng-repeat="item in employeeList track by $index">
-                <h5>{{item}}</h5>
-              </div>
-              <select ng-required="true" ng-model="priorityStatus">
-                <option value="" disabled selected>Priority</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-              </select>
-              <label>Start Date</label>
-              <input
-                type="Date"
-                ng-model="startDate"
-                name="startDate"
-                placeholder="Start Date"
-                ng-required="true"
-                style="text-align: center"
-              />
-
-              <label>End Date</label>
-              <input
-                type="Date"
-                ng-model="endDate"
-                name="EndDate"
-                placeholder="Start Date"
-                ng-required="true"
-                style="text-align: center"
-              />
-              <button
-                class="createButton"
-                type="submit"
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-                ng-disabled="projectForm.$invalid"
-                ng-click="ProjectFormDetails($event)"
-              >
-                Create Project
-                <div
-                  ng-hide="createProjectLoader"
-                  style="margin-left: 20px"
-                  class="loader"
-                ></div>
-              </button>
-            </form>
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal">
-              Close
-            </button>
-          </div>
-        </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
       </div>
     </div>
-    <!---------------------------- update modal ends --------------------------------------------->
   </div>
-  <div style="display: flex; justify-content: space-around">
-    <div class="searchingDiv">
-      <input
-        class="searchClass"
-        placeholder="Search Project / Employee"
-        ng-model="searchProject"
-      />
-      <select ng-model="projectSortedBy" class="searchClass">
-        <option value="" disabled selected>SortBy:-</option>
-        <option value="priority" name="role">Priority</option>
-        <option value="projectName" name="role">Name</option>
-        <option value="-createdAt" name="role">Date</option>
+</div>
+<!---------------------------- update modal ends --------------------------------------------->
 
-        <!-- <option value="priority" name="role"> priority </option> -->
-      </select>
-    </div>
-    <button
-      data-toggle="modal"
-      data-target="#myModal2"
-      class="createProjectButton"
-    >
-      Create Project
-    </button>
+    
   </div>
+  <div style="display: flex; justify-content: space-around;">
+  <div  class="searchingDiv">
+    <input
+      class="searchClass"
+      placeholder="Search Project / Employee"
+      ng-model="searchProject"
+    />
+    <select ng-model="projectSortedBy" class="searchClass">
+      <option value="" disabled selected>SortBy:-</option>
+      <option value="priority" name="role">Priority</option>
+      <option value="projectName" name="role">Name</option>
+      <option value="-createdAt" name="role">Date</option>
+
+      <!-- <option value="priority" name="role"> priority </option> -->
+    </select>
+    
+  </div>
+  <button
+    data-toggle="modal"
+    data-target="#myModal2"
+    class="createProjectButton"
+    
+  >
+  Create Project
+  </button>
+</div>
 
   <div class="allProjectClass">
-    <div
-      style="height: 100px; width: 100px"
-      ng-hide="allProjectDetailsLoader"
-      class="loader"
-    ></div>
+
+    <div style="height:100px ; width: 100px;" ng-hide="allProjectDetailsLoader" class="loader"></div>
 
     <div
       class="projectDetailsClass"
@@ -156,10 +155,7 @@
         <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
         <div class="projectActions">
           <h3 style="color: rgb(227, 79, 79)">
-            <i
-              class="fa-sharp fa-solid fa-trash"
-              ng-click="deleteProject(project._id)"
-            ></i>
+            <i class="fa-sharp fa-solid fa-trash" ng-click="deleteProject(project._id)"></i>
           </h3>
 
           <h3
@@ -174,12 +170,8 @@
       </div>
       <hr />
       <div class="Detailing">
-        <progress
-          style="width: 80%"
-          id="file"
-          value="{{project.progress.percentage}}"
-          max="100"
-        ></progress>
+      
+        <progress style="width:80%" id="file" value={{project.progress.percentage}} max="100"></progress>
         <h6>{{project.progress.percentage}} %</h6>
         <h5
           ng-class="{'highPriority': project.priority=='High' ,
@@ -258,48 +250,44 @@
                   <span class="idd1">Oxc4c16a645_b21a</span>
                   <!-- <span><i class="fa fa-copy"></i></span> -->
                 </div>
-                <!-- <div
-                class="d-flex flex-row justify-content-center align-items-center mt-3"
-              >
-                <span class="number">1069 <span class="follow">Followers</span></span>
-              </div> -->
+               
                 <div disabled="true" class="d-flex mt-2">
-                  <button
-                    ng-style="{'display': employeeRole!='Manager' ? 'block' : 'none'}"
-                    ng-click="showEmployeeTicket()"
-                    class="btn1 btn-dark"
-                  >
+
+                  <button  ng-style="{'display': employeeRole!='Manager' ? 'block' : 'none'}" ng-click="showEmployeeTicket()" class="btn1 btn-dark">
                     View Ticket
                   </button>
+                 
                 </div>
 
-                <table
-                  style="margin-left: -25px"
-                  ng-hide="showEmployeeTicketTable"
-                  class="content-table"
-                >
+                <table style="margin-left: -25px;" ng-hide="showEmployeeTicketTable" class="content-table">
                   <thead>
                     <tr>
-                      <th>Progress</th>
-                      <th>Status</th>
-                      <th>Created At</th>
+                      <th> Progress</th>
+                      <th>  Status</th>
+                      <th> Created At</th>
+                   
+                    
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>{{EmployeeticketDetails.progress.percentage}} %</td>
-
-                      <td>{{EmployeeticketDetails.status}}</td>
+                      <td >{{EmployeeticketDetails.progress.percentage}} %
+                  
+                      </td>
+                      
+                      <td>
+                        {{EmployeeticketDetails.status}}
+                      </td>
                       <td>
                         {{EmployeeticketDetails.createdAt | date:"dd/MM/yyyy"}}
                       </td>
                     </tr>
                   </tbody>
-                </table>
-                <div class="text mt-3">
-                  <span style="font-size: 18px"
+                  </table>
+                  <div class="text mt-3">
+                  <span style="font-size:18px ;"
                     >{{employeeFirstName}} is {{employeeRole}}<br />
-                    work in {{employeeOrganization}} Organization
+                    work in {{employeeOrganization}} Organization 
                     <br />
                   </span>
                 </div>
@@ -323,6 +311,11 @@
   </div>
 
   <!------------------------------------ modal ends ------------------------------------->
+
+
+
+
+
 
   <div class="modal" id="myModal3">
     <div class="modal-dialog">

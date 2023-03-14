@@ -87,6 +87,7 @@ myApp.controller(
         });
       };
       $scope.showComments = true;
+     
       $scope.ticketIdForComment;
       $scope.comments = [];
       $scope.viewComments = function (val) {
@@ -106,6 +107,7 @@ myApp.controller(
           }
         });
       };
+       
 
       $scope.addCommentsFormSubmit = function ($event) {
         console.log($scope.ticketIds);
@@ -122,6 +124,83 @@ myApp.controller(
           $scope.addComments = "";
         });
       };
+
+
+      $scope.employeesAssignedToTask ; 
+      $scope.projectName ; 
+      $scope.projectId; 
+      $scope.projectManager ; 
+      $scope.projectManagerUsername ; 
+      $scope.projectManagerName; 
+      $scope.addTasks = function(val){
+        console.log(val);
+
+        $scope.employeesAssignedToTask= val.assignedTo;
+        $scope.projectName  = val.projectName ;
+        $scope.projectId = val._id;
+        $scope.projectManager = val.projectManger.projectMangerId ;
+        $scope.projectManagerUsername = val.projectManger.username ; 
+        $scope.projectManagerName  = val.projectManger.name ;  
+      }
+
+      $scope.taskEmployeeList = []  ; 
+      $scope.taskEmployeeListView = [] ; 
+      $scope.taskEmployeeListed = function(val){
+        console.log(val); 
+        $scope.taskEmployeeListView.push(JSON.parse(val).username); 
+       $scope.taskEmployeeList.push({
+      assignedUserId: JSON.parse(val)._id,
+      name: JSON.parse(val).name,
+      username: JSON.parse(val).username,
+       })
+      }
+
+
+      $scope.addTaskFunction = function($event){
+        $event.preventDefault(); 
+        if (Date.now() <= $scope.startDate && Date.now() <= $scope.endDate) {
+          if ($scope.startDate <= $scope.endDate) {
+            
+        var data = {
+          taskName: $scope.taskName , 
+          taskDescription:   $scope.taskDescription , 
+          taskeEmployeesAssigned : $scope.taskEmployeeList , 
+          startDate  :  $scope.startDate,
+          endDate  :$scope.endDate,
+          project: {
+            ProjectName:$scope.projectName,
+            projectId: $scope.projectId,
+            projectManager: $scope.projectManager,
+            projectManagerUsername:  $scope.projectManagerUsername, 
+            projectManagerName :  $scope.projectManagerName, 
+          },
+          token
+        }
+      managerServices.addTasks(data , function(response){
+        console.log(response); 
+        alert("Task Assigned");
+        $scope.taskName = ""; 
+        $scope.taskDescription=""; 
+        $scope.taskEmployeeList = []  ; 
+      $scope.taskEmployeeListView = [] ; 
+      $scope.startDate=""; 
+      $scope.endDate=""; 
+      
+
+
+
+
+      })
+      }else{
+        alert("Enter the valid Date"); 
+      }
+    }
+      else{
+        alert("Enter the valid Date");
+      }
+    }
+
+
     } else {
       $window.location.href = "#!/singinAsUsers";
     }

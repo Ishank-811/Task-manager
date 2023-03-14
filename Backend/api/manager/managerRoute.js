@@ -17,8 +17,9 @@ router.get(
 
 router.get(
   "/viewComments/:ticketId",
-
   managerController.viewComments
 );
+router.post("/addTasks" , passport.authenticate("level2", { session: false }),
+managerController.addTasks)
 
 module.exports = router;

@@ -54,6 +54,28 @@ var fac = function ($http) {
           }
         );
     },
+    addTasks : function(data , cb){
+
+      $http({
+        method: "POST",
+        url: "http://localhost:8080/manager/addTasks",
+        headers: {
+          Authorization: "Bearer " + data.token,
+          Accept: "application/json;odata=verbose",
+          "Content-Type": "application/json",
+        },
+        data,
+      })
+        .then(
+          function (res) {
+            console.log(res);
+            cb(res);
+          },
+          function (err) {
+            return err;
+          }
+        );
+    }
   };
 };
 

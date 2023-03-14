@@ -29,6 +29,7 @@ passport.use(
 passport.use(
   "level2",
   new JwtStrategy(opts, function (jwt_payload, done) {
+
     users.findOne(
       { username: jwt_payload.username },
       function (err, organization) {
