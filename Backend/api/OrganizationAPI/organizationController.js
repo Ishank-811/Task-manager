@@ -34,12 +34,12 @@ const registeringUsers = function (req, res) {
 };
 
 const fetchingUsers = function (req, res) {
-  if (req.user.valid == undefined) {
+  if (req.user.valid == true) {
     var id = req.user._id;
-
     users
       .find({ "organization.organizationId": id })
       .then(function (data) {
+        
         res
           .status(202)
           .json({ usersdata: data, roleAsOrganization: true, validity: true });
@@ -51,6 +51,8 @@ const fetchingUsers = function (req, res) {
     res.status(404).json({ validity: false });
   }
 };
+
+
 
 const updatingUser = function (req, res) {
   var updateUser = {

@@ -1,4 +1,4 @@
-myApp.controller("mangerController", function ($scope, $window, managerServices , employeeServices) {
+myApp.controller("mangerController", function ($scope, $window,$timeout,  managerServices , employeeServices) {
 
     var role = sessionStorage.getItem("role");
     var token = sessionStorage.getItem("token");
@@ -6,11 +6,19 @@ myApp.controller("mangerController", function ($scope, $window, managerServices 
 
     if (role == "Manager") {
       $scope.hideticket = true;
-      $scope.ViewTicketLoader=true ; 
+      $scope.ViewTicketLoader=true ;
+      
+      
+
+  
+
+
+
        $window.location.href = "#!/MangerDashboard";
        managerServices.readingdata(token, function (data) {
        $scope.response = data.data.projectDetails;});
-
+      
+      
         $scope.getTickets=  function(val){
           // console.log(val._id); 
           var data  ={
@@ -30,7 +38,44 @@ myApp.controller("mangerController", function ($scope, $window, managerServices 
             $scope.ViewTicketLoader=true ; 
             $scope.noTickets = false;  
             $scope.hideticket = false; 
-            $scope.ticket = response.data.ticketDetails  ; 
+            $scope.ticket = response.data.ticketDetails;
+            // console.log($scope.ticket);
+            var inactiveNumber = 0 ;
+            var completedNumber = 0 ; 
+            var progressNumber =0; 
+            var startedNumber=0 ;  
+            $scope.ticket.forEach(element => {
+              // console.log(element.status) ;
+              if(element.status=="Inactive"){
+                inactiveNumber++; 
+                console.log( inactiveNumber )
+              }else if(element.status=="completed"){
+                completedNumber++; 
+              }else if(element.status=="inProgress"){
+                progressNumber++; 
+              }else if(element.status=="started"){
+                startedNumber++; 
+              }
+
+            }); 
+            $timeout(function() {
+              new Chart(("pie-chart"), {
+                type: 'pie',
+                data: { 
+                  labels: ["Progress", "Completed", "Not Started" , "Started"],
+                  datasets: [{
+                    label: "Population (millions)",
+                    backgroundColor: ["#5bf556", "#ffc107","#dc3545","#6610f2"],
+                    data: [progressNumber,completedNumber,inactiveNumber, startedNumber]
+                  }]
+                },
+                options: {
+                  title: {
+                    display: true,
+                    text: 'Predicted world population (millions) in 2050'
+                  }
+                }
+            })},0); 
 
             }
           })
@@ -75,10 +120,16 @@ myApp.controller("mangerController", function ($scope, $window, managerServices 
          })
        
         }
-     
+
+
+
+
+
+
 
     } else {
       $window.location.href = "#!/singinAsUsers";
     }
   }
+  
 );

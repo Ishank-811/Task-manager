@@ -133,6 +133,22 @@ var fac = function ($http) {
           // console.log(err);
         });
     },
+    updateProgress : function(data, cb){
+      $http
+      .patch(
+        `http://localhost:8080/employee/updateProgress/${data.ticketId}`,
+        data
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      );
+    }
   };
 };
 

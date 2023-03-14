@@ -38,7 +38,13 @@ const ProjectSchema =  mongoose.Schema({
     endDate:{
         type:Date,
         required:true , 
-    }
+    }, 
+    progress :{
+        percentage:{type:Number, Default:0} , 
+        UpdatedAt : {type:Date , Default :new Date()},  
+    },
+  
+ 
 
 })
 const Project= mongoose.model("Project", ProjectSchema);

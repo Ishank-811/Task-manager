@@ -1,6 +1,6 @@
 const users = require("../../model/usersModel");
 const project = require("../../model/projects");
-
+var ticket = require("../../model/ticketModel");
 var organizationId, organizationName;
 
 const fetchingUsers = function (req, res) {
@@ -135,6 +135,21 @@ const viewProfile = function (req, res) {
     });
 };
 
+const showEmployeeTicket = function(req,res){
+console.log(req.query); 
+ticket
+.findOne({
+  "project.projectId": req.query.projectId,
+  "user.userId": req.query.employeeId,
+})
+.then(function (ticketData) {
+  res.status(202).send(ticketData);
+})
+.catch(function (error) {
+  console.log(error);
+});
+}
+
 module.exports = {
   fetchingUsers,
   creatingPorject,
@@ -143,4 +158,5 @@ module.exports = {
   deleteuser,
   addEmployees,
   viewProfile,
+  showEmployeeTicket
 };

@@ -23,7 +23,7 @@ app.use("/organization", require("./api/OrganizationAPI/organizationRoutes"));
 app.use("/admin", require("./api/admin/adminroutes")); 
 app.use("/manager" , require("./api/manager/managerRoute")); 
 app.use("/employee",  require("./api/employee/employeeRoutes"));
-
+app.use("/superAdmin" , require("./api/superAdmin/superAdminRoutes")); 
 
 
 

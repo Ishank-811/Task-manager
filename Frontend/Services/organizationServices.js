@@ -22,11 +22,13 @@ var fac = function($http){
             })
         },
         ReadingData : function(token,cb){
+           
             var config = {headers:  {
                 'Authorization': 'Bearer '+token,
                 'Accept': 'application/json;odata=verbose' ,
                
             }}; 
+            
             $http.get("http://localhost:8080/organization/fetchingUser" ,config).then(function(res){
                 console.log(res);
                 cb(res) ;  

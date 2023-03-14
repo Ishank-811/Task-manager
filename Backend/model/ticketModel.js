@@ -39,7 +39,13 @@ const ticketSchema = mongoose.Schema({
     type:String , 
     enum:['High' , 'Low' , 'Medium'],
     required:true 
-}, 
+},
+  progress :{
+    percentage:{type:Number, Default:0} , 
+    UpdatedAt : {type:Date , Default :new Date()},  
+  }
+  
+   
 });
 const tickets = mongoose.model("Tickets", ticketSchema);
 module.exports = tickets;

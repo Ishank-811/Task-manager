@@ -4,10 +4,13 @@ const organizationSchema =  mongoose.Schema({
         type : String, required:  true , trim:true
     },
     organizationUsername :{
-        type:String, required:  true, trim:true
+        type:String, required:  true, trim:true,  unique:true
     },
     organizationPassword : {
-        type:String, required:true, unique:true , trim:true
+        type:String, required:true , trim:true
+    },
+    valid :{
+        type:Boolean , default:false
     }
    
 })

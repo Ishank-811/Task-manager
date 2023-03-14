@@ -9,7 +9,8 @@ passport.use(new LocalStrategy(
     function(username, password, done) {
         console.log(username);
         Organization.findOne({ organizationUsername: username }, function (err, organization) {
-        if (err) {   return done(err); }
+        if (err) {   return done(err);
+         }
        
         if (!organization) { 
              return done(null, false); }

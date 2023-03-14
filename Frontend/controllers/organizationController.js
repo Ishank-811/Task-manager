@@ -39,9 +39,18 @@ myApp.controller(
       });
     };
 
-    $scope.displayForm = false;
-    $scope.updateUser = function (_id) {
-  
+$scope.displayForm = false;
+$scope.updatedFirstName; 
+$scope.updatedLastName;
+$scope.updatedUsername;
+$scope.UpdatedPassword;
+$scope.updatedRole ;  
+    $scope.updateUser = function (_id , firstName ,lastName,password , role, username) {
+      $scope.updatedFirstName= firstName;
+      $scope.updatedUsername = username;
+      $scope.updatedRole = role
+      $scope.updatedLastName = lastName ;
+      $scope.UpdatedPassword  = password
       $scope.updateFormDetails = function ($event) {
         $event.preventDefault();
         var data = {

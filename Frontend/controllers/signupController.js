@@ -61,6 +61,7 @@ myApp.controller("signupController", function ($scope, singupServices) {
 
     singupServices.sendingdata(newUser, function (data) {
       console.log(data);
+      alert("Successfully signup")
     });
   };
 });

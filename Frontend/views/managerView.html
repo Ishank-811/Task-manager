@@ -6,15 +6,22 @@
       <tr>
         <th>Projects Assigned</th>
         <th>Employee Assigned</th>
+        <th>Progress</th>
+        <th>Assigned At</th>  
         <th>Tickets</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="project in response">
-        <td>{{project.projectName}}</td>
+      <tr ng-repeat="project in response" >
+        <td >{{project.projectName}}
+    
+        </td>
+        
         <td>
           <li ng-repeat="item in project.assignedTo">{{item.name}}</li>
         </td>
+        <td>{{ project.progress.percentage /project.assignedTo.length }} %</td>
+        <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
         <td>
           <button class="displayTicketsClass" ng-click="getTickets(project)">
             Tickets
@@ -27,33 +34,40 @@
     No tickets has been initiated by the employee
   </h4>
 
-
-  <div ng-hide="ViewTicketLoader" style="margin:auto ;margin-top:10px; height:70px ; width:70px" class="loader"></div>
-
+  <div
+    ng-hide="ViewTicketLoader"
+    style="margin: auto; margin-top: 10px; height: 70px; width: 70px"
+    class="loader"
+  ></div>
+  
   <div ng-hide="hideticket">
-    
     <div class="displayAllTickets">
       <div class="ticketDetailsClass" ng-repeat="tickets in ticket">
         <div class="ticketHeader">
           <h5 class="ticketStatus">{{tickets.status}}</h5>
-          <h5  ng-class="{'highPriority': tickets.priority=='High' ,
-          'MediumPriority':tickets.priority=='Medium' , 'lowPriority':tickets.priority=='Low'}" >{{tickets.priority}}</h5>
+          <h4>
+            <i class="fa-sharp fa-solid fa-bars-progress"></i>
+            {{tickets.progress.percentage}} %
+          </h4>
+        
+         
         </div>
         <div>
           <div style="display: flex; justify-content: space-evenly">
-            <h4>Name:-</h4> 
-            <h4>{{tickets.user.name}}</h4>
+            <h5>Name:-</h5>
+            <h5>{{tickets.user.name}}</h5>
           </div>
-        
+
           <div style="display: flex; justify-content: space-evenly">
-            <h4>Username:-</h4>
-            <h4>{{tickets.user.username}}</h4>
+            <h5>Username:-</h5>
+            <h5>{{tickets.user.username}}</h5>
           </div>
           <hr />
-          <div style="display: flex; justify-content: space-evenly">
-            <h4>Created at:-</h4>
-            <h4>{{tickets.createdAt | date:"dd/MM/yyyy"}}</h4>
+          <div style="display: flex; justify-content: space-around">
+            <h6>Created at:-</h6>
+            <h6>{{tickets.createdAt | date:"dd/MM/yyyy"}}</h6>
           </div>
+          <hr>
         </div>
         <div class="ticketFooter">
           <h3
@@ -63,18 +77,25 @@
           >
             <i class="fa-sharp fa-solid fa-comment"></i>
           </h3>
-          <h4
-            style="
-              background-color: #f1c8db;
-              padding: 10px;
-              border-radius: 10px;
-            "
+          <h5
+          ng-class="{'highPriority': tickets.priority=='High' ,
+        'MediumPriority':tickets.priority=='Medium' , 'lowPriority':tickets.priority=='Low'}"
+        >
+          {{tickets.priority}}
+        </h5>
+          <!-- <h5
+            style="background-color: #f1c8db; padding: 7px; border-radius: 10px"
           >
-            Project
-          </h4>
+            {{tickets.project.ProjectName}}
+          </h5> -->
+          
+          
         </div>
+    
       </div>
+      
     </div>
+    <!-- <canvas id="pie-chart" style="width: 10%; max-width: 300px"></canvas> -->
   </div>
   <!-- <div ng-hide="showComments">
     
@@ -94,7 +115,6 @@
         <div class="modal-body">
           <h5>{{showNoComments}}</h5>
           <div ng-repeat="comment in comments">
-
             <h5>{{comment.comments.comment }}</h5>
             <h5>By:- {{comment.comments.commentBy.name }}</h5>
             <h5 style="color: #fb7474">{{comment.comments.commentBy.role }}</h5>
@@ -128,5 +148,4 @@
       </div>
     </div>
   </div>
-  
 </div>

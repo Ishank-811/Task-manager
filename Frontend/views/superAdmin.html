@@ -1,0 +1,244 @@
+<!-- <h1>{{message}}</h1>  -->
+<button
+  class="createButton"
+  type="submit"
+  style="
+    width: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+  ng-disabled="projectForm.$invalid"
+  data-toggle="modal"
+  data-target="#myModal3"
+>
+  Create organization
+</button>
+<table class="content-table">
+  <thead>
+    <tr>
+      <th>Organization Name</th>
+      <th>Admin Username</th>
+      <th>Allow Access</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="organization in organizationDetails track by $index">
+      <td>{{organization.organizationName}}</td>
+      <td>{{organization.organizationUsername}}</td>
+      <td ng-hide="organization.valid">
+        <button ng-click="createOrganization(organization._id)">Create</button>
+      </td>
+      <td ng-show="organization.valid">
+        <button data-toggle="modal"
+        data-target="#myModal2" ng-click="updateOrganizationDetails(organization.organizationName 
+        ,organization.organizationUsername  ,organization._id  )">Update</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<!--------------------------------------- create organization modal ---------------------------------------------- -->
+
+<div class="modal" id="myModal3">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create Organization</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div style="width: 100%">
+        <form
+          style="width: 70%; margin: auto"
+          name="signupform"
+          role="form"
+          autocomplete="off"
+        >
+          <span ng-show="showError" class="formerror"
+            >Organization already exist</span
+          >
+          <div class="txt_field" id="firstname" class="form-group">
+            <input
+              ng-required="true"
+              type="text"
+              name="organizationName"
+              ng-model="organizationName"
+            />
+            <label>Organization name</label>
+          </div>
+          <div class="txt_field" id="emailvalid" class="form-group">
+            <input
+              type="email"
+              name="email"
+              id="email"
+              ng-model="emailValid"
+              ng-required="true"
+            />
+            <span class="formerror"></span>
+            <label>Admin Email</label>
+          </div>
+          <div ng-show="signupform.email.$invalid && signupform.email.$touched">
+            <span class="formerror">Fill the vaild email</span>
+          </div>
+
+          <div class="txt_field" id="passwordc" class="form-group">
+            <input
+              type="password"
+              name="pwd"
+              id="pwd"
+              ng-focus="onfocusfun()"
+              ng-model="Password"
+              ng-blur="onblurfun()"
+              ng-change="passwordFeild(Password)"
+              ng-required="true"
+            />
+            <span
+              ng-style="{'color' : 'red'}"
+              ng-show="passwordValidityFalse"
+              class="formerror"
+            >
+              Enter the valid password</span
+            >
+            <label>Password</label>
+          </div>
+          <div
+            id="message"
+            ng-style="{'display': displaypasswordMessage ? 'block' : 'none'}"
+          >
+            <p class="{{lowerCaseChecking}}">A <b>lowercase</b> letter</p>
+            <p id="capital" class="{{uppercaseChecking}}">
+              A <b>capital (uppercase)</b> letter
+            </p>
+            <p id="number" class="{{numberChecking}}">A <b>number</b></p>
+            <p id="length" class="{{lengthChecking}}">
+              Minimum <b>8 characters</b>
+            </p>
+          </div>
+
+          <div class="txt_field" id="confirmpassword" class="form-group">
+            <input
+              type="password"
+              name="cpwd"
+              id="cpwd"
+              placeholder="Confirm Password"
+              ng-model="confirmPassword"
+              required
+            />
+            <span
+              ng-style="{'color' : 'red'}"
+              ng-show="ConfirmPasswordMatchingFalse"
+            >
+              Passwords does not match
+            </span>
+          </div>
+          <div class="form-group">
+            <button
+              ng-disabled="signupform.$invalid"
+              style="
+                padding: 5px;
+                font-size: 15px;
+                border-radius: 10%;
+                background-color: rgb(161, 161, 255);
+                color: white;
+                font: bold;
+              "
+              type="submit"
+              ng-click="singupfun($event)"
+            >
+              Create
+            </button>
+          </div>
+          <!-- <input type="submit" value="Login"> -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--------------------------------------- create organization modal ends ---------------------------------------------- -->
+
+
+
+
+
+
+<div class="modal" id="myModal2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Update Organization</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <div style="width: 100%">
+          <form
+            style="width: 70%; margin: auto"
+            name="updateOrganizationForm"
+            role="form"
+            autocomplete="off"
+          >
+            <span ng-show="showErrorInUpdateForm" class="formerror"
+              >Organization already exist</span
+            >
+            <div class="txt_field" id="firstname" class="form-group">
+              <input
+                ng-required="true"
+                type="text"
+
+                name="organizationName"
+                ng-model="updateOrganizationName"
+              />
+              <label>Organization name</label>
+            </div>
+            <div class="txt_field" id="emailvalid" class="form-group">
+              <input
+                type="email"
+                name="email"
+               
+                ng-model="updateOrganizationUsername"
+                ng-required="true"
+              />
+              <span class="formerror"></span>
+              <label>Admin Email</label>
+            </div>
+            <div ng-show="updateOrganizationForm.email.$invalid && updateOrganizationForm.email.$touched">
+              <span class="formerror">Fill the vaild email</span>
+            </div>
+  
+           
+            <div class="form-group">
+              <button
+                ng-disabled="updateOrganizationForm.$invalid"
+                style="
+                  padding: 5px;
+                  font-size: 15px;
+                  border-radius: 10%;
+                  background-color: rgb(161, 161, 255);
+                  color: white;
+                  font: bold;
+                "
+                type="submit"
+                ng-click="UpdateOrganizationFunction($event)"
+              >
+                Update
+              </button>
+            </div> 
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

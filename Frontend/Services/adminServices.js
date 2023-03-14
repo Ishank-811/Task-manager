@@ -46,7 +46,29 @@ var fac = function($http){
                 cb(err); 
                 return err ; 
             });    
-        }
+        },
+        showEmployeeTicket: function (data, cb) {
+            console.log(data);
+            // var config = {
+            //   headers: {
+            //     Authorization: "Bearer " + data.token,
+            //     Accept: "application/json;odata=verbose",
+            //   },
+            // };
+            $http
+              .get(
+                `http://localhost:8080/admin/showEmployeeTicket?projectId=${data.projectId}&employeeId=${data.employeeId}`,
+              )
+              .then(
+                function (res) {
+                  console.log(res);
+                  cb(res);
+                },
+                function (err) {
+                  return err;
+                }
+              );
+          },
  
     }
 }

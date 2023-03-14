@@ -9,6 +9,7 @@ opts.secretOrKey = "random string";
 
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
+ 
     organization.findOne(
       { organizationUsername: jwt_payload.username },
       function (err, organization) {
@@ -16,6 +17,7 @@ passport.use(
           return done(err, false);
         }
         if (organization) {
+        
           return done(null, organization);
         } else {
           return done(null, { valid: false });

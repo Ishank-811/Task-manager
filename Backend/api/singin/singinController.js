@@ -9,7 +9,7 @@ const singinAsOrganization = function (req, res) {
     })
     .then(function (organizationDetail) {
       if (organizationDetail) {
-        console.log(organizationDetail);
+       
         var dataToSendForJwt = {
           id: organizationDetail._id,
           roleAsOrganization: true,
@@ -18,7 +18,7 @@ const singinAsOrganization = function (req, res) {
         const token = jwt.sign(dataToSendForJwt, "random string", {
           expiresIn: "1d",
         });
-        console.log(token);
+       
         return res.json({ token, roleAsOrganization: true });
       } else {
         res.status(404).send({ message: "user not authorized" });

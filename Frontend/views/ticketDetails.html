@@ -1,12 +1,14 @@
 <div ng-controller="ticketDetailsController">
   <div class="ticketClass">
     <div class="ticketHeader">
-     
-      <h5 ng-class="{'highPriority': priority=='High' ,
+      <h5
+        ng-class="{'highPriority': priority=='High' ,
       'MediumPriority': priority=='Medium' , 'lowPriority':priority=='Low'}"
-       style="margin-bottom:20px">{{priority}}</h5>
+        style="margin-bottom: 20px"
+      >
+        {{priority}}
+      </h5>
       <h5 class="ticketStatus">{{status}}</h5>
-     
     </div>
     <hr />
     <div class="ticketDetails">
@@ -15,8 +17,12 @@
     </div>
     <hr />
     <div class="addTags">
-      <form name="progressForm" role="form" style="text-align: center;">
-        <select ng-required="true" ng-model="progressStatus"  style="text-align: center; margin-left:10px">
+      <form name="progressForm" role="form" style="text-align: center">
+        <select
+          ng-required="true"
+          ng-model="progressStatus"
+          style="text-align: center; margin-left: 10px"
+        >
           <option value="started">Started</option>
           <option value="inProgress">Progress</option>
           <option value="completed">Completed</option>
@@ -24,49 +30,90 @@
         <button
           class="ticketButton"
           type="submit"
-          
           ng-disabled="progressForm.$invalid"
           ng-click="progressSubmitFunction($event)"
         >
-          Update Tag <div ng-hide="updateStatusLoader" style="margin-left:10px" class="loader"></div>
+          Update Tag
+          <div
+            ng-hide="updateStatusLoader"
+            style="margin-left: 10px"
+            class="loader"
+          ></div>
         </button>
       </form>
     </div>
     <hr />
 
     <div class="addComments">
-      <form name="addCommentsForm" role="form" style="text-align: center;">
+      <form name="addCommentsForm" role="form" style="text-align: center">
         <input
           ng-model="addComments"
           type="text"
           ng-required="true"
           placeholder="Add Comments"
-          style="text-align: center;"
+          style="text-align: center"
         />
-       
+
         <button
           type="submit"
           class="ticketButton"
           ng-disabled="addCommentsForm.$invalid"
           ng-click="addCommentsFormSubmit($event)"
         >
-          Add Comment <div ng-hide="CommentLoader" style="margin-left:10px" class="loader"></div>
+          Add Comment
+          <div
+            ng-hide="CommentLoader"
+            style="margin-left: 10px"
+            class="loader"
+          ></div>
         </button>
-        
-        <h3 style="text-align: center;" ng-click="viewComments(tickets)" data-toggle="modal"
-        data-target="#CreateModal" ><i class="fa-sharp fa-solid fa-comment"></i></h3>
+
+     
+        <hr />
+
+
+     
+
       </form>
+      <form  name="progressBarForm" role="form" style="text-align: center">
+        <label >Progress {{progressBar}}%</label>
+      <input
+      ng-model="progressBar"
+      ng-change="progressBarChange(progressBar)"
+      min="0"
+      max="100"
+      type="range"
+      class="ticketprogressBar"
+     
+
+    />
+<button
+          type="submit"
+          class="ticketButton"
+          ng-disabled="progressBarForm.$invalid"
+          ng-click="addProgressFormSubmit($event)"
+        >
+          Update Progress
+          <div
+            ng-hide="ProgressLoader"
+            style="margin-left: 10px"
+            class="loader"
+          ></div>
+        </button>
+  </form>
+    <hr />
+
+    
       <div class="addComments">
-        <form name="addFile" role="form" style="text-align: center;">
+        <form name="addFile" role="form" style="text-align: center">
           <input
             type="file"
             ng-required="true"
             placeholder="Add File"
-            style="text-align: center;"
-            file-model = "formData.file"
-            
+            style="text-align: center; margin-left: 50px"
+            file-model="formData.file"
           />
-         
+
           <button
             type="submit"
             class="ticketButton"
@@ -75,8 +122,29 @@
           >
             Add Image
           </button>
-         
         </form>
+
+        <hr />
+
+       
+      </div>
+      <div
+        style="
+          display: flex;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <h6>view Comments</h6>
+        <h3
+          style="text-align: center; margin-left: 12px; cursor: pointer"
+          ng-click="viewComments(tickets)"
+          data-toggle="modal"
+          data-target="#CreateModal"
+        >
+          <i class="fa-sharp fa-solid fa-comment"></i>
+        </h3>
       </div>
     </div>
   </div>
@@ -96,13 +164,14 @@
         <div class="modal-body">
           <h5>{{showNoComments}}</h5>
           <div ng-repeat="comment in comments">
-
             <h5>{{comment.comments.comment }}</h5>
-            <image style="height:20% ; width: 20%;" ng-hide={{comment.comments.file==undefined}} src="{{comment.comments.file}}"/>
+            <image style="height:20% ; width: 20%;"
+            ng-hide={{comment.comments.file==undefined}}
+            src="{{comment.comments.file}}"/>
             <h6>By:- {{comment.comments.commentBy.name }}</h6>
-            <h6 style="color:#fb7474">{{comment.comments.commentBy.role }}</h6>
-           
-            <hr>
+            <h6 style="color: #fb7474">{{comment.comments.commentBy.role }}</h6>
+
+            <hr />
           </div>
         </div>
 

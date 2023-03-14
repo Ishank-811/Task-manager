@@ -164,14 +164,14 @@ button{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: rgb(243, 243, 243);
+  /* height: 100vh; */
+  /* background-color: rgb(243, 243, 243); */
 }
 .projectClass{
   display: flex;
   flex-direction: column;
-  width: 35%;
-  height: 80vh;
+  width: 100%;
+  height: 73vh;
   
 }
 .UpdatedprojectClass{
@@ -185,8 +185,9 @@ button{
 .projectClass input{
   background-color: rgb(255, 255, 255) ;
   height: 50px;
-  margin: 10px;
+  margin-top: 20px;
   border-radius: 10px;
+
   text-align: center;
   width: 100%;
   box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
@@ -194,8 +195,8 @@ button{
 }
 .searchingDiv{
   display: flex;
-  flex-direction: column;
-  width: 95%;
+  /* flex-direction: column; */
+  width: 55%;
   margin:30px;
   justify-content: center;
   align-items: center;
@@ -217,7 +218,7 @@ button{
   margin: 10px;
   border-radius: 10px;
   text-align: center;
-  width: 35%;
+  width: 95%;
   box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
   border: none;
 }
@@ -225,7 +226,7 @@ button{
   background-color: rgb(255, 255, 255) ;
   height: 50px;
   width: 100%;
-  margin: 10px;
+  margin-top: 20px;
   border-radius: 10px;
   box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
   border: none;
@@ -241,7 +242,7 @@ button{
 .UpdatedprojectClass select{
   background-color: rgb(255, 255, 255) ;
   height: 50px;
-  width: 35%;
+  width: 95%;
   margin: 10px;
   border-radius: 10px;
   box-shadow: 10px 10px 15px 10px rgba(0,0,0,0.05);
@@ -258,6 +259,20 @@ button{
   font-size:16px;
   padding-left:20px;
   padding-right:20px;
+}
+.createProjectButton{
+  margin-top: 40px;
+  width: 20%;
+  padding:7px;
+  /* margin-left:100px; */
+  background-color: #484C7f;
+  color:white;
+  border-radius:6px;
+  border: none;
+  font-size:16px;
+  padding-left:20px;
+  padding-right:20px;
+  height: 50px;
 }
 .logoutButton{
   background-color: red;
@@ -377,7 +392,7 @@ button{
 }
 .ticketClass{
 
-  width:300px ;
+  width:350px ;
   background-color: rgb(243, 243, 243);
   border-radius:22px;
   margin: auto;
@@ -558,9 +573,10 @@ align-items: center;
 }
 .ticketDetailsClass{
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.61) ;
-  width:23% ;
+  width:26% ;
   background-color: rgb(243, 243, 243);
   border-radius:10px;
+  height: 90%;
   border-bottom: 10px solid rgb(255, 118, 20);
  
 }
@@ -573,6 +589,7 @@ align-items: center;
   justify-content: space-evenly;
   flex-wrap: wrap;
   margin:20px;  
+  height:60vh; 
 }
 .ticketButton{
   background-color: #484C7f;
@@ -656,8 +673,8 @@ align-items: center;
 }
 
 .avtarbtn {
-  height: 140px;
-  width: 140px;
+  height: 120px;
+  width: 120px;
   border-radius: 50%
 }
 
@@ -728,6 +745,36 @@ hr .new1 {
   height: 15px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 2s linear infinite;
+}
+.TablehighPriority{
+  background-color:rgb(239, 66, 66); 
+  color:white ; 
+  font: bold!important;
+}
+.TableLowPriority{
+  background-color:rgb(98, 216, 117); 
+  color:white; 
+  font: bold!important;
+ 
+}
+.TableMediumPriority{
+  /* color:rgb(255, 221, 1); 
+   */
+   background-color:rgb(252, 252, 136);
+   color:white;
+  font: bold!important;
+}
+.ticketprogressBar{
+  background: linear-gradient(to right, #82CFD0 0%, #82CFD0 50%, #fff 50%, #fff 100%);
+  border: solid 1px #82CFD0;
+  border-radius: 8px;
+  height: 20px;
+  outline: none;
+  width:200px;
+   margin:auto;
+  display: flex;
+
+   height:4px;
 }
 
 /* Safari */

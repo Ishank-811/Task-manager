@@ -105,8 +105,18 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
     }
   };
 
-  $scope.showProfile = function (val) {
+  $scope.deleteProject = function(val){
+    console.log(val); 
+  }
+  $scope.selectedProjectId 
+  $scope.selectEmployeeId 
+  $scope.showProfile = function (projectId,   val) {
     // console.log(val);
+    $scope.showEmployeeTicketTable=  true; 
+    $scope.selectedProjectId = projectId ; 
+    $scope.selectEmployeeId = val;  
+
+console.log(projectId , val); 
     adminServices.viewProfile(val , function(response){
       console.log(response);
        $scope.employeeFirstName = response.data.firstName
@@ -118,14 +128,27 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
     })
     
   };
-  $scope.displaySearchButton = true ;
-  $scope.allProjectDetailsLoader = true;       
-  $scope.DisplayProjectList = function () {
-     $scope.allProjectDetailsLoader = false;   
+  $scope.showEmployeeTicketTable=  true; 
+  $scope.showEmployeeTicket = function(){
+
+  //  console.log( $scope.selectedProjectId  , $scope.selectEmployeeId) ; 
+   const data = {
+    projectId : $scope.selectedProjectId,  
+    employeeId  : $scope.selectEmployeeId
+   }
+   adminServices.showEmployeeTicket(data , function(response){
+    $scope.showEmployeeTicketTable=  false; 
+    $scope.EmployeeticketDetails = (response.data); 
+    
+   })
+  }
+
+  $scope.allProjectDetailsLoader = false;       
+  
     adminServices.fetchProjects(token, function (data) {
-      $scope.displaySearchButton = false  ;
       $scope.allProjectDetailsLoader = true;   
       $scope.project = (data.data);
     });
-  };
+
+
 });

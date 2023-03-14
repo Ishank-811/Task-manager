@@ -18,6 +18,7 @@ router.get("/getProjectDetails/:id", adminController.getProjectDetails);
 router.post("/deleteuser", adminController.deleteuser);
 router.post("/addEmployees", adminController.addEmployees);
 router.get("/viewProfile", adminController.viewProfile);
+router.get("/showEmployeeTicket" , adminController.showEmployeeTicket); 
 // router.patch("/updatingUser/:id" ,organizationController.updatingUser )
 
 module.exports = router;

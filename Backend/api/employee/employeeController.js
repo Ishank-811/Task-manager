@@ -72,7 +72,7 @@ var addTicket = function (req, res) {
   response
     .save()
     .then(function () {
-      res.json({employeeId:req.user._id});
+      res.json({ employeeId: req.user._id });
     })
     .catch(function (error) {
       console.log(error);
@@ -120,6 +120,12 @@ const addComment = function (req, res) {
 };
 
 var updatingStatus = function (req, res) {
+
+  // var data = {status:req.body.projectStatus}
+  // if(req.body.projectStatus){
+    
+  // }
+
   ticket
     .findByIdAndUpdate(
       req.params.ticketId,
@@ -163,6 +169,39 @@ var uploadFileToUrl = async (req, res) => {
     });
 };
 
+const updateProgress = function (req, res) {
+  console.log(req.params.ticketId);
+  console.log(req.body);
+  var data = {
+    "progress.percentage": req.body.progressBar,
+    "progress.UpdatedAt": new Date(),
+    status: "inProgress",
+  };
+  if (req.body.progressBar == 100) {
+    data.status = "completed";
+  }
+
+  ticket
+    .findByIdAndUpdate(req.params.ticketId, data, { new: true })
+    .then(function (response) {
+      res.status(202).send(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  project
+    .findByIdAndUpdate(req.body.projectId, {
+      $inc: { "progress.percentage": req.body.progressBarDiff },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 module.exports = {
   fetchingProjects,
   addTicket,
@@ -170,4 +209,5 @@ module.exports = {
   addComment,
   updatingStatus,
   uploadFileToUrl,
+  updateProgress,
 };

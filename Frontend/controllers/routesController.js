@@ -6,6 +6,11 @@ myApp.config(function ($stateProvider) {
       templateUrl: "views/signinAsOrganization.html",
       controller: "signinAsOrganizationController",
     })
+    .state("superAdmin"  , {
+      url:"/superAdmin" , 
+      templateUrl:"views/superAdmin.html",
+      controller:"superAdminController"
+    })
     .state("singup", {
       url: "/singup",
       templateUrl: "views/signup.html",
