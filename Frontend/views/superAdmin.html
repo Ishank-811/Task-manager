@@ -30,15 +30,18 @@
         <button ng-click="createOrganization(organization._id)">Create</button>
       </td>
       <td ng-show="organization.valid">
-        <button data-toggle="modal"
-        data-target="#myModal2" ng-click="updateOrganizationDetails(organization.organizationName 
-        ,organization.organizationUsername  ,organization._id  )">Update</button>
+        <button
+          data-toggle="modal"
+          data-target="#myModal2"
+          ng-click="updateOrganizationDetails(organization.organizationName 
+        ,organization.organizationUsername  ,organization._id  )"
+        >
+          Update
+        </button>
       </td>
     </tr>
   </tbody>
 </table>
-
-
 
 <!--------------------------------------- create organization modal ---------------------------------------------- -->
 
@@ -165,80 +168,74 @@
 </div>
 <!--------------------------------------- create organization modal ends ---------------------------------------------- -->
 
-
-
-
-
-
 <div class="modal" id="myModal2">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Update Organization</h4>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-        <div style="width: 100%">
-          <form
-            style="width: 70%; margin: auto"
-            name="updateOrganizationForm"
-            role="form"
-            autocomplete="off"
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Organization</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div style="width: 100%">
+        <form
+          style="width: 70%; margin: auto"
+          name="updateOrganizationForm"
+          role="form"
+          autocomplete="off"
+        >
+          <span ng-show="showErrorInUpdateForm" class="formerror"
+            >Organization already exist</span
           >
-            <span ng-show="showErrorInUpdateForm" class="formerror"
-              >Organization already exist</span
-            >
-            <div class="txt_field" id="firstname" class="form-group">
-              <input
-                ng-required="true"
-                type="text"
+          <div class="txt_field" id="firstname" class="form-group">
+            <input
+              ng-required="true"
+              type="text"
+              name="organizationName"
+              ng-model="updateOrganizationName"
+            />
+            <label>Organization name</label>
+          </div>
+          <div class="txt_field" id="emailvalid" class="form-group">
+            <input
+              type="email"
+              name="email"
+              ng-model="updateOrganizationUsername"
+              ng-required="true"
+            />
+            <span class="formerror"></span>
+            <label>Admin Email</label>
+          </div>
+          <div
+            ng-show="updateOrganizationForm.email.$invalid && updateOrganizationForm.email.$touched"
+          >
+            <span class="formerror">Fill the vaild email</span>
+          </div>
 
-                name="organizationName"
-                ng-model="updateOrganizationName"
-              />
-              <label>Organization name</label>
-            </div>
-            <div class="txt_field" id="emailvalid" class="form-group">
-              <input
-                type="email"
-                name="email"
-               
-                ng-model="updateOrganizationUsername"
-                ng-required="true"
-              />
-              <span class="formerror"></span>
-              <label>Admin Email</label>
-            </div>
-            <div ng-show="updateOrganizationForm.email.$invalid && updateOrganizationForm.email.$touched">
-              <span class="formerror">Fill the vaild email</span>
-            </div>
-  
-           
-            <div class="form-group">
-              <button
-                ng-disabled="updateOrganizationForm.$invalid"
-                style="
-                  padding: 5px;
-                  font-size: 15px;
-                  border-radius: 10%;
-                  background-color: rgb(161, 161, 255);
-                  color: white;
-                  font: bold;
-                "
-                type="submit"
-                ng-click="UpdateOrganizationFunction($event)"
-              >
-                Update
-              </button>
-            </div> 
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
-        </div>
+          <div class="form-group">
+            <button
+              ng-disabled="updateOrganizationForm.$invalid"
+              style="
+                padding: 5px;
+                font-size: 15px;
+                border-radius: 10%;
+                background-color: rgb(161, 161, 255);
+                color: white;
+                font: bold;
+              "
+              type="submit"
+              ng-click="UpdateOrganizationFunction($event)"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
       </div>
     </div>
   </div>
+</div>

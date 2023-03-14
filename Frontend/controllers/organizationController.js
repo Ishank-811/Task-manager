@@ -31,26 +31,32 @@ myApp.controller(
         token: token,
       };
       organizationServices.sendingdata(data, function (data) {
-       
-        if(data.status==404){
-          console.log("hello"); 
-          $scope.showError=true ; 
+        if (data.status == 404) {
+          console.log("hello");
+          $scope.showError = true;
         }
       });
     };
 
-$scope.displayForm = false;
-$scope.updatedFirstName; 
-$scope.updatedLastName;
-$scope.updatedUsername;
-$scope.UpdatedPassword;
-$scope.updatedRole ;  
-    $scope.updateUser = function (_id , firstName ,lastName,password , role, username) {
-      $scope.updatedFirstName= firstName;
+    $scope.displayForm = false;
+    $scope.updatedFirstName;
+    $scope.updatedLastName;
+    $scope.updatedUsername;
+    $scope.UpdatedPassword;
+    $scope.updatedRole;
+    $scope.updateUser = function (
+      _id,
+      firstName,
+      lastName,
+      password,
+      role,
+      username
+    ) {
+      $scope.updatedFirstName = firstName;
       $scope.updatedUsername = username;
-      $scope.updatedRole = role
-      $scope.updatedLastName = lastName ;
-      $scope.UpdatedPassword  = password
+      $scope.updatedRole = role;
+      $scope.updatedLastName = lastName;
+      $scope.UpdatedPassword = password;
       $scope.updateFormDetails = function ($event) {
         $event.preventDefault();
         var data = {

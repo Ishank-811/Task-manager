@@ -6,10 +6,10 @@ myApp.config(function ($stateProvider) {
       templateUrl: "views/signinAsOrganization.html",
       controller: "signinAsOrganizationController",
     })
-    .state("superAdmin"  , {
-      url:"/superAdmin" , 
-      templateUrl:"views/superAdmin.html",
-      controller:"superAdminController"
+    .state("superAdmin", {
+      url: "/superAdmin",
+      templateUrl: "views/superAdmin.html",
+      controller: "superAdminController",
     })
     .state("singup", {
       url: "/singup",
@@ -40,7 +40,7 @@ myApp.config(function ($stateProvider) {
       url: "/ticketDetails/:id",
       templateUrl: "views/ticketDetails.html",
       controller: "ticketDetailsController",
-    })  
+    })
     .state("AdminDashboard", {
       url: "/AdminDashboard",
       templateUrl: "views/adminView.html",
@@ -63,14 +63,12 @@ var mycontroller = function ($scope, $window) {
     $scope.loggedin = false;
     $scope.loggedOut = true;
   }
-  $scope.logout = function(){
+  $scope.logout = function () {
     sessionStorage.clear();
     $scope.loggedOut = true;
-    $scope.loggedin = false; 
+    $scope.loggedin = false;
     $window.location.href = "#!/singinAsUsers";
-   
-
-  }
+  };
 };
 
 myApp.controller("mycontroller", mycontroller);

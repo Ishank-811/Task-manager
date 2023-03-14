@@ -1,10 +1,10 @@
 myApp.controller(
   "signinAsUsersController",
   function ($scope, $window, signinServices) {
-    $scope.signinMessage  ="SIGN IN" ; 
+    $scope.signinMessage = "SIGN IN";
     $scope.siginFunAsUser = function ($event) {
       $event.preventDefault();
-      $scope.signinMessage = "SIGNING..."
+      $scope.signinMessage = "SIGNING...";
       var LoggedinOrganization = {
         username: $scope.username,
         password: $scope.password,
@@ -16,7 +16,7 @@ myApp.controller(
           sessionStorage.setItem("token", data.data.token);
         } else {
           $scope.showError = true;
-          $scope.signinMessage  ="SIGN IN" ; 
+          $scope.signinMessage = "SIGN IN";
           return;
         }
         if (data.data.token && data.data.role == "Admin") {
@@ -28,7 +28,7 @@ myApp.controller(
         } else if (data.data.token && data.data.role == "Employee") {
           $window.location.href = "#!/EmployeeDashboard";
           sessionStorage.setItem("role", data.data.role);
-        }else if(data.data.token && data.data.role == "SuperAdmin"){
+        } else if (data.data.token && data.data.role == "SuperAdmin") {
           $window.location.href = "#!/superAdmin";
           sessionStorage.setItem("role", data.data.role);
         }

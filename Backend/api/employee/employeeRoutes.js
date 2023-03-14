@@ -34,7 +34,6 @@ router.patch(
   employeeController.uploadFileToUrl
 );
 
-router.patch("/updateProgress/:ticketId" ,employeeController.updateProgress );  
-
+router.patch("/updateProgress/:ticketId", employeeController.updateProgress);
 
 module.exports = router;

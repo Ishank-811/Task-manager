@@ -7,16 +7,14 @@
         <th>Projects Assigned</th>
         <th>Employee Assigned</th>
         <th>Progress</th>
-        <th>Assigned At</th>  
+        <th>Assigned At</th>
         <th>Tickets</th>
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="project in response" >
-        <td >{{project.projectName}}
-    
-        </td>
-        
+      <tr ng-repeat="project in response">
+        <td>{{project.projectName}}</td>
+
         <td>
           <li ng-repeat="item in project.assignedTo">{{item.name}}</li>
         </td>
@@ -39,7 +37,7 @@
     style="margin: auto; margin-top: 10px; height: 70px; width: 70px"
     class="loader"
   ></div>
-  
+
   <div ng-hide="hideticket">
     <div class="displayAllTickets">
       <div class="ticketDetailsClass" ng-repeat="tickets in ticket">
@@ -49,8 +47,6 @@
             <i class="fa-sharp fa-solid fa-bars-progress"></i>
             {{tickets.progress.percentage}} %
           </h4>
-        
-         
         </div>
         <div>
           <div style="display: flex; justify-content: space-evenly">
@@ -67,7 +63,7 @@
             <h6>Created at:-</h6>
             <h6>{{tickets.createdAt | date:"dd/MM/yyyy"}}</h6>
           </div>
-          <hr>
+          <hr />
         </div>
         <div class="ticketFooter">
           <h3
@@ -78,22 +74,18 @@
             <i class="fa-sharp fa-solid fa-comment"></i>
           </h3>
           <h5
-          ng-class="{'highPriority': tickets.priority=='High' ,
+            ng-class="{'highPriority': tickets.priority=='High' ,
         'MediumPriority':tickets.priority=='Medium' , 'lowPriority':tickets.priority=='Low'}"
-        >
-          {{tickets.priority}}
-        </h5>
+          >
+            {{tickets.priority}}
+          </h5>
           <!-- <h5
             style="background-color: #f1c8db; padding: 7px; border-radius: 10px"
           >
             {{tickets.project.ProjectName}}
           </h5> -->
-          
-          
         </div>
-    
       </div>
-      
     </div>
     <!-- <canvas id="pie-chart" style="width: 10%; max-width: 300px"></canvas> -->
   </div>

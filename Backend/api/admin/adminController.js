@@ -135,20 +135,20 @@ const viewProfile = function (req, res) {
     });
 };
 
-const showEmployeeTicket = function(req,res){
-console.log(req.query); 
-ticket
-.findOne({
-  "project.projectId": req.query.projectId,
-  "user.userId": req.query.employeeId,
-})
-.then(function (ticketData) {
-  res.status(202).send(ticketData);
-})
-.catch(function (error) {
-  console.log(error);
-});
-}
+const showEmployeeTicket = function (req, res) {
+  console.log(req.query);
+  ticket
+    .findOne({
+      "project.projectId": req.query.projectId,
+      "user.userId": req.query.employeeId,
+    })
+    .then(function (ticketData) {
+      res.status(202).send(ticketData);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
 
 module.exports = {
   fetchingUsers,
@@ -158,5 +158,5 @@ module.exports = {
   deleteuser,
   addEmployees,
   viewProfile,
-  showEmployeeTicket
+  showEmployeeTicket,
 };

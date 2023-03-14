@@ -39,7 +39,6 @@ const fetchingUsers = function (req, res) {
     users
       .find({ "organization.organizationId": id })
       .then(function (data) {
-        
         res
           .status(202)
           .json({ usersdata: data, roleAsOrganization: true, validity: true });
@@ -51,8 +50,6 @@ const fetchingUsers = function (req, res) {
     res.status(404).json({ validity: false });
   }
 };
-
-
 
 const updatingUser = function (req, res) {
   var updateUser = {

@@ -3,31 +3,44 @@
 
   <form class="UpdatedprojectClass" name="updateProjectForm" role="form">
     <span ng-show="showError" class="formerror"
-      >Project is already present</span>
-      <label>Project Name:-</label>
-    <div style="display:flex; width:100%">
-    <input
-      type="text"
-      ng-model="updatedProjectName"
-      name="firstName"
-      placeholder="Project name"
-      ng-required="true"
-      ng-change="updatedProjectNameFunction(updatedProjectName)"
-    />
-    <div ng-hide="projectNameChanged" style="display: flex; width:0%">
- <i style="margin-top:26px ;position: relative; right:90px ; font-size:25px ; color:rgb(0, 147, 39)" 
- class="fa-solid fa-check"></i>
- <i style="margin-top:26px ;position: relative; right:68px ; font-size:25px ; color:rgb(223, 68, 68)" 
- class="fa-solid fa-xmark"></i>
-</div>
-  </div>
+      >Project is already present</span
+    >
+    <label>Project Name:-</label>
+    <div style="display: flex; width: 100%">
+      <input
+        type="text"
+        ng-model="updatedProjectName"
+        name="firstName"
+        placeholder="Project name"
+        ng-required="true"
+        ng-change="updatedProjectNameFunction(updatedProjectName)"
+      />
+      <div ng-hide="projectNameChanged" style="display: flex; width: 0%">
+        <i
+          style="
+            margin-top: 26px;
+            position: relative;
+            right: 90px;
+            font-size: 25px;
+            color: rgb(0, 147, 39);
+          "
+          class="fa-solid fa-check"
+        ></i>
+        <i
+          style="
+            margin-top: 26px;
+            position: relative;
+            right: 68px;
+            font-size: 25px;
+            color: rgb(223, 68, 68);
+          "
+          class="fa-solid fa-xmark"
+        ></i>
+      </div>
+    </div>
 
     <label>Project Manger:-</label>
-    <select 
-    
-    
-    
-    >
+    <select>
       <option value="" disabled selected>{{managerUsername}}</option>
       <option
         ng-repeat="item in response track by $index"
@@ -47,24 +60,26 @@
         </tr>
       </thead>
       <tbody>
-          <tr ng-repeat = "item in updateAssignedEmployee"  >
-            <td>{{item.name}}</td>
-            <td>{{item.username}}</td>
-            <td><button class="updateProjectDeleteClass" ng-click="deleteAssingedUser(item)">Delete </button></td>
+        <tr ng-repeat="item in updateAssignedEmployee">
+          <td>{{item.name}}</td>
+          <td>{{item.username}}</td>
+          <td>
+            <button
+              class="updateProjectDeleteClass"
+              ng-click="deleteAssingedUser(item)"
+            >
+              Delete
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
 
-
-
-    
     <select
-      
       ng-change="employeeAddedChange(employeeAdded)"
       ng-model="employeeAdded"
-    
     >
-      <option value="" disabled selected >Add Employees</option>
+      <option value="" disabled selected>Add Employees</option>
       <option
         ng-repeat="item in employeesAsignedFiltered track by $index "
         value="{{item}}"
@@ -74,18 +89,14 @@
       </option>
     </select>
     <button
-    type="submit"
-    style="width:35%"
-    ng-click="addEmployeesSubmit($event)" 
-    ng-hide="allEmployeesChanged" 
-  
-  >
-  
-    Add employee
-  </button>
- 
+      type="submit"
+      style="width: 35%"
+      ng-click="addEmployeesSubmit($event)"
+      ng-hide="allEmployeesChanged"
+    >
+      Add employee
+    </button>
 
-  
     <!-- <button
       class="createButton"
       type="submit"
@@ -96,5 +107,4 @@
       Update Project
     </button> -->
   </form>
-
 </div>

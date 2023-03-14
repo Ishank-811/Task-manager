@@ -68,26 +68,19 @@
           ></div>
         </button>
 
-     
         <hr />
-
-
-     
-
       </form>
-      <form  name="progressBarForm" role="form" style="text-align: center">
-        <label >Progress {{progressBar}}%</label>
-      <input
-      ng-model="progressBar"
-      ng-change="progressBarChange(progressBar)"
-      min="0"
-      max="100"
-      type="range"
-      class="ticketprogressBar"
-     
-
-    />
-<button
+      <form name="progressBarForm" role="form" style="text-align: center">
+        <label>Progress {{progressBar}}%</label>
+        <input
+          ng-model="progressBar"
+          ng-change="progressBarChange(progressBar)"
+          min="0"
+          max="100"
+          type="range"
+          class="ticketprogressBar"
+        />
+        <button
           type="submit"
           class="ticketButton"
           ng-disabled="progressBarForm.$invalid"
@@ -100,10 +93,9 @@
             class="loader"
           ></div>
         </button>
-  </form>
-    <hr />
+      </form>
+      <hr />
 
-    
       <div class="addComments">
         <form name="addFile" role="form" style="text-align: center">
           <input
@@ -125,8 +117,6 @@
         </form>
 
         <hr />
-
-       
       </div>
       <div
         style="

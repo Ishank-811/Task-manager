@@ -24,7 +24,7 @@ myApp.controller(
             createdAt: new Date(),
             priority: value.priority,
           };
-          
+
           employeeServices.addTicket(data, function (response) {
             console.log(response);
             alert("ticket has been initiaited");
@@ -44,7 +44,6 @@ myApp.controller(
             // $scope.response
           });
         };
-
       });
     } else {
       $window.location.href = "#!/singinAsUsers";

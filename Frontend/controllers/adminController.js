@@ -7,7 +7,7 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
   } else {
     $window.location.href = "#!/singinAsUsers";
   }
-  $scope.project= [] ; 
+  $scope.project = [];
   $scope.response = [];
   $scope.employeesAsigned = [];
   var array1 = [];
@@ -55,12 +55,12 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
 
     $scope.employeeList.push(JSON.parse(val).username);
   };
-  $scope.createProjectLoader = true ; 
+  $scope.createProjectLoader = true;
   $scope.ProjectFormDetails = function ($event) {
     $event.preventDefault();
 
     if (Date.now() <= $scope.startDate && Date.now() <= $scope.endDate) {
-      $scope.createProjectLoader = false ; 
+      $scope.createProjectLoader = false;
       if ($scope.startDate <= $scope.endDate) {
         var projectDetails = {
           projectName: $scope.updatedFirstName,
@@ -75,17 +75,16 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
           startDate: $scope.startDate,
           endDate: $scope.endDate,
         };
-     
+
         adminServices.creatingPorject(projectDetails, function (data) {
-       
           if (data.status == 404) {
             $scope.showError = true;
-            $scope.createProjectLoader = true ; 
+            $scope.createProjectLoader = true;
           } else {
-            $scope.createProjectLoader = true ; 
-            $scope.project.push(data.data); 
+            $scope.createProjectLoader = true;
+            $scope.project.push(data.data);
             alert("Project created");
-            console.log(data); 
+            console.log(data);
             $scope.updatedFirstName = "";
             $scope.projectManager = "";
             $scope.showError = false;
@@ -105,50 +104,44 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
     }
   };
 
-  $scope.deleteProject = function(val){
-    console.log(val); 
-  }
-  $scope.selectedProjectId 
-  $scope.selectEmployeeId 
-  $scope.showProfile = function (projectId,   val) {
-    // console.log(val);
-    $scope.showEmployeeTicketTable=  true; 
-    $scope.selectedProjectId = projectId ; 
-    $scope.selectEmployeeId = val;  
-
-console.log(projectId , val); 
-    adminServices.viewProfile(val , function(response){
-      console.log(response);
-       $scope.employeeFirstName = response.data.firstName
-       $scope.employeeLastName = response.data.lastName 
-       $scope.employeeUsername  = response.data.username
-       $scope.employeeRole = response.data.role
-       $scope.employeeOrganization = response.data.organization.name
-      
-    })
-    
+  $scope.deleteProject = function (val) {
+    console.log(val);
   };
-  $scope.showEmployeeTicketTable=  true; 
-  $scope.showEmployeeTicket = function(){
+  $scope.selectedProjectId;
+  $scope.selectEmployeeId;
+  $scope.showProfile = function (projectId, val) {
+    // console.log(val);
+    $scope.showEmployeeTicketTable = true;
+    $scope.selectedProjectId = projectId;
+    $scope.selectEmployeeId = val;
 
-  //  console.log( $scope.selectedProjectId  , $scope.selectEmployeeId) ; 
-   const data = {
-    projectId : $scope.selectedProjectId,  
-    employeeId  : $scope.selectEmployeeId
-   }
-   adminServices.showEmployeeTicket(data , function(response){
-    $scope.showEmployeeTicketTable=  false; 
-    $scope.EmployeeticketDetails = (response.data); 
-    
-   })
-  }
-
-  $scope.allProjectDetailsLoader = false;       
-  
-    adminServices.fetchProjects(token, function (data) {
-      $scope.allProjectDetailsLoader = true;   
-      $scope.project = (data.data);
+    console.log(projectId, val);
+    adminServices.viewProfile(val, function (response) {
+      console.log(response);
+      $scope.employeeFirstName = response.data.firstName;
+      $scope.employeeLastName = response.data.lastName;
+      $scope.employeeUsername = response.data.username;
+      $scope.employeeRole = response.data.role;
+      $scope.employeeOrganization = response.data.organization.name;
     });
+  };
+  $scope.showEmployeeTicketTable = true;
+  $scope.showEmployeeTicket = function () {
+    //  console.log( $scope.selectedProjectId  , $scope.selectEmployeeId) ;
+    const data = {
+      projectId: $scope.selectedProjectId,
+      employeeId: $scope.selectEmployeeId,
+    };
+    adminServices.showEmployeeTicket(data, function (response) {
+      $scope.showEmployeeTicketTable = false;
+      $scope.EmployeeticketDetails = response.data;
+    });
+  };
 
+  $scope.allProjectDetailsLoader = false;
 
+  adminServices.fetchProjects(token, function (data) {
+    $scope.allProjectDetailsLoader = true;
+    $scope.project = data.data;
+  });
 });

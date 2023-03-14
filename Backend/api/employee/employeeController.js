@@ -8,7 +8,7 @@ const { uploadFile } = require("../../s3");
 const multer = require("multer");
 
 const upload = multer({ dest: "uploads/" });
-// console.log(upload);
+
 var fetchingProjects = function (req, res) {
   project
     .aggregate([
@@ -121,10 +121,6 @@ const addComment = function (req, res) {
 
 var updatingStatus = function (req, res) {
 
-  // var data = {status:req.body.projectStatus}
-  // if(req.body.projectStatus){
-    
-  // }
 
   ticket
     .findByIdAndUpdate(
