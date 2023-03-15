@@ -2,14 +2,13 @@
   <h1>{{message}}</h1>
 
   <table class="content-table">
-
     <thead>
       <tr>
         <th>Projects Assigned</th>
         <th>Employee Assigned</th>
         <th>Progress</th>
         <th>Assigned At</th>
-        <th>Tickets</th>
+        <th>Status</th>
         <th>Add Tasks</th>
       </tr>
     </thead>
@@ -19,22 +18,28 @@
         <td>{{project.projectName}}</td>
 
         <td>
-          <li ng-repeat="item in project.assignedTo">{{item.name}}</li>
+          <li style="display: flex" ng-repeat="item in project.assignedTo">
+            {{item.name}}
+            <h6 style="margin: 4px" ng-hide="item.isStarted">(not started)</h6>
+          </li>
         </td>
         <td>{{ project.progress.percentage /project.assignedTo.length }} %</td>
         <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
         <td>
-          <button  class="displayTicketsClass" ng-click="getTickets(project)">
-            Tickets
+          <button class="displayTicketsClass" ng-click="getTickets(project)">
+            Status
           </button>
         </td>
-        <td><button class="displayTicketsClass"
-          data-toggle="modal"
-          data-target="#addTaskModal"
-             ng-click="addTasks(project)">
-          Add Task
-        </button>
-      </td>
+        <td>
+          <button
+            class="displayTicketsClass"
+            data-toggle="modal"
+            data-target="#addTaskModal"
+            ng-click="addTasks(project)"
+          >
+            Add Task
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -58,6 +63,15 @@
             {{tickets.progress.percentage}} %
           </h4>
         </div>
+        <button
+          data-toggle="modal"
+          data-target="#ViewTaskModal"
+          ng-click="viewAssignedTask(tickets)"
+          class="ticketButton"
+          style="margin-bottom: 30px"
+        >
+          View Tasks
+        </button>
         <div>
           <div style="display: flex; justify-content: space-evenly">
             <h5>Name:-</h5>
@@ -89,13 +103,12 @@
           >
             {{tickets.priority}}
           </h5>
-          
         </div>
       </div>
     </div>
     <!-- <canvas id="pie-chart" style="width: 10%; max-width: 300px"></canvas> -->
   </div>
- 
+
   <div class="modal" id="CreateModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -144,12 +157,9 @@
       </div>
     </div>
   </div>
-  
+
   <!---------------------------------- modal starts ----------------------------------->
 
-
-
-  
   <div class="modal" id="addTaskModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -163,34 +173,38 @@
 
         <!-- Modal body -->
         <div class="modal-body">
-  
-          <form class="projectClass" style="height:60vh" name="addTaskForm" role="form">
+          <form
+            class="projectClass"
+            style="height: 60vh"
+            name="addTaskForm"
+            role="form"
+          >
             <!-- <span ng-show="showError" class="formerror"
               >Project is already present</span
             > -->
             <input
-            type="text"
-            ng-model="taskName"
-            name="taskName"
-            placeholder="Task Name"
-            ng-required="true"
-            style="text-align: center"
-          />
+              type="text"
+              ng-model="taskName"
+              name="taskName"
+              placeholder="Task Name"
+              ng-required="true"
+              style="text-align: center"
+            />
             <input
-            type="text"
-            ng-model="taskDescription"
-            name="taskDescription"
-            placeholder="Task Description"
-            ng-required="true"
-            style="text-align: center"
-          />
+              type="text"
+              ng-model="taskDescription"
+              name="taskDescription"
+              placeholder="Task Description"
+              ng-required="true"
+              style="text-align: center"
+            />
             <select
               ng-required="true"
               ng-change="taskEmployeeListed(taskeEmployeesAssigned)"
               ng-model="taskeEmployeesAssigned"
             >
-            <option value="" disabled selected>Employees assigned</option>
-             
+              <option value="" disabled selected>Employees assigned</option>
+
               <option
                 ng-repeat="item in employeesAssignedToTask track by $index"
                 value="{{item}}"
@@ -203,7 +217,7 @@
             <div ng-repeat="item in taskEmployeeListView track by $index">
               <h5>{{item}}</h5>
             </div>
-          
+
             <label>Start Date</label>
             <input
               type="Date"
@@ -235,11 +249,8 @@
               ng-click="addTaskFunction($event)"
             >
               Create Task
-             
             </button>
           </form>
-
-
         </div>
 
         <!-- Modal footer -->
@@ -253,7 +264,61 @@
   </div>
 
   <!------------------------------------ modal ends ------------------------------------->
+
+  <!-------------------------------------- view task modal starts-------------------------------------------->
+
+  <div class="modal" id="ViewTaskModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">View Tasks</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <!-- <h1>hello</h1> -->
+
+          <h5 style="color: red">{{showNoTaskAssigned}}</h5>
+          <div
+            ng-repeat="item in viewTask track by $index"
+            style="
+              width: 60%;
+              background-color: whitesmoke;
+              padding: 14px;
+              border-radius: 12px;
+              margin: 10px;
+            "
+          >
+            <div style="display: flex; justify-content: space-between">
+              <h5>{{item.task.taskName}}</h5>
+              <h5>{{item.status}}</h5>
+            </div>
+            <h6>{{item.task.taskDescription}}</h6>
+
+            <h6>
+              <i class="fa-solid fa-calendar-days"></i> {{item.startDate |
+              date:"dd/MM/yyyy"}}
+            </h6>
+            <h6>
+              <i class="fa-solid fa-calendar-days"></i> {{item.endDate |
+              date:"dd/MM/yyyy"}}
+            </h6>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-------------------------------------- view task modal ends-------------------------------------------->
 </div>
-
-
-

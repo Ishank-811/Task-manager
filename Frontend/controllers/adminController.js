@@ -45,9 +45,7 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
       return element.assignedUserId;
     });
     console.log(array1);
-    employeesAsignedFiltered = $scope.employeesAsigned.filter(function (
-      element
-    ) {
+    employeesAsignedFiltered = $scope.employeesAsigned.filter(function (element) {
       return !array1.includes(element._id);
     });
 
@@ -116,25 +114,37 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
     $scope.selectEmployeeId = val;
 
     console.log(projectId, val);
+    $scope.showStatusError  = true ; 
     adminServices.viewProfile(val, function (response) {
-      console.log(response);
+      console.log(response);  
+      $scope.showStatusError  = true ; 
       $scope.employeeFirstName = response.data.firstName;
       $scope.employeeLastName = response.data.lastName;
       $scope.employeeUsername = response.data.username;
       $scope.employeeRole = response.data.role;
       $scope.employeeOrganization = response.data.organization.name;
     });
-  };
+  }; 
   $scope.showEmployeeTicketTable = true;
+  
   $scope.showEmployeeTicket = function () {
-    //  console.log( $scope.selectedProjectId  , $scope.selectEmployeeId) ;
+    $scope.showStatusError = true ; 
+   
     const data = {
       projectId: $scope.selectedProjectId,
       employeeId: $scope.selectEmployeeId,
     };
     adminServices.showEmployeeTicket(data, function (response) {
-      $scope.showEmployeeTicketTable = false;
-      $scope.EmployeeticketDetails = response.data;
+      $scope.showStatusError = true ; 
+      if(response.data.length==0){
+        $scope.showStatusError = false ; 
+      }else{
+        $scope.showEmployeeTicketTable = false;
+        $scope.showStatusError = true ; 
+        $scope.EmployeeticketDetails = response.data;
+      } 
+    
+      
     });
   };
 

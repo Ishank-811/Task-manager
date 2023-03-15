@@ -41,6 +41,7 @@ const creatingPorject = function (req, res) {
           createdAt: req.body.createdAt,
           startDate: req.body.startDate,
           endDate: req.body.endDate,
+          progress : {percentage:0}
         });
         response
           .save()

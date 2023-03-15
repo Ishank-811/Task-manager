@@ -15,7 +15,7 @@ myApp.controller(
         if (data.data.token) {
           sessionStorage.setItem("token", data.data.token);
         } else {
-          $scope.showError = true;
+          $scope.showError = true; 
           $scope.signinMessage = "SIGN IN";
           return;
         }

@@ -40,7 +40,7 @@ const ProjectSchema =  mongoose.Schema({
         required:true , 
     }, 
     progress :{
-        percentage:{type:Number, Default:0} , 
+        percentage:{type:Number, Default:0 , required:true} , 
         UpdatedAt : {type:Date , Default :new Date()},  
     },
   

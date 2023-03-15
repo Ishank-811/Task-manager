@@ -1,8 +1,10 @@
 var project = require("../../model/projects");
 var comments = require("../../model/commentsModel");
 var ticket = require("../../model/ticketModel");
+var task = require("../../model/taskModel"); 
 const fs = require("fs");
 const util = require("util");
+var mongodb = require('mongodb'); 
 const unlinkfile = util.promisify(fs.unlink);
 const { uploadFile } = require("../../s3");
 const multer = require("multer");
@@ -67,6 +69,10 @@ var addTicket = function (req, res) {
     },
     createdAt: req.body.createdAt,
     priority: req.body.priority,
+    progress :{
+      percentage:0 , 
+      UpdatedAt : new Date(),  
+    }
   });
   console.log(response);
   response
@@ -198,6 +204,32 @@ const updateProgress = function (req, res) {
     });
 };
 
+var viewAssignedTask = function(req,res){
+  console.log(req.user._id); 
+  console.log(req.query.projectId);
+  task
+    .find({
+      "project.projectId": req.query.projectId,
+      "user.userId":new mongodb.ObjectId(req.user._id),
+    })
+    .then(function (ticketData) {
+      res.status(202).send(ticketData);
+    })
+    .catch(function (error) {
+      console.log(error);
+    }); 
+
+}
+
+var taskStatusUpdate = function(req,res){
+  console.log(req.params);
+  task.findByIdAndUpdate(req.params.taskId , {status:req.body.taskStatus} , {new:true}).then(function(response){
+    res.status(202).send(response); 
+  }).catch(function(error){
+    console.log(error); 
+  })
+}
+
 module.exports = {
   fetchingProjects,
   addTicket,
@@ -206,4 +238,7 @@ module.exports = {
   updatingStatus,
   uploadFileToUrl,
   updateProgress,
+  viewAssignedTask,
+  taskStatusUpdate
+
 };

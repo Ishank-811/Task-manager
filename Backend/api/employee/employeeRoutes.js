@@ -35,5 +35,9 @@ router.patch(
 );
 
 router.patch("/updateProgress/:ticketId", employeeController.updateProgress);
+router.get("/viewAssignedTask" ,passport.authenticate("level2", { session: false }), 
+ employeeController.viewAssignedTask); 
+
+router.patch("/taskStatusUpdate/:taskId" ,employeeController.taskStatusUpdate )
 
 module.exports = router;

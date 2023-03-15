@@ -5,12 +5,19 @@ myApp.controller(
 
     console.log(token);
     if (token != null) {
+      $scope.showNoEmployees = false; 
       organizationServices.ReadingData(token, function (data) {
         if (data.data.validity) {
           if (!data.data.roleAsOrganization) {
             $window.location.href = "#!/signinAsOrganization";
           } else {
             $scope.response = data.data.usersdata;
+            console.log($scope.response); 
+            if($scope.response.length==0){
+              $scope.showNoEmployees = true;  
+            }else{
+              $scope.showNoEmployees = false;  
+            }
           }
         } else {
           $window.location.href = "#!/signinAsOrganization";

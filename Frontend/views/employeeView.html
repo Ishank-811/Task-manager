@@ -56,12 +56,12 @@
               ng-hide="item.isStarted"
               ng-click="startTicket(project)"
             >
-              Start Ticket
+              Start Project
               <!-- {{startTicketMessage}} <div ng-hide="hideLoader" class="loader"></div>  -->
             </button>
             <button style="border: none" ng-show="item.isStarted">
               <a ui-sref="EmployeeDashboard.ticketDetails({id:project._id})"
-                >View Ticket</a
+                >View Project</a
               >
             </button>
           </td>

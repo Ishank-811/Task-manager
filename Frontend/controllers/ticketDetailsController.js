@@ -9,12 +9,12 @@ myApp.controller(
         { projectId: $stateParams.id, token },
         function (response) {
           $scope.status = response.data.status;
-
           $scope.projectManagerName = response.data.project.projectManagerName;
           $scope.projectName = response.data.project.ProjectName;
           $scope.priority = response.data.priority;
           $scope.ticketId = response.data._id;
-          console.log(response.data.progress.percentage);
+          // console.log(response.data.progress.percentage);
+          
           $scope.progressBar = response.data.progress.percentage;
           $scope.progressBarStore = response.data.progress.percentage;
         }
@@ -98,6 +98,41 @@ myApp.controller(
           }
         });
       };
+       
+      $scope.viewAssignedTask = function(){
+        var data={
+          projectId :$stateParams.id, 
+          token 
+        }
+        employeeServices.viewAssignedTask(data , function(response){
+          console.log(response);
+          if(response.data.length==0){
+          $scope.showNoTaskAssigned = "No task Assigned"
+          }else{
+            $scope.viewTask =response.data ;  
+            $scope.showNoTaskAssigned = ""; 
+            
+          }
+        })
+      }
+
+      $scope.taskStatusChangeFunction = function( index){
+     
+        $scope.isSelected =index;
+      } 
+      $scope.taskStatusFunction= function(taskStatus , taskId){
+        var data = {
+          taskStatus , 
+          taskId  , 
+        }
+        employeeServices.taskStatusUpdate(data , function(response){
+          console.log(response);
+          alert("Task Status Updated"); 
+          $scope.isSelected="" ; 
+        })
+         
+      }
+
 
       $scope.addCommentsFormSubmit = function () {
         $scope.CommentLoader = false;
@@ -113,6 +148,9 @@ myApp.controller(
           $scope.addComments = "";
         });
       };
+
+
+
     } else {
       $window.location.href = "#!/singinAsUsers";
     }

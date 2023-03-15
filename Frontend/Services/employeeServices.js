@@ -149,6 +149,43 @@ var fac = function ($http) {
           }
         );
     },
+    viewAssignedTask : function(data , cb){
+      var config = {
+        headers: {
+          Authorization: "Bearer " + data.token,
+          Accept: "application/json;odata=verbose",
+        },
+      };
+
+      $http.get(`http://localhost:8080/employee/viewAssignedTask?projectId=${data.projectId}`, config).then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+      
+    },
+    taskStatusUpdate : function(data , cb){
+      console.log(data);
+      $http
+      .patch(
+        `http://localhost:8080/employee/taskStatusUpdate/${data.taskId}`,
+        data,
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+
+    }
   };
 };
 

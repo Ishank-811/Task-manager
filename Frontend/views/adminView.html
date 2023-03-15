@@ -254,11 +254,11 @@
                 <div disabled="true" class="d-flex mt-2">
 
                   <button  ng-style="{'display': employeeRole!='Manager' ? 'block' : 'none'}" ng-click="showEmployeeTicket()" class="btn1 btn-dark">
-                    View Ticket
+                    View Status
                   </button>
                  
                 </div>
-
+                <h6 style="color:red" ng-hide="showStatusError">Employee have not started the project yet</h6>
                 <table style="margin-left: -25px;" ng-hide="showEmployeeTicketTable" class="content-table">
                   <thead>
                     <tr>

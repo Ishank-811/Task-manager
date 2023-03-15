@@ -13,9 +13,10 @@ myApp.controller(
       managerServices.readingdata(token, function (data) {
         $scope.response = data.data.projectDetails;
       });
-
+      // var array1 = []; 
       $scope.getTickets = function (val) {
-        // console.log(val._id);
+
+
         var data = {
           projectId: val._id,
           token,
@@ -23,6 +24,7 @@ myApp.controller(
         $scope.ticket = "";
         $scope.noTickets = false;
         $scope.ViewTicketLoader = false;
+        $scope.employeeWithNoTicked=[]  ;
         managerServices.viewTicket(data, function (response) {
           console.log(response.data.ticketDetails);
           if (response.data.ticketDetails.length == 0) {
@@ -30,11 +32,12 @@ myApp.controller(
             $scope.noTickets = true;
             $scope.hideticket = true;
           } else {
+          
             $scope.ViewTicketLoader = true;
             $scope.noTickets = false;
             $scope.hideticket = false;
             $scope.ticket = response.data.ticketDetails;
-            // console.log($scope.ticket);
+
             var inactiveNumber = 0;
             var completedNumber = 0;
             var progressNumber = 0;
@@ -146,13 +149,36 @@ myApp.controller(
       $scope.taskEmployeeList = []  ; 
       $scope.taskEmployeeListView = [] ; 
       $scope.taskEmployeeListed = function(val){
-        console.log(val); 
-        $scope.taskEmployeeListView.push(JSON.parse(val).username); 
-       $scope.taskEmployeeList.push({
-      assignedUserId: JSON.parse(val)._id,
+        // console.log(val); 
+      if(val!=undefined){
+      $scope.taskEmployeeListView.push(JSON.parse(val).username); 
+      $scope.taskEmployeeList.push({
+      assignedUserId: JSON.parse(val).assignedUserId,
       name: JSON.parse(val).name,
       username: JSON.parse(val).username,
        })
+      }
+    }
+
+      $scope.viewAssignedTask = function(val){
+        $scope.viewTask=""; 
+            var data = {
+             userId:val.user.userId  ,
+             projectId : val.project.projectId
+            }
+              managerServices.viewAssignedTask(data , function(response){
+                if(response.data.length==0){
+                  $scope.showNoTaskAssigned = "No task Assigned";
+                  $scope.viewTask=""; 
+                  }else{
+                    $scope.viewTask =response.data ;  
+                    $scope.showNoTaskAssigned = ""; 
+                    
+                  }
+            })
+
+
+             
       }
 
 

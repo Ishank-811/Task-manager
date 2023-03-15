@@ -87,4 +87,23 @@ for(var i=0 ; i<req.body.taskeEmployeesAssigned.length ; i++){
 res.status(202).send({taskCreated:true}); 
 }
 
-module.exports = { fetchingProjects, viewTicket, viewComments , addTasks };
+var viewAssignedTask  = function(req,res){
+  console.log(req.query.projectId);
+  console.log(req.query.employeeId);    
+
+  task
+  .find({
+    "project.projectId": req.query.projectId,
+    "user.userId":req.query.employeeId,
+  })
+  .then(function (ticketData) {
+    res.status(202).send(ticketData);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+}
+
+
+module.exports = { fetchingProjects, viewTicket, viewComments , addTasks,  viewAssignedTask };

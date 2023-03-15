@@ -75,7 +75,26 @@ var fac = function ($http) {
             return err;
           }
         );
-    }
+    },
+    viewAssignedTask : function(data,  cb){
+      console.log(data);
+      $http
+      .get(
+        `http://localhost:8080/manager/viewAssignedTask?projectId=${data.projectId}&employeeId=${data.userId}`
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      );
+
+    },
+    
+
   };
 };
 

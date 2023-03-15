@@ -22,4 +22,6 @@ router.get(
 router.post("/addTasks" , passport.authenticate("level2", { session: false }),
 managerController.addTasks)
 
+router.get("/viewAssignedTask" , managerController.viewAssignedTask); 
+
 module.exports = router;

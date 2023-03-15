@@ -10,6 +10,16 @@
       </h5>
       <h5 class="ticketStatus">{{status}}</h5>
     </div>
+
+    <hr />
+    <button
+      data-toggle="modal"
+      data-target="#ViewTaskModal"
+      ng-click="viewAssignedTask()"
+      class="ticketButton"
+    >
+      View Tasks
+    </button>
     <hr />
     <div class="ticketDetails">
       <h5>Project Name:- {{projectName}}</h5>
@@ -139,6 +149,8 @@
     </div>
   </div>
 
+  <!----------------------------- comment modal ------------------------------------------------------>
+
   <div class="modal" id="CreateModal">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -174,4 +186,67 @@
       </div>
     </div>
   </div>
+  <!----------------------------- comment modal ends ------------------------------------------------------>
+
+  <!-------------------------------------- view task modal starts-------------------------------------------->
+
+  <div class="modal" id="ViewTaskModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">View Tasks</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <!-- <h1>hello</h1> -->
+          <h5 style="color:red">{{showNoTaskAssigned}}</h5>
+          <div
+            ng-repeat="item in viewTask track by $index"
+            style="
+              width: 80%;
+              background-color: whitesmoke;
+              padding: 14px;
+              border-radius: 12px;
+              margin:10px;
+            "
+          >
+            <div style="display: flex; justify-content: space-between">
+              <h5>{{item.task.taskName}}</h5>
+             
+              <select
+          ng-required="true"
+          ng-model="taskStatus"
+          ng-change="taskStatusChangeFunction( $index)"
+          style="text-align: center; margin-left: 10px ; width:50%"
+        >
+        <option value="" disabled selected>{{item.status}}</option>
+          <option value="started">Started</option>
+          <option value="working">Working</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button  ng-show="isSelected===$index" ng-click="taskStatusFunction(taskStatus , item._id)">update</button>
+            </div>
+            <h6>{{item.task.taskDescription}}</h6>
+
+            <h6><i class="fa-solid fa-calendar-days"></i>  {{item.startDate | date:"dd/MM/yyyy"}}</h6>
+            <h6> <i class="fa-solid fa-calendar-days"></i> {{item.endDate | date:"dd/MM/yyyy"}}</h6>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-------------------------------------- view task modal ends-------------------------------------------->
 </div>
