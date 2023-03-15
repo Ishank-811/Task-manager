@@ -13,6 +13,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   organizationController.registeringUsers
 );
+router.get("/searchUser",organizationController.searchUser ); 
 router.patch("/updatingUser/:id", organizationController.updatingUser);
 
 module.exports = router;

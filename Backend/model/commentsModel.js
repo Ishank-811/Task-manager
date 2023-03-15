@@ -13,7 +13,6 @@ const commentSchema =  mongoose.Schema({
     createdAt:{
         type:Date, 
         default:new Date(),
-     
     }
 })
 const Comment= mongoose.model("Comment", commentSchema);

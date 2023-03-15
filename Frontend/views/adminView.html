@@ -151,15 +151,16 @@
       ng-repeat="project in project | filter : searchProject | orderBy:projectSortedBy "
     >
       <div class="projectHeader">
-        <h3 style="font-weight: bold">{{project.projectName}}</h3>
         <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
+        <h4 style="font-weight: bold ; margin-top:10px ;">{{project.projectName}}</h4>
+      
         <div class="projectActions">
-          <h3 style="color: rgb(227, 79, 79)">
+          <h3 style="color: rgb(227, 79, 79) ;margin-top:10px ;">
             <i class="fa-sharp fa-solid fa-trash" ng-click="deleteProject(project._id)"></i>
           </h3>
 
           <h3
-            style="color: rgb(3, 127, 59); cursor: pointer"
+            style="color: rgb(3, 127, 59); cursor: pointer ; margin-top:10px ;"
             ui-sref="AdminDashboard.updateProjectDetails({id:project._id})"
             data-toggle="modal"
             data-target="#myModal3"

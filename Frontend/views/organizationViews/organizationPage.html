@@ -6,16 +6,21 @@
     <h2 style="display: flex; flex-direction: column; align-items: center">
       Employee
     </h2>
+    <input
+    class="searchClass"
+    placeholder="Search Employee"
+    ng-change = searchEmployeeFunction(searchEmployee)
+    ng-model="searchEmployee"
+  />
   <button class="createUserButton" data-toggle="modal"
   data-target="#CreateModal">
     <i class="fa-solid fa-plus"></i>Add Employee
   </button>
  
+
+
 </div>
-
-
  
-
   <div class="listOfUsers">
   <h1 style="color:red ; height:80vh ; display: flex; align-items: center;" ng-show="showNoEmployees">No Employee Added yet </h1>   
     <div class="employeeCard" ng-repeat="res in response">

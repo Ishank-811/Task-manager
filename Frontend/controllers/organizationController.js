@@ -1,17 +1,19 @@
 myApp.controller(
   "organizationController",
-  function ($scope, $window, organizationServices) {
+  function ($scope, $window,$timeout,  organizationServices) {
     var token = sessionStorage.getItem("token");
 
     console.log(token);
     if (token != null) {
       $scope.showNoEmployees = false; 
+      $scope.adminId ; 
       organizationServices.ReadingData(token, function (data) {
         if (data.data.validity) {
           if (!data.data.roleAsOrganization) {
             $window.location.href = "#!/signinAsOrganization";
           } else {
             $scope.response = data.data.usersdata;
+            $scope.adminId   =data.data.adminId
             console.log($scope.response); 
             if($scope.response.length==0){
               $scope.showNoEmployees = true;  
@@ -51,6 +53,30 @@ myApp.controller(
     $scope.updatedUsername;
     $scope.UpdatedPassword;
     $scope.updatedRole;
+
+    var debounceTimer; 
+     
+    $scope.searchEmployeeFunction = function(val){
+      
+
+          if(debounceTimer){
+          $timeout.cancel(debounceTimer)
+          }       
+        debounceTimer = $timeout(function(){
+          var data ={
+            adminId:$scope.adminId, 
+            val
+          }
+          organizationServices.searchUser(data , function(response){
+            console.log(response); 
+            $scope.response = response.data;
+          })
+        }, 800)
+      
+
+    }
+
+
     $scope.updateUser = function (
       _id,
       firstName,
@@ -75,7 +101,8 @@ myApp.controller(
           role: $scope.updatedRole,
         };
         organizationServices.updateUser(data, function (response) {
-          console.log(response);
+          console.log(response.data);
+         
         });
         // console.log()  ;
       };

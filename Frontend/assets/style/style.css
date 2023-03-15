@@ -421,7 +421,7 @@ button{
 }
 .employeeCard{
   display: flex;
-  width: 30%;
+  width: 28%;
   border : 1px solid rgb(232, 224, 224);
   border-radius:10px; 
   margin:30px;
@@ -466,7 +466,7 @@ align-items: center;
   box-shadow: 2px 1px 10px 0px rgb(156, 156, 156);
 }
 .profileRole{
-  width:30%;
+  width:60%;
   margin-bottom: 10px;
   display: flex;
   padding:3px; 
@@ -500,7 +500,8 @@ align-items: center;
   font-size:16px;
   padding:4px;
   padding-left:20px;
-  padding-right:20px; 
+  padding-right:20px;
+  height:45px  ;  
 }
 .pageHeader{
   display: flex;
@@ -508,10 +509,11 @@ align-items: center;
   justify-content: space-evenly;
 }
 .projectDetailsClass{
-  width:25% ;
+  width:22% ;
   border-radius: 20px;
   background-color: rgb(245, 245, 245);
   margin:20px;
+  height:75vh;
 
 }
 .allProjectClass{
@@ -530,10 +532,11 @@ align-items: center;
 }
 .divCenter{
   font-size:30px;
-  position: relative;
-  bottom:60px;
-  right:20px ;  
-  padding:14px;
+  /* position: relative; */
+  /* bottom:60px; */
+  /* right:20px ;   */
+  
+  padding:8px;
   border-radius: 10px;
   background-color: #0ff4c6;
 }

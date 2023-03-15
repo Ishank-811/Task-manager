@@ -2,7 +2,7 @@ const users = require("../../model/usersModel");
 
 const registeringUsers = function (req, res) {
   users
-    .findOne({ username: req.body.username })
+    .findOne({ "organization.organizationId": req.user._id  , username: req.body.username })
     .then(function (userdetail) {
       if (userdetail) {
         res.status(404).send("Employee already exist");
@@ -41,7 +41,7 @@ const fetchingUsers = function (req, res) {
       .then(function (data) {
         res
           .status(202)
-          .json({ usersdata: data, roleAsOrganization: true, validity: true });
+          .json({ usersdata: data, roleAsOrganization: true, validity: true , adminId:id});
       })
       .catch(function (e) {
         console.log(e);
@@ -52,21 +52,36 @@ const fetchingUsers = function (req, res) {
 };
 
 const updatingUser = function (req, res) {
-  var updateUser = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    username: req.body.username,
-    password: req.body.password,
-    role: req.body.role,
-  };
-  users
-    .findByIdAndUpdate(req.params.id, updateUser, { new: true })
-    .then(function (userdetail) {
-      console.log(userdetail);
-    })
-    .catch(function (err) {
-      console.log(err);
-    });
+  // var updateUser = {
+  //   firstName: req.body.firstName,
+  //   lastName: req.body.lastName,
+  //   username: req.body.username,
+  //   password: req.body.password,
+  //   role: req.body.role,
+  // };
+  // users
+  //   .findByIdAndUpdate(req.params.id, updateUser, { new: true })
+  //   .then(function (userdetail) {
+  //     console.log(userdetail);
+  //   })
+  //   .catch(function (err) {
+  //     console.log(err);
+  //   });
+
 };
 
-module.exports = { registeringUsers, fetchingUsers, updatingUser };
+const searchUser = function(req,res){
+console.log(req.query); 
+
+const regex = new RegExp(req.query.value, 'i');
+users.find({ "organization.organizationId": req.query.adminId,
+username:regex}).then(function(response){
+  res.status(200).send(response); 
+}).catch(function(error){
+  console.log(error); 
+})
+
+
+}
+
+module.exports = { registeringUsers, fetchingUsers, updatingUser , searchUser };

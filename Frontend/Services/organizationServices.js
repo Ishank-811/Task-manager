@@ -44,7 +44,7 @@ var fac = function ($http) {
       console.log(data);
       $http
         .patch(
-          `http://localhost:8080/organization//updatingUser/${data._id}`,
+          `http://localhost:8080/organization/updatingUser/${data._id}`,
           data
         )
         .then(function (res) {
@@ -54,6 +54,19 @@ var fac = function ($http) {
           console.log(err);
         };
     },
+    searchUser : function(data , cb){
+      console.log(data); 
+      $http
+        .get(
+          `http://localhost:8080/organization/searchUser?adminId=${data.adminId}&value=${data.val} `
+        )
+        .then(function (res) {
+          cb(res);
+        }),
+        function (err) {
+          console.log(err);
+        };
+    }
   };
 };
 
