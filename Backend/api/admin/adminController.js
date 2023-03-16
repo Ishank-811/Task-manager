@@ -6,20 +6,20 @@ var organizationId, organizationName;
 const fetchingUsers = function (req, res) {
   organizationId = req.user.organization.organizationId;
   organizationName = req.user.organization.name;
-  users
+  Promise.all([
+    users
     .find({
       $and: [
         { "organization.organizationId": req.user.organization.organizationId },
         { $or: [{ role: "Manager" }, { role: "Employee" }] },
       ],
-    })
-    .then(function (userdata) {
-      res.status(202).json({ userdata, role: req.user.role });
-    })
-    .catch(function (error) {
-      console.log(error);
-      res.status(404).send({ error });
-    });
+    }),
+    project.find({}).count(),
+  ]).then(function(response){
+    
+    res.status(202).json({ response, role: req.user.role});
+  })
+
 };
 
 const creatingPorject = function (req, res) {
@@ -59,10 +59,12 @@ const creatingPorject = function (req, res) {
 };
 
 const fetchProjects = function (req, res) {
+  var LIMIT = 8 ; 
+  var startIndex  = (Number(req.query.currentPage)-1)*8; 
   project
     .find({
       "organization.organizationId": req.user.organization.organizationId,
-    })
+    }).sort({_id:-1}).limit(LIMIT).skip(startIndex) 
     .then(function (projectDetails) {
       res.status(202).send(projectDetails);
     })
@@ -72,11 +74,9 @@ const fetchProjects = function (req, res) {
 };
 
 const getProjectDetails = function (req, res) {
-  // console.log(req.params);
   project
     .findById(req.params.id, "assignedTo projectManger projectName")
     .then(function (projectDetails) {
-      // console.log(projectDetails);
       res.status(202).send(projectDetails);
     })
     .catch(function (error) {

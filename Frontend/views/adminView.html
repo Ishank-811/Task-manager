@@ -223,8 +223,26 @@
         </ul>
       </div>
     </div>
+   
+  
   </div>
-
+  <ul class="pagination">
+    <li>
+      <button  ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(1)">First</button>
+    </li>
+    <li >
+      <button ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(currentPage - 1)">Previous</button>
+    </li>
+    <li ng-repeat="page in pages track by $index" ng-class="{active: currentPage == page}">
+      <button ng-click="setPage(page)">{{page}}</button>
+    </li>
+    <li>
+      <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(currentPage + 1)">Next</button>
+    </li>
+    <li>
+      <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(totalPages)">Last</button>
+    </li>
+  </ul>
   <!---------------------------------- modal starts ----------------------------------->
 
   <div class="modal" id="myModal">

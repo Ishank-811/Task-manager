@@ -794,6 +794,31 @@ hr .new1 {
   align-items: center;
   padding-top:20px;
 }
+
+.pagination{
+  justify-content: center;
+  padding:40px;
+}
+
+.pagination li{
+margin:6px; 
+
+}
+
+.pagination li button{
+padding:4px ; 
+background-color: transparent;
+color:#19a0fa; 
+border:none ;
+font-size:20px ; 
+}
+.disabledPage {
+  /* background-color: red!important; */
+  color:rgb(208, 204, 204)!important;
+  cursor: not-allowed!important; 
+}
+
+
 /* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }

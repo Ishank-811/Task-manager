@@ -34,11 +34,11 @@ var fac = function ($http) {
     fetchProjects: function (data, cb) {
       var config = {
         headers: {
-          Authorization: "Bearer " + data,
+          Authorization: "Bearer " + data.token,
           Accept: "application/json;odata=verbose",
         },
       };
-      $http.get("http://localhost:8080/admin/fetchProjects", config).then(
+      $http.get(`http://localhost:8080/admin/fetchProjects?currentPage=${data.currentPage}`, config).then(
         function (res) {
           console.log(res);
           cb(res);
@@ -62,13 +62,7 @@ var fac = function ($http) {
       );
     },
     showEmployeeTicket: function (data, cb) {
-      console.log(data);
-      // var config = {
-      //   headers: {
-      //     Authorization: "Bearer " + data.token,
-      //     Accept: "application/json;odata=verbose",
-      //   },
-      // };
+     
       $http
         .get(
           `http://localhost:8080/admin/showEmployeeTicket?projectId=${data.projectId}&employeeId=${data.employeeId}`

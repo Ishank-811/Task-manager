@@ -11,11 +11,12 @@ app.use(passport.initialize());
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
-const multer = require("multer");
+var multer = require("multer");
 
-app.get("/", (req, res) => {
+
+app.get("/" , function(req,res){
   res.send("app is running");
-});
+})
 app.use("/", require("./api/singup/singupRoutes"));
 app.use("/signin", require("./api/singin/singinRoute"));
 app.use("/signinAsUser", require("./api/singin/singinAsUsersRoute"));
@@ -25,6 +26,6 @@ app.use("/manager", require("./api/manager/managerRoute"));
 app.use("/employee", require("./api/employee/employeeRoutes"));
 app.use("/superAdmin", require("./api/superAdmin/superAdminRoutes"));
 
-app.listen(port, () => {
+app.listen(port, function(){
   console.log(`listening at port number ${port}`);
 });

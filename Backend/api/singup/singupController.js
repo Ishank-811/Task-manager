@@ -1,6 +1,6 @@
 const organization = require("../../model/oganizationModel");
 
-const registerAsorganization = (req, res) => {
+const registerAsorganization = function(req, res){
   organization
     .findOne({ organizationUsername: req.body.email })
     .then(function (userdetail) {
