@@ -50,8 +50,14 @@ myApp.config(function ($stateProvider) {
       url: "/updateProjectDetails/:id",
       templateUrl: "views/updateProjectDetails.html",
       controller: "updateProjectDetailsController",
+    })
+    .state("MangerDashboard.viewTask", {
+      url: "/viewTask",
+      templateUrl: "views/managerViewTask.html",
+      controller: "mangerController",
     });
 });
+
 
 var mycontroller = function ($scope, $window) {
   var token = sessionStorage.getItem("token");

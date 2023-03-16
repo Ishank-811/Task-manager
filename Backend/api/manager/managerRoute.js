@@ -23,5 +23,7 @@ router.post("/addTasks" , passport.authenticate("level2", { session: false }),
 managerController.addTasks)
 
 router.get("/viewAssignedTask" , managerController.viewAssignedTask); 
-
+router.get("/showAllTask" ,passport.authenticate("level2", { session: false }), managerController.showAllTask )
+router.patch("/updateTask/:taskId" , managerController.updateTask); 
+router.post("/dateWiseAnalysis" , managerController.dateWiseAnalysis) ;  
 module.exports = router;

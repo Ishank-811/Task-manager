@@ -91,9 +91,61 @@ var fac = function ($http) {
           return err;
         }
       );
-
     },
-    
+    showAllTask : function(token , cb){
+
+      var config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json;odata=verbose",
+        },
+      };
+
+      $http
+      .get(
+        "http://localhost:8080/manager/showAllTask"  , config
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      );
+    } , 
+    updateTask : function( taskId,data , cb){
+      $http
+      .patch(
+        `http://localhost:8080/manager/updateTask/${taskId}`,
+        data,
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    },
+    dateWiseAnalysis : function(data , cb){
+      $http
+      .post(
+        "http://localhost:8080/manager/dateWiseAnalysis"  ,data
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    }
 
   };
 };

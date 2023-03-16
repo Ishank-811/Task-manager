@@ -1,0 +1,212 @@
+<div style="padding-bottom: 50px">
+  <form style="margin: 40px" name="dateAnalysisForm">
+    <label>Start Date</label>
+    <input
+      style="width: 15%"
+      ng-required="true"
+      class="searchClass"
+      type="date"
+      ng-model="startDateForAnalysis"
+    />
+    <label>End Date</label>
+    <input
+      style="width: 15%"
+      ng-required="true"
+      class="searchClass"
+      type="date"
+      ng-model="endDateForAnalysis"
+    />
+    <button
+      class="createUserButton"
+      type="submit"
+      ng-disabled="dateAnalysisForm.$invalid"
+      ng-click="dateWiseAnalysis($event)"
+    >
+      View Analysis
+    </button>
+  </form>
+  <div
+    style="
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+      margin-bottom: 50px;
+    "
+  >
+    <h3 ng-show="showNoAnalysis" style="color:red">No task created between this dates</h3>
+    <div ng-repeat="item in analysis track by $index" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>{{item.status}}</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{item.count}}
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <table style="width: 80%" class="content-table">
+    <thead>
+      <tr>
+        <th>Projects Assigned</th>
+        <th>Task Assigned</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="project in response">
+        <td>{{project.projectName}}</td>
+
+        <td>
+          <li ng-repeat="item in showTaskList | filter : project.projectName">
+            {{item.task.taskName}}
+            <i
+              data-toggle="modal"
+              data-target="#myModal"
+              style="margin: 10px; color: #af0000; cursor: pointer"
+              class="fa-solid fa-pen-to-square"
+              ng-click="taskDetails(item)"
+            ></i>
+
+            <h6 style="margin: 4px">
+              Description-> {{item.task.taskDescription}}
+            </h6>
+            <h6 style="margin: 4px">Assigned To-> {{item.user.name}}</h6>
+            <!-- <h6 style="margin: 4px" >Start Date-> {{item.startDate | date:"dd/MM/yyyy"}} </h6>
+            <h6 style="margin: 4px" >End Date-> {{item.endDate | date:"dd/MM/yyyy"}} </h6> -->
+          </li>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!---------------------------------- modal starts ----------------------------------->
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Update Task</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            style="height: fit-content"
+            class="projectClass"
+            name="projectForm"
+            role="form"
+          >
+            <span ng-show="showError" class="formerror"
+              >Project is already present</span
+            >
+            <input
+              type="text"
+              ng-model="updatedTaskName"
+              name="updatedTaskName"
+              placeholder="Task Name"
+              style="text-align: center"
+            />
+            <input
+              type="text"
+              ng-model="updatedTaskDescription"
+              name="updatedTaskDescription"
+              placeholder="Task Description"
+              style="text-align: center"
+            />
+            <!-- <select
+                  ng-required="true"
+                  ng-model="projectManager"
+                  ng-change="projectManagerChange(projectManager)"
+                >
+                  <option value="" disabled selected>Project manager</option>
+                  <option
+                    ng-repeat="item in response track by $index"
+                    value="{{item}}"
+                    name="role"
+                  >
+                    {{item.username}}
+                  </option>
+                </select> -->
+            <!-- <select
+                  ng-required="true"
+                  ng-change="employeeListed(employeesAssigned)"
+                  ng-model="employeesAssigned"
+                >
+                  <option value="" disabled selected>Employees assigned</option>
+                  <option
+                    ng-repeat="item in employeesAsigned track by $index"
+                    value="{{item}}"
+                    name="role"
+                  >
+                    {{item.username}}
+                  </option>
+                </select> -->
+            <!-- <div ng-repeat="item in employeeList track by $index">
+                  <h5>{{item}}</h5>
+                </div> -->
+            <!-- <select ng-required="true" ng-model="priorityStatus">
+                  <option value="" disabled selected>Priority</option>
+                  <option value="High">High</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Low">Low</option>
+                </select> -->
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="updatedStartDate"
+              name="updatedStartDate"
+              value="{{StartDateValue}}"
+              placeholder="Start Date"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="updatedEndDate"
+              value="{{EndDateValue}}"
+              name="updatedEndDate"
+              placeholder="updatedEndDate"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-click="updateTaskFunction($event)"
+            >
+              Update Task
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------------------------------------ modal ends ------------------------------------->
+</div>
