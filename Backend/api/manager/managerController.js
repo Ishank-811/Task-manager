@@ -4,7 +4,11 @@ var comments = require("../../model/commentsModel");
 var task = require("../../model/taskModel");
 var moment = require("moment"); 
 const { default: mongoose } = require("mongoose");
+
+
 var fetchingProjects = function (req, res) {
+  var LIMIT = 4 ;  
+  var startIndex  = (Number(req.query.currentPage)-1)*4; 
   project
     .aggregate([
       {
@@ -15,9 +19,12 @@ var fetchingProjects = function (req, res) {
           "projectManger.projectMangerId": req.user._id,
         },
       },
-    ])
+    ]).sort({_id:-1}).skip(startIndex).limit(LIMIT)
     .then(function (projectDetails) {
-      res.status(202).json({ projectDetails, userid: req.user._id });
+      project.find({ "projectManger.projectMangerId": req.user._id}).count().then(function(countNum){
+        res.status(202).json({ projectDetails, userid: req.user._id ,countNum  });
+      })
+     
     })
     .catch(function (error) {
       console.log(error);
@@ -108,8 +115,9 @@ var viewAssignedTask = function (req, res) {
       console.log(error);
     });
 };
+var managerUserId ; 
 var showAllTask = function (req, res) {
-  console.log(req.user._id);
+  managerUserId= (req.user._id);
   task
     .find({ "project.projectManager": req.user._id })
     .then(function (response) {
@@ -134,7 +142,7 @@ var dateWiseAnalysis = function(req,res){
 
   task.aggregate([
     {$match :{$and :[
-      {'project.projectManager':mongoose.Types.ObjectId('63f49bc544987940823b1f40')}  , 
+      {'project.projectManager':mongoose.Types.ObjectId(managerUserId)}  , 
       { createdAt: {
                   $gte:new Date(req.body.startDate), 
                   $lte:new Date(req.body.endDate) 

@@ -58,7 +58,6 @@ myApp.config(function ($stateProvider) {
     });
 });
 
-
 var mycontroller = function ($scope, $window) {
   var token = sessionStorage.getItem("token");
   console.log(token);

@@ -6,14 +6,43 @@ myApp.controller(
     $scope.message = "Manager Dashboard";
 
     if (role == "Manager") {
+      $scope.viewManagerDashBoardLoader = false;
       $scope.hideticket = true;
-      $scope.showManagerDashboard = false;
+      $scope.showManagerDashboard = true;
       $scope.ViewTicketLoader = true;
-
+      $scope.showNoProjectAssigned = false;
       $window.location.href = "#!/MangerDashboard";
-      managerServices.readingdata(token, function (data) {
-        $scope.response = data.data.projectDetails;
-      });
+
+      $scope.currentPage = 1;
+      var fetchProjectsFunction = function (currentPage) {
+        $scope.viewManagerDashBoardLoader = false;
+        $scope.response=[]; 
+        console.log(currentPage);
+        managerServices.readingdata({ token, currentPage }, function (data) {
+          $scope.pageSize = 4;
+          $scope.count = data.data.countNum;
+          $scope.totalPages = Math.ceil($scope.count / $scope.pageSize);
+          $scope.pages = [];
+          for (var i = 1; i <= $scope.totalPages; i++) {
+            $scope.pages.push(i);
+          }
+          $scope.response = data.data.projectDetails;
+          if ($scope.response.length == 0) {
+            $scope.showNoProjectAssigned = true;
+          } else {
+            $scope.showNoProjectAssigned = false;
+          }
+          $scope.viewManagerDashBoardLoader = true;
+          $scope.showManagerDashboard = false;
+        });
+      };
+      fetchProjectsFunction($scope.currentPage);
+      $scope.setPage = function (pageNumber) {
+        $scope.currentPage = pageNumber;
+        fetchProjectsFunction($scope.currentPage);
+        console.log($scope.currentPage);
+      };
+
       $scope.getTickets = function (val) {
         var data = {
           projectId: val._id,
@@ -91,7 +120,6 @@ myApp.controller(
       $scope.ticketIdForComment;
       $scope.comments = [];
       $scope.viewComments = function (val) {
-        // console.log(val);
         console.log(val._id);
 
         $scope.ticketIdForComment = val._id;
@@ -144,7 +172,6 @@ myApp.controller(
       $scope.taskEmployeeList = [];
       $scope.taskEmployeeListView = [];
       $scope.taskEmployeeListed = function (val) {
-        // console.log(val);
         if (val != undefined) {
           $scope.taskEmployeeListView.push(JSON.parse(val).username);
           $scope.taskEmployeeList.push({
@@ -177,6 +204,13 @@ myApp.controller(
         $scope.showGoBackButton = false;
         $scope.showManagerDashboardButton = true;
         managerServices.showAllTask(token, function (response) {
+          $scope.projectListNames = [];
+          for (let name of response.data) {
+            if (!$scope.projectListNames.includes(name.project.ProjectName)) {
+              $scope.projectListNames.push(name.project.ProjectName);
+            }
+          }
+     
           $scope.showTaskList = response.data;
 
           console.log(response.data);
@@ -271,28 +305,27 @@ myApp.controller(
           console.log(response);
         });
       };
-      $scope.showNoAnalysis = false ;
+      $scope.showNoAnalysis = false;
       $scope.dateWiseAnalysis = function ($event) {
         if ($scope.startDateForAnalysis <= $scope.endDateForAnalysis) {
-        var data = {
-          startDate: $scope.startDateForAnalysis,
-          endDate: $scope.endDateForAnalysis,
-        };
+          var data = {
+            startDate: $scope.startDateForAnalysis,
+            endDate: $scope.endDateForAnalysis,
+          };
 
-        managerServices.dateWiseAnalysis(data, function (response) {
-         
-          if(response.data.length==0){
-            $scope.analysis = response.data;
-            $scope.showNoAnalysis = true ; 
-          }else{
-            $scope.analysis = response.data;
-            $scope.showNoAnalysis = false ;
-          }
-        });
-      }else{
-        alert("Enter the valid date") ; 
-      }
-    }
+          managerServices.dateWiseAnalysis(data, function (response) {
+            if (response.data.length == 0) {
+              $scope.analysis = response.data;
+              $scope.showNoAnalysis = true;
+            } else {
+              $scope.analysis = response.data;
+              $scope.showNoAnalysis = false;
+            }
+          });
+        } else {
+          alert("Enter the valid date");
+        }
+      };
     } else {
       $window.location.href = "#!/singinAsUsers";
     }

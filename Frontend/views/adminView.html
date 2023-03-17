@@ -180,10 +180,10 @@
         <progress
           style="width: 80%"
           id="file"
-          value="{{project.progress.percentage}}"
+          value="{{project.progress.percentage /project.assignedTo.length}}"
           max="100"
         ></progress>
-        <h6>{{project.progress.percentage}} %</h6>
+        <h6>{{(project.progress.percentage /project.assignedTo.length).toFixed(1)}} %</h6>
         <h5
           ng-class="{'highPriority': project.priority=='High' ,
          'MediumPriority': project.priority=='Medium' , 'lowPriority':project.priority=='Low'}"

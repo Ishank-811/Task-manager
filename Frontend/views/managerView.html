@@ -1,9 +1,9 @@
 <div ng-controller="mangerController">
   <div>
-    <h1>{{message}}</h1>
+    <h3>{{message}}</h3>
 
     
-
+    <div ng-hide="showNoProjectAssigned">
     <button
       style="width: 15% ; height:35px"
       class="displayTicketsClass"
@@ -14,6 +14,7 @@
     >
     view Task
     </button>
+  </div>
     <button
       style="width: 15% ; height:35px"
       class="displayTicketsClass"
@@ -26,8 +27,14 @@
     </button>
   </div>
   <ui-view></ui-view>
+  <div
+  ng-hide="viewManagerDashBoardLoader"
+  style="margin: auto; margin-top: 10px; height: 120px; width: 120px"
+  class="loader"
+></div>
   <div style="padding-bottom:50px" ng-hide="showManagerDashboard">
-    <table class="content-table">
+    <h3 ng-show="showNoProjectAssigned" style="color:#f63333 ; display: flex; justify-content: center;">No project assigned by the admin</h3>
+    <table  class="content-table">
       <thead>
         <tr>
           <th>Projects Assigned</th>
@@ -40,7 +47,9 @@
       </thead>
 
       <tbody>
+       
         <tr ng-repeat="project in response">
+        
           <td>{{project.projectName}}</td>
 
           <td>
@@ -52,7 +61,7 @@
             </li>
           </td>
           <td>
-            {{ project.progress.percentage /project.assignedTo.length }} %
+            {{ (project.progress.percentage /project.assignedTo.length).toFixed(1) }} %
           </td>
           <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
           <td>
@@ -73,8 +82,31 @@
         </tr>
       </tbody>
     </table>
+<!-----------------------pagination starts--------------------------------------------->
+
+
+<ul class="pagination">
+  <li>
+    <button  ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(1)">First</button>
+  </li>
+  <li >
+    <button ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(currentPage - 1)">Previous</button>
+  </li>
+  <li ng-repeat="page in pages track by $index" ng-class="{active: currentPage == page}">
+    <button ng-click="setPage(page)">{{page}}</button>
+  </li>
+  <li>
+    <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(currentPage + 1)">Next</button>
+  </li>
+  <li>
+    <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(totalPages)">Last</button>
+  </li>
+</ul>
+
+
+<!----------------------pagination Ends---------------------------------------------------->
     <h4 ng-show="noTickets" style="text-align: center; color: red">
-      No tickets has been initiated by the employee
+      No work has been started by any employee
     </h4>
 
     <div

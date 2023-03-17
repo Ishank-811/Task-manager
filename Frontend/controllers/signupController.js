@@ -53,7 +53,7 @@ myApp.controller("signupController", function ($scope, singupServices) {
       return;
     }
     console.log($scope.organizationName, $scope.emailValid, $scope.Password);
-    const newUser = {
+    var newUser = {
       organizationName: $scope.organizationName,
       email: $scope.emailValid,
       password: $scope.Password,

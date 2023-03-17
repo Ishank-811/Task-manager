@@ -28,7 +28,6 @@ myApp.controller(
           employeeServices.addTicket(data, function (response) {
             console.log(response);
             alert("ticket has been initiaited");
-            // $scope.hideLoader = true ;
             $scope.response.forEach((element) => {
               if (element._id == value._id) {
                 element.assignedTo.forEach(function (secondIterate) {
@@ -40,8 +39,6 @@ myApp.controller(
                 });
               }
             });
-            // $scope.startTicketMessage = "Created"
-            // $scope.response
           });
         };
       });

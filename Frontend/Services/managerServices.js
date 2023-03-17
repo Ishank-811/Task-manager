@@ -1,14 +1,14 @@
 var fac = function ($http) {
   return {
-    readingdata: function (token, cb) {
+    readingdata: function (data, cb) {
       var config = {
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + data.token,
           Accept: "application/json;odata=verbose",
         },
       };
       $http
-        .get("http://localhost:8080/manager/fetchingProjects", config)
+        .get(`http://localhost:8080/manager/fetchingProjects?currentPage=${data.currentPage}`, config)
         .then(function (res) {
           console.log(res);
           cb(res);

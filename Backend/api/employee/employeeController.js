@@ -32,7 +32,7 @@ var fetchingProjects = function (req, res) {
 };
 
 var addTicket = function (req, res) {
-  console.log(req.body.projectName);
+
   project
     .findOneAndUpdate(
       { _id: req.body.projectId },
@@ -49,7 +49,7 @@ var addTicket = function (req, res) {
       console.log(error);
     });
 
-  console.log(req.body);
+
   var response = new ticket({
     organization: {
       organizationId: req.user.organization.organizationId,
@@ -74,7 +74,7 @@ var addTicket = function (req, res) {
       UpdatedAt : new Date(),  
     }
   });
-  console.log(response);
+
   response
     .save()
     .then(function () {
@@ -100,10 +100,6 @@ const viewTicket = function (req, res) {
 };
 
 const addComment = function (req, res) {
-  // console.log(req.params);
-  // console.log(req.body);
-  console.log(req.user);
-
   var response = new comments({
     ticketId: req.body.ticketId,
     comments: {
@@ -143,13 +139,11 @@ var updatingStatus = function (req, res) {
 };
 
 var uploadFileToUrl = async (req, res) => {
-  console.log(req.file);
-  console.log(req.user);
-  console.log(req.params);
+
 
   const result = await uploadFile(req.file);
   await unlinkfile(req.file.path);
-  console.log(result);
+
   var response = new comments({
     ticketId: req.params.ticketId,
     comments: {
@@ -172,8 +166,7 @@ var uploadFileToUrl = async (req, res) => {
 };
 
 const updateProgress = function (req, res) {
-  console.log(req.params.ticketId);
-  console.log(req.body);
+
   var data = {
     "progress.percentage": req.body.progressBar,
     "progress.UpdatedAt": new Date(),
@@ -205,8 +198,7 @@ const updateProgress = function (req, res) {
 };
 
 var viewAssignedTask = function(req,res){
-  console.log(req.user._id); 
-  console.log(req.query.projectId);
+
   task
     .find({
       "project.projectId": req.query.projectId,

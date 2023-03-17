@@ -14,7 +14,7 @@ myApp.controller(
           } else {
             $scope.response = data.data.usersdata;
             $scope.adminId = data.data.adminId;
-            console.log($scope.response); 
+            console.log($scope.response);
             if ($scope.response.length == 0) {
               $scope.showNoEmployees = true;
             } else {
@@ -43,6 +43,16 @@ myApp.controller(
         if (data.status == 404) {
           console.log("hello");
           $scope.showError = true;
+        }else{
+          alert("User Created"); 
+          console.log(data); 
+          $scope.firstName="";
+          $scope.lastName=""; 
+          $scope.email=""; 
+          $scope.password="";  
+          $scope.role="";
+          $scope.response.push(data.data); 
+          $scope.showError = false;
         }
       });
     };
@@ -98,7 +108,7 @@ myApp.controller(
         organizationServices.updateUser(data, function (response) {
           console.log(response.data);
         });
-        // console.log()  ;
+       
       };
     };
   }

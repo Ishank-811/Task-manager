@@ -10,14 +10,13 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
   $scope.project = [];
   $scope.response = [];
   $scope.employeesAsigned = [];
-  var array1 = []; 
+  var array1 = [];
   adminServices.readingData(token, function (data) {
     if (data.data.role != "Admin") {
       $window.location.href = "#!/singinAsUsers";
     } else {
+      $scope.count = data.data.response[1];
 
-      $scope.count = data.data.response[1] ; 
-     
       $scope.employeesAsigned = data.data.response[0].filter(function (val) {
         return val.role == "Employee";
       });
@@ -48,11 +47,11 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
       return element.assignedUserId;
     });
     console.log(array1);
-    employeesAsignedFiltered = $scope.employeesAsigned.filter(function (element) {
+    employeesAsignedFiltered = $scope.employeesAsigned.filter(function (
+      element
+    ) {
       return !array1.includes(element._id);
     });
-
-    // $scope.employeesAsigned  = (employeesAsignedFiltered);
 
     $scope.employeeList.push(JSON.parse(val).username);
   };
@@ -83,7 +82,7 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
             $scope.createProjectLoader = true;
           } else {
             $scope.createProjectLoader = true;
-            $scope.project.pop(); 
+            $scope.project.pop();
             $scope.project.unshift(data.data);
             alert("Project created");
             console.log(data);
@@ -112,81 +111,64 @@ myApp.controller("adminController", function ($scope, $window, adminServices) {
   $scope.selectedProjectId;
   $scope.selectEmployeeId;
   $scope.showProfile = function (projectId, val) {
-    // console.log(val);
     $scope.showEmployeeTicketTable = true;
     $scope.selectedProjectId = projectId;
     $scope.selectEmployeeId = val;
 
     console.log(projectId, val);
-    $scope.showStatusError  = true ; 
+    $scope.showStatusError = true;
     adminServices.viewProfile(val, function (response) {
-      console.log(response);  
-      $scope.showStatusError  = true ; 
+      console.log(response);
+      $scope.showStatusError = true;
       $scope.employeeFirstName = response.data.firstName;
       $scope.employeeLastName = response.data.lastName;
       $scope.employeeUsername = response.data.username;
       $scope.employeeRole = response.data.role;
       $scope.employeeOrganization = response.data.organization.name;
     });
-  }; 
+  };
   $scope.showEmployeeTicketTable = true;
-  
-
-
-
-
-
-
 
   $scope.showEmployeeTicket = function () {
-    $scope.showStatusError = true ; 
-   
-    const data = {
+    $scope.showStatusError = true;
+
+    var data = {
       projectId: $scope.selectedProjectId,
       employeeId: $scope.selectEmployeeId,
     };
     adminServices.showEmployeeTicket(data, function (response) {
-      $scope.showStatusError = true ; 
-      if(response.data.length==0){
-        $scope.showStatusError = false ; 
-      }else{
+      $scope.showStatusError = true;
+      if (response.data.length == 0) {
+        $scope.showStatusError = false;
+      } else {
         $scope.showEmployeeTicketTable = false;
-        $scope.showStatusError = true ; 
+        $scope.showStatusError = true;
         $scope.EmployeeticketDetails = response.data;
-      } 
-    
-      
-    });
+      }
+    }); 
   };
-
-
-  
-
 
   $scope.allProjectDetailsLoader = false;
   $scope.currentPage = 1;
-  var fetchProjectsFunction = function(currentPage){
-  $scope.allProjectDetailsLoader = false;
-  $scope.project=[];
-  adminServices.fetchProjects({token, currentPage}, function (data) {
-  $scope.allProjectDetailsLoader = true;
-  $scope.project = data.data;
-  $scope.pageSize = 8
-  console.log($scope.count)
-  $scope.totalPages = Math.ceil($scope.count / $scope.pageSize);
-  $scope.pages = [];
-  for (var i = 1; i <= $scope.totalPages; i++) {
-    $scope.pages.push(i);
-  }
-  });
-  }
-  fetchProjectsFunction($scope.currentPage)  ; 
-  $scope.setPage = function(pageNumber){
-    $scope.currentPage  = pageNumber  ; 
-    fetchProjectsFunction($scope.currentPage)  ; 
-    console.log( $scope.currentPage); 
-   
-  }
-
-
+  var fetchProjectsFunction = function (currentPage) {
+    $scope.allProjectDetailsLoader = false;
+    $scope.project = [];
+    adminServices.fetchProjects({ token, currentPage }, function (data) {
+      $scope.allProjectDetailsLoader = true;
+      $scope.project = data.data;
+      $scope.pageSize = 8;
+      console.log($scope.count);
+      $scope.totalPages = Math.ceil($scope.count / $scope.pageSize);
+      $scope.pages = [];
+      for (var i = 1; i <= $scope.totalPages; i++) {
+        $scope.pages.push(i);
+      }
+    });
+  };
+  fetchProjectsFunction($scope.currentPage);
+  $scope.setPage = function (pageNumber) {
+    $scope.currentPage = pageNumber;
+    fetchProjectsFunction($scope.currentPage);
+    console.log($scope.currentPage);
+  };
 });

@@ -63,12 +63,13 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="project in response">
-        <td>{{project.projectName}}</td>
+      <tr ng-repeat="projectName in projectListNames">
+        <td>{{projectName}}</td>
 
         <td>
-          <li ng-repeat="item in showTaskList | filter : project.projectName">
-            {{item.task.taskName}}
+          
+          <li ng-repeat="item in showTaskList | filter : projectName">
+            {{item.task.taskName}} ({{item.status}})
             <i
               data-toggle="modal"
               data-target="#myModal"

@@ -14,7 +14,7 @@ myApp.controller(
           $scope.priority = response.data.priority;
           $scope.ticketId = response.data._id;
           // console.log(response.data.progress.percentage);
-          
+
           $scope.progressBar = response.data.progress.percentage;
           $scope.progressBarStore = response.data.progress.percentage;
         }
@@ -78,14 +78,12 @@ myApp.controller(
         console.log($scope.progressBar);
 
         $scope.ProgressLoader = false;
-        const data = {
+        var data = {
           progressBar: $scope.progressBar,
           progressBarDiff: $scope.progressBar - $scope.progressBarStore,
           ticketId: $scope.ticketId,
           projectId: $stateParams.id,
         };
-        // console.log(data);
-
         employeeServices.updateProgress(data, function (response) {
           alert("Progress Updated");
           $scope.progressBar = response.data.progress.percentage;
@@ -98,41 +96,37 @@ myApp.controller(
           }
         });
       };
-       
-      $scope.viewAssignedTask = function(){
-        var data={
-          projectId :$stateParams.id, 
-          token 
-        }
-        employeeServices.viewAssignedTask(data , function(response){
-          console.log(response);
-          if(response.data.length==0){
-          $scope.showNoTaskAssigned = "No task Assigned"
-          }else{
-            $scope.viewTask =response.data ;  
-            $scope.showNoTaskAssigned = ""; 
-            
-          }
-        })
-      }
 
-      $scope.taskStatusChangeFunction = function( index){
-     
-        $scope.isSelected =index;
-      } 
-      $scope.taskStatusFunction= function(taskStatus , taskId){
+      $scope.viewAssignedTask = function () {
         var data = {
-          taskStatus , 
-          taskId  , 
-        }
-        employeeServices.taskStatusUpdate(data , function(response){
+          projectId: $stateParams.id,
+          token,
+        };
+        employeeServices.viewAssignedTask(data, function (response) {
           console.log(response);
-          alert("Task Status Updated"); 
-          $scope.isSelected="" ; 
-        })
-         
-      }
+          if (response.data.length == 0) {
+            $scope.showNoTaskAssigned = "No task Assigned";
+          } else {
+            $scope.viewTask = response.data;
+            $scope.showNoTaskAssigned = "";
+          }
+        });
+      };
 
+      $scope.taskStatusChangeFunction = function (index) {
+        $scope.isSelected = index;
+      };
+      $scope.taskStatusFunction = function (taskStatus, taskId) {
+        var data = {
+          taskStatus,
+          taskId,
+        };
+        employeeServices.taskStatusUpdate(data, function (response) {
+          console.log(response);
+          alert("Task Status Updated");
+          $scope.isSelected = "";
+        });
+      };
 
       $scope.addCommentsFormSubmit = function () {
         $scope.CommentLoader = false;
@@ -148,9 +142,6 @@ myApp.controller(
           $scope.addComments = "";
         });
       };
-
-
-
     } else {
       $window.location.href = "#!/singinAsUsers";
     }

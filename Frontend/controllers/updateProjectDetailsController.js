@@ -22,10 +22,6 @@ myApp.controller(
         }
       );
       console.log($scope.employeesAsignedFiltered);
-
-      // $scope.employeesAsigned =employeesAsignedFiltered ;
-
-      // console.log(data.data.assignedTo.length);
       $scope.updateAssignedEmployee = data.data.assignedTo;
       $scope.updatedProjectName = data.data.projectName;
       $scope.managerUsername = data.data.projectManger.username;
@@ -33,7 +29,6 @@ myApp.controller(
     $scope.allEmployeesChanged = true;
 
     $scope.employeeAddedChange = function (val) {
-      // console.log(val);
       if (val == undefined || val == null) {
         $scope.allEmployeesChanged = true;
       } else {
@@ -42,7 +37,6 @@ myApp.controller(
     };
 
     $scope.deleteAssingedUser = function (userId) {
-      // console.log(data.data.assignedTo.length);
       if ($scope.updateAssignedEmployee.length <= 1) {
         $window.alert("add more users to delete");
       } else {

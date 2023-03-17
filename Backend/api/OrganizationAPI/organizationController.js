@@ -1,6 +1,7 @@
 const users = require("../../model/usersModel");
 
 const registeringUsers = function (req, res) {
+  console.log(req.body); 
   users
     .findOne({ "organization.organizationId": req.user._id  , username: req.body.username })
     .then(function (userdetail) {

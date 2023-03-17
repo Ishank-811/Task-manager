@@ -59,7 +59,7 @@ const creatingPorject = function (req, res) {
 };
 
 const fetchProjects = function (req, res) {
-  var LIMIT = 8 ; 
+  var LIMIT = 8 ;  
   var startIndex  = (Number(req.query.currentPage)-1)*8; 
   project
     .find({

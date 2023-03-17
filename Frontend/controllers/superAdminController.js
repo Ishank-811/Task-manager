@@ -71,7 +71,7 @@ myApp.controller(
           $scope.emailValid,
           $scope.Password
         );
-        const newUser = {
+        var newUser = {
           organizationName: $scope.organizationName,
           email: $scope.emailValid,
           password: $scope.Password,
