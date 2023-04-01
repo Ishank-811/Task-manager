@@ -1,32 +1,20 @@
 var fac = function ($http) {
   return {
-    readingdata: function (id, cb) {
-      //  console.log(data);
-
-      $http.get(`http://localhost:8080/admin/getProjectDetails/${id}`).then(
-        function (res) {
-          console.log(res);
-          cb(res);
-        },
-        function (err) {
-          return err;
-        }
-      );
-    },
-
-    deleteuser: function (data, cb) {
-      console.log(data);
-      $http.post("http://localhost:8080/admin/deleteuser", data).then(
-        function (res) {
-          console.log(res);
-          cb(res);
-        },
-        function (err) {
-          return err;
-        }
-      );
-    },
-    addEmployees: function (data, cb) {
+    addEmployees: function (projectDetails , userDetails, cb) {
+      var data=  {
+      project:{projectName:projectDetails.projectName ,  projectId:projectDetails._id},
+      organization:projectDetails.organization,
+      projectManger:projectDetails.projectManger,
+      assignedTo : {
+        assignedUserId:userDetails._id ,
+        name:userDetails.firstName,
+        username:userDetails.username,
+        isisStarted:false
+      }, priority: projectDetails.priority,
+      createdAt:new Date(),
+      startDate: projectDetails.startDate,
+      endDate: projectDetails.endDate,
+      }
       $http.post("http://localhost:8080/admin/addEmployees", data).then(
         function (res) {
           console.log(res);

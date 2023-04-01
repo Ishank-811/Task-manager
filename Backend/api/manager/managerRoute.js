@@ -9,11 +9,7 @@ router.get(
   managerController.fetchingProjects
 );
 
-router.get(
-  "/viewTicket/:projectId",
-  passport.authenticate("level2", { session: false }),
-  managerController.viewTicket
-);
+
 
 router.get(
   "/viewComments/:ticketId",
@@ -23,7 +19,18 @@ router.post("/addTasks" , passport.authenticate("level2", { session: false }),
 managerController.addTasks)
 
 router.get("/viewAssignedTask" , managerController.viewAssignedTask); 
-router.get("/showAllTask" ,passport.authenticate("level2", { session: false }), managerController.showAllTask )
 router.patch("/updateTask/:taskId" , managerController.updateTask); 
 router.post("/dateWiseAnalysis" , managerController.dateWiseAnalysis) ;  
-module.exports = router;
+router.get("/fetchProjectDetail/:projectId" , managerController.fetchProjectDetail) ;  
+router.get("/showAllAssignedProjects",passport.authenticate("level2", { session: false }),
+ managerController.showAllAssignedProjects);
+ router.get("/showProjectTask/:projectId",passport.authenticate("level2", { session: false }), managerController.showProjectTask); 
+router.get("/searchProject" , managerController.searchProject); 
+router.patch("/deleteTask/:taskId",  managerController.deleteTask)  ; 
+router.patch("/projectStatusUpdate/:projectId" , managerController.projectStatusUpdate) ; 
+router.get("/stats" ,managerController.stats); 
+router.get("/projectTaskStats/:projectId" , managerController.projectTaskStats); 
+router.get("/userStats/:userId" , managerController.userStats) ;
+router.get("/searchEmployee/:name" ,  managerController.searchEmployee) ;  
+
+ module.exports = router;

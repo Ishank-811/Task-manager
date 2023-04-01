@@ -1,5 +1,15 @@
-var fac = function ($http) {
+  var fac = function ($http) {
+    var data = JSON.parse(localStorage.getItem('myData')) || {};
   return {
+
+    getData: function() {
+      return data;
+    },
+    setData: function(newData) {
+      data = newData;
+      localStorage.setItem('myData', JSON.stringify(data));
+    },
+
     readingdata: function (data, cb) {
       var config = {
         headers: {
@@ -17,50 +27,30 @@ var fac = function ($http) {
           return err;
         };
     },
-    viewTicket: function (data, cb) {
-      console.log(data);
-      var config = {
-        headers: {
-          Authorization: "Bearer " + data.token,
-          Accept: "application/json;odata=verbose",
-        },
-      };
-      $http
-        .get(
-          `http://localhost:8080/manager/viewTicket/${data.projectId}`,
-          config
-        )
-        .then(
-          function (res) {
-            console.log(res);
-            cb(res);
+    
+    
+    addTasks : function(taskDetails ,projectDetails,token , cb){
+
+      var data = {
+        taskName:taskDetails.taskName,
+        taskDescription:taskDetails.taskDescription,
+        taskeEmployeesAssigned:taskDetails.taskeEmployeesAssigned,
+        startDate:taskDetails.startDate,
+        project: {
+            projectId: projectDetails._id ,
+            ProjectName:  projectDetails.projectName,
+            projectManager:  projectDetails.projectManger.projectMangerId, 
+            projectManagerUsername:  projectDetails.projectManger.username,
+            projectManagerName: projectDetails.projectManger.name,
           },
-          function (err) {
-            return err;
-          }
-        );
-    },
-    viewComments: function (data, cb) {
-      console.log(data);
-      $http
-        .get(`http://localhost:8080/manager/viewComments/${data.ticketId}`)
-        .then(
-          function (res) {
-            console.log(res);
-            cb(res);
-          },
-          function (err) {
-            return err;
-          }
-        );
-    },
-    addTasks : function(data , cb){
+        endDate:taskDetails.endDate
+      }
 
       $http({
         method: "POST",
         url: "http://localhost:8080/manager/addTasks",
         headers: {
-          Authorization: "Bearer " + data.token,
+          Authorization: "Bearer " + token,
           Accept: "application/json;odata=verbose",
           "Content-Type": "application/json",
         },
@@ -76,8 +66,11 @@ var fac = function ($http) {
           }
         );
     },
-    viewAssignedTask : function(data,  cb){
-      console.log(data);
+    viewAssignedTask : function(userId,projectId,  cb){
+      var data= {
+        userId,
+        projectId
+      }
       $http
       .get(
         `http://localhost:8080/manager/viewAssignedTask?projectId=${data.projectId}&employeeId=${data.userId}`
@@ -92,33 +85,25 @@ var fac = function ($http) {
         }
       );
     },
-    showAllTask : function(token , cb){
+    
+    updateTask : function( updateTask , cb){
 
-      var config = {
-        headers: {
-          Authorization: "Bearer " + token,
-          Accept: "application/json;odata=verbose",
-        },
-      };
+      var data=  {
+        task:{
+          taskName: updateTask.updatedTaskName,
+          taskDescription: updateTask.updatedTaskDescription,
+        }        
+      }
+      if (updateTask.StartDateValue != undefined) {
+          data.startDate = updateTask.StartDateValue; 
+      }
+      if (updateTask.EndDateValue != undefined) {
+          data.endDate = updateTask.EndDateValue ; 
+      }
 
-      $http
-      .get(
-        "http://localhost:8080/manager/showAllTask"  , config
-      )
-      .then(
-        function (res) {
-          console.log(res);
-          cb(res);
-        },
-        function (err) {
-          return err;
-        }
-      );
-    } , 
-    updateTask : function( taskId,data , cb){
       $http
       .patch(
-        `http://localhost:8080/manager/updateTask/${taskId}`,
+        `http://localhost:8080/manager/updateTask/${updateTask.taskId}`,
         data,
       )
       .then(
@@ -146,6 +131,175 @@ var fac = function ($http) {
         }
       ); 
     }
+    ,fetchProjectDetail : function(data , cb){
+      $http
+      .get(
+        `http://localhost:8080/manager/fetchProjectDetail/${data}`  ,data
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    },
+    showAllAssignedProjects : function(currentPage , token , cb){
+      var config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json;odata=verbose",
+        },
+      };
+
+      $http
+      .get(
+        `http://localhost:8080/manager/showAllAssignedProjects?currentPage=${currentPage}`  ,config
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    },
+    showProjectTask:function(projectId, token , cb){
+      var config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json;odata=verbose",
+        },
+      };
+      $http
+      .get(
+        `http://localhost:8080/manager/showProjectTask/${projectId}`  ,config
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    },
+
+    searchProject:function (projectName,managerId, cb) {
+      $http
+        .get(
+          `http://localhost:8080/manager/searchProject?projectName=${projectName}&managerId=${managerId}`
+        )
+        .then(
+          function (res) {
+            console.log(res);
+            cb(res);
+          },
+          function (err) {
+            return err;
+          }
+        );
+    },
+    deleteTask:function(taskId , cb){
+      $http
+      .patch(
+        `http://localhost:8080/manager/deleteTask/${taskId}`
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    }, 
+    projectStatusUpdate : function(status , projectId  ,cb){
+      var data = {
+        status,
+      };
+      $http
+      .patch(
+        `http://localhost:8080/manager/projectStatusUpdate/${projectId}`, data
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      );  
+    },
+   statistics : function(cb){
+    $http
+      .get(
+        "http://localhost:8080/manager/stats/", 
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res.data.countBystatus,  res.data.isUpcomingProject  , res.data.overDueProject ,
+             res.data.completionRateOfProject, res.data.taskCreatedDayWise );
+        },
+        function (err) {
+          return err;
+        }
+      );  
+   },
+   projectTaskStats  :function(projectId , cb){
+    $http
+    .get(
+      `http://localhost:8080/manager/projectTaskStats/${projectId}`, 
+    )
+    .then(
+      function (res) {
+        console.log(res);
+        cb(res);
+      },
+      function (err) {
+        return err;
+      }
+    );  
+   }
+   ,
+   searchEmployee :function(searchEmployee , cb){
+    $http
+    .get(
+      `http://localhost:8080/manager/searchEmployee/${searchEmployee}`, 
+    )
+    .then(
+      function (res) {
+        console.log(res);
+        cb(res);
+      },
+      function (err) {
+        return err;
+      }
+    );  
+   },
+   userStats:function(userId , cb){
+    $http
+    .get(
+      `http://localhost:8080/manager/userStats/${userId}`, 
+    )
+    .then(
+      function (res) {
+        console.log(res);
+        cb(res);
+      },
+      function (err) {
+        return err;
+      }
+    );
+   }
 
   };
 };

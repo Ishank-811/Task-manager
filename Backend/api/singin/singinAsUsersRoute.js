@@ -11,4 +11,3 @@ router.post(
   singinController.singinAsUsers
 );
 module.exports = router;
-  

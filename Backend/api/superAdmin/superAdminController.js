@@ -49,8 +49,6 @@ organization
 }
 
 const updateOrganization = function(req,res){
-    console.log(req.params)
-    console.log(req.body) ; 
     organization.findByIdAndUpdate(req.params.organizationId ,{organizationName:req.body.organizationName
          ,organizationUsername:req.body.organizationUsername } , {new:true}).then(function(response){
             res.status(202).send(response); 
@@ -60,4 +58,9 @@ const updateOrganization = function(req,res){
          })
 }
 
-module.exports = {fetchAllOrganization , AllowOrganization , addOrganization , updateOrganization} ;
+var statistics = function(req,res){
+  
+  
+}
+
+module.exports = {fetchAllOrganization , AllowOrganization , addOrganization , updateOrganization ,statistics } ;

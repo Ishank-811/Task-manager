@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const userSchema =  mongoose.Schema({
     organization:{
         name:{type:String,  required:true, trim:true},
-        organizationId:{type:mongoose.Schema.Types.ObjectId , require:true , ref :"Organization"  }
+        organizationId:{type:mongoose.Schema.Types.ObjectId , require:true   }
     },
     firstName:{
         type:String, 

@@ -11,6 +11,9 @@ const organizationSchema =  mongoose.Schema({
     },
     valid :{
         type:Boolean , default:false
+    },
+    joinedAt : {
+        type:Date, default :new Date() , require:true
     }
    
 })

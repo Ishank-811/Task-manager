@@ -1,32 +1,30 @@
 const mongoose = require("mongoose"); 
 const ProjectSchema =  mongoose.Schema({
-    projectName:{
-        type : String, 
-        required:true , 
-        trim:true
+    project:{
+        projectName : { type : String, required:true , trim:true} ,
+        projectId:{type:mongoose.Schema.Types.ObjectId , required:true},   
     },
     organization :{
-        organizationId : {type:mongoose.Schema.Types.ObjectId ,  ref:"Organization", required:true}, 
+        organizationId : {type:mongoose.Schema.Types.ObjectId ,  required:true}, 
         name:{type:String , required:true , trim:true}
     },
     projectManger : {
-        projectMangerId : {  type:mongoose.Schema.Types.ObjectId,  ref:"Users",  required:true},
+        projectMangerId : {  type:mongoose.Schema.Types.ObjectId,  required:true},
         name:{type:String , required:true , trim:true},
         username:{type:String, required:true , trim:true}
     },
-    assignedTo :[
+    assignedTo :
        {
         assignedUserId:{type:mongoose.Schema.Types.ObjectId , require:true}, 
         name:{type:String , required:true , trim:true},
         username:{type:String,  required:true , trim:true},
         isStarted : {type:Boolean , required:true , default:false},
        },
-    ],
-    priority:{
+       priority:{
         type:String , 
         enum:['High' , 'Low' , 'Medium'],
         required:true 
-    },  
+    },
     createdAt:{
         type:Date,
         required:true,  
@@ -38,14 +36,13 @@ const ProjectSchema =  mongoose.Schema({
     endDate:{
         type:Date,
         required:true , 
-    }, 
-    progress :{
-        percentage:{type:Number, Default:0 , required:true} , 
-        UpdatedAt : {type:Date , Default :new Date()},  
     },
-  
- 
-
+    isDeleted:{
+        type:Boolean,
+        default:false,
+        required:true
+    }
+    
 })
 const Project= mongoose.model("Project", ProjectSchema);
 module.exports = Project ; 

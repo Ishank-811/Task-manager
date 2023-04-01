@@ -72,8 +72,6 @@ const updatingUser = function (req, res) {
 };
 
 const searchUser = function(req,res){
-console.log(req.query); 
-
 const regex = new RegExp(req.query.value, 'i');
 users.find({ "organization.organizationId": req.query.adminId,
 username:regex}).then(function(response){

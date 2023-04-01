@@ -1,0 +1,281 @@
+<div ng-controller="adminProjectDetailsController">
+  <div class="SpecificProjectDetailsClass">
+    <div
+      ng-hide="loaderObject.projectSpecificationLoader"
+      style="
+        margin: auto;
+        margin-top: 40px !important;
+        height: 100px;
+        width: 100px;
+      "
+      class="loader"
+    ></div>
+    <div
+      ng-hide="loaderObject.showprojectSpecification"
+      class="projectSpecification"
+    >
+      <div class="projectDetailsHeader">
+        <h3 style="margin: 30px">{{projectDetails.projectName}}</h3>
+        <div style="margin: 30px">
+          <progress
+            style="width: 10%"
+            id="file"
+            value="{{timeleft(projectDetails.endDate)}}"
+            max="{{getDaysDiff(projectDetails.startDate , projectDetails.endDate)}}"
+          ></progress>
+          <h6 class="dayleft" style="width: 15%">
+            {{(timeleft(projectDetails.endDate))>=0 ?
+            (timeleft(projectDetails.endDate)) : "No"}} days left
+          </h6>
+        </div>
+
+        <h6 style="width: 80%; margin: 30px">
+          Lorem ipsum dolor Consequuntur facilis at minima temporibus tempora
+          beatae commodi dolores nemo voluptatem, cum repudiandaeadipisci
+          veritatis
+        </h6>
+      </div>
+      <div class="projectAssignedTo">
+        <div>
+          <h3>Manager:</h3>
+          <div class="mangerDivClass">
+            <img
+              src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+              height="30"
+              width="30"
+            />
+            {{projectDetails.projectManger.name}}
+          </div>
+        </div>
+        <div>
+          <h3>Assigned to:</h3>
+          <div class="projectAssingedToDiv">
+            <div
+              ng-repeat="employee in employeesOfProject track by $index"
+              ng-click="employeeProjectStatus(employee.project.projectId , employee.assignedTo)"
+            >
+              <img
+                src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+                height="30"
+                width="30"
+              />
+              {{employee.assignedTo.name}} 
+            <p style="font-size:10px" ng-hide="employee.assignedTo.isStarted">Not started</p>
+            </div>
+            <button data-toggle="modal" data-target="#myModal3">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="projectDetailsInAdminClass">
+        <h3 style="margin: 30px">Project Details</h3>
+        <div>
+          <progress
+            style="width: 60%"
+            id="file" 
+            value="{{((projectDetails.progress.percentage)/(employeesOfProject.length)).toFixed(1)}}"
+            max="100"
+          ></progress>
+          <h6>
+            progress:
+            {{((projectDetails.progress.percentage)/(employeesOfProject.length)).toFixed(1)}}
+            %
+          </h6>
+          <h5
+            ng-class="{'highPriority': projectDetails.priority=='High' ,
+         'MediumPriority': projectDetails.priority=='Medium' , 'lowPriority':projectDetails.priority=='Low'}"
+            style="margin-bottom: 20px"
+          >
+            {{projectDetails.priority}}
+          </h5>
+          <h6>Start Date</h6>
+          <h6>
+            <i class="fa-sharp fa-solid fa-calendar-days"></i>
+            {{(projectDetails.startDate | date:"dd/MM/yyyy")}}
+          </h6>
+          <h6>end Date</h6>
+          <h6>
+            <i class="fa-sharp fa-solid fa-calendar-days"></i>
+            {{(projectDetails.endDate | date:"dd/MM/yyyy")}}
+          </h6>
+        </div>
+        <div></div>
+      </div>
+    </div>
+    <div class="projectTask">
+      <h6>SELECT EMPLOYEE TO VIEW THE STATUS</h6>
+      <div
+        ng-hide="object.showstatusLoader"
+        style="
+          margin: auto;
+          margin-top: 40px !important;
+          height: 50px;
+          width: 50px;
+        "
+        class="loader"
+      ></div>
+      <div ng-show="object.showInformation">
+        <div ng-show="employeeProjectStatusDetails!=''">
+          <h3 style="display: flex; justify-content: center; margin: 20px">
+            {{employeeProjectStatusDetails.user.name}}
+          </h3>
+          <div class="ticketHeader">
+            <!-- <h5
+              ng-class="{'highPriority': employeeProjectStatusDetails.priority=='High' ,
+              'MediumPriority': employeeProjectStatusDetails.priority=='Medium' , 'lowPriority':employeeProjectStatusDetails.priority=='Low'}"
+              style="margin-bottom: 20px"
+            >
+              {{employeeProjectStatusDetails.priority}}
+            </h5> -->
+            <h5 class="ticketStatus">
+              {{employeeProjectStatusDetails.status}}
+            </h5>
+          </div>
+          <h6 style="text-align: center">
+            Created at:
+            <i class="fa-solid fa-calendar-days"></i>
+            {{employeeProjectStatusDetails.createdAt | date:"dd/MM/yyyy"}}
+          </h6>
+
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              margin: 30px;
+            "
+          >
+            <progress
+              style="width: 60%"
+              id="file"
+              value="{{employeeProjectStatusDetails.progress.percentage}}"
+              max="100"
+            ></progress>
+            <h6>
+              progress: {{employeeProjectStatusDetails.progress.percentage}}%
+            </h6>
+          </div>
+          <button
+            ng-click="viewAssignedTask(employeeProjectStatusDetails.user.userId ,employeeProjectStatusDetails.project.projectId )"
+            class="ticketButton"
+          >
+            View Tasks
+          </button>
+        </div>
+        <h5 style="margin: 20px" ng-show="employeeProjectStatusDetails==''">
+          Employee has not started the project yet , select on different user to
+          view the status
+        </h5>
+      </div>
+      <hr />
+      <div
+        ng-repeat="item in object.viewTask track by $index"
+        style="
+          width: 90%;
+          background-color: white;
+          padding: 14px;
+          border-radius: 12px;
+          margin: 10px;
+        "
+      >
+        <div style="display: flex; justify-content: space-between">
+          <h5>{{item.task.taskName}}</h5>
+          <h5>{{item.status}}</h5>
+        </div>
+        <h6>{{item.task.taskDescription}}</h6>
+
+        <h6>
+          <i class="fa-solid fa-calendar-days"></i> {{item.startDate |
+          date:"dd/MM/yyyy"}}
+        </h6>
+        <h6>
+          <i class="fa-solid fa-calendar-days"></i> {{item.endDate |
+          date:"dd/MM/yyyy"}}
+        </h6>
+      </div>
+      <h6 style="color: red" ng-hide="object.showNoTaskAssigned">
+        No task assigned yet
+      </h6>
+    </div>
+  </div>
+
+  <!----------------Add employee modal starts------------------->
+
+  <div class="modal" id="myModal3">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Update Form</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+        <!-- <h1>hello</h1> -->
+        <div class="modal-body">
+          <table class="updateAssignedEmployeeClass">
+            <thead>
+              <tr>
+                <th>Employee name</th>
+                <th>Employee username</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="employee in employeesOfProject">
+                <td>{{employee.assignedTo.name}}</td>
+                <td>{{employee.assignedTo.username}}</td>
+                <td> 
+                  <button
+                    class="updateProjectDeleteClass"
+                    ng-click="deleteAssingedUser(employee.project.projectId  , employee.assignedTo.assignedUserId ,employee.assignedTo.name,  $index)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <select
+            ng-change="employeeAddedChange(employeeAdded)"
+            ng-model="employeeAdded"
+            ng-required="true"
+            style="margin-top: 30px"
+          >
+            <option value="" disabled selected>Add Employees</option>
+            <option
+              ng-repeat="item in employeesAsignedFiltered track by $index "
+              value="{{item}}"
+              name="role"
+            >
+              {{item.firstName}}
+            </option>
+          </select>
+          <button
+            type="submit"
+            style="
+              width: 35%;
+              margin-top: 10px;
+              height: 30px;
+              border-radius: 10px;
+              border: none;
+              box-shadow: 8px 8px 8px 1px rgba(0, 0, 0, 0.178);
+            "
+            ng-click="addEmployeesSubmit($event)"
+            ng-hide="object.allEmployeesChanged"
+          >
+            Add employee
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!----------------Add employee modal ends------------------->
+</div>

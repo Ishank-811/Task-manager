@@ -4,9 +4,12 @@
   type="submit"
   style="
     width: 20%;
+    text-align: center;
     display: flex;
-    align-items: center;
+    margin: auto;
     justify-content: center;
+    margin-bottom:20px
+   
   "
   ng-disabled="projectForm.$invalid"
   data-toggle="modal"
@@ -33,6 +36,8 @@
         <button
           data-toggle="modal"
           data-target="#myModal2"
+          style="margin:0px"
+          class="createButton"
           ng-click="updateOrganizationDetails(organization.organizationName 
         ,organization.organizationUsername  ,organization._id  )"
         >

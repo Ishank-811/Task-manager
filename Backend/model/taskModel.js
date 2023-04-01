@@ -4,7 +4,7 @@ const taskSchema = mongoose.Schema({
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Organization",
+     
     },
     name: { type: String, required: true, trim: true },
   },
@@ -12,18 +12,18 @@ const taskSchema = mongoose.Schema({
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Users",
+    
     },
     name: { type: String, required: true, trim: true },
     username: { type: String, required: true, trim: true },
   },
   task:{
-    taskName : {type:String , required:true}  ,
-    taskDescription: {type:String , required:true}, 
+    taskName : {type:String , required:true},
+    taskDescription: {type:String , required:true},
   },
   project: {
+    projectId:{ type: mongoose.Schema.Types.ObjectId, required: true},
     ProjectName:{type:String, required: true},
-    projectId: { type: mongoose.Schema.Types.ObjectId, required: true },
     projectManager: { type: mongoose.Schema.Types.ObjectId, required: true },
     projectManagerUsername  :{type:String,  required:true}, 
     projectManagerName : {type:String , required:true}, 
@@ -45,7 +45,17 @@ const taskSchema = mongoose.Schema({
   endDate:{
     type:Date , 
     required:true
+  },
+  isDeleted:{
+    type:Boolean,
+    default:false,
+    required:true
+  },
+  isCompleted:{
+    status:{type:Boolean ,required:true , default:false}, 
+    updatedAt:{type:Date ,required:true,  default:new Date()}
   }
 });
+taskSchema.index({'project.ProjectName':1}); 
 const tasks = mongoose.model("Tasks", taskSchema);
 module.exports = tasks;

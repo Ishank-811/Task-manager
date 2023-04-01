@@ -1,0 +1,450 @@
+<div style="display: flex" ng-controller="managerProjectDetailsController">
+  <div style="width: 70%">
+    <div class="projectDetailsHeader">
+      <h3 style="margin: 30px">{{projectDetails.projectName}}</h3>
+      <h6 style="width: 80%; margin: 30px">
+        Lorem ipsum dolor Consequuntur facilis at minima temporibus tempora
+        beatae commodi dolores nemo voluptatem, cum repudiandaeadipisci
+        veritatis
+      </h6>
+      <div style="margin: 50px">
+        <div style="width: 40%">
+          <h5
+            ng-class="{'highPriority': projectDetails.priority=='High' ,
+         'MediumPriority': projectDetails.priority=='Medium' , 'lowPriority':projectDetails.priority=='Low'}"
+            style="margin-bottom: 20px"
+          >
+            {{projectDetails.priority}}
+          </h5>
+          <h6>status</h6>
+          <select
+            ng-required="true"
+            ng-model="projectStatus"
+            ng-change="projectStatusChangeFunction()"
+            style="text-align: center; margin-left: 10px; width: 50%"
+          >
+            <option value="" disabled selected>
+              {{projectDetails.status}}
+            </option>
+            <option value="progress">progress</option>
+            <option ng-disabled='progressPercentage!=100.0'  value="completed">Completed</option>
+          </select>
+        </div>
+        <button style="width:10%" class="createButton" ng-show="isSelected" ng-click="projectstatusFunction(projectStatus , projectDetails._id)">update</button>
+        <br />
+        <h5>Total Employees: {{totalEmployees.length}}</h5>
+        <br />
+        <div class="managerProjectDetailsClass">
+          <progress
+            style="width: 60%; height: 20px"
+            id="file"
+            value="{{progressPercentage}}"
+            max="100"
+          ></progress>
+          <h6 style="width: 35%; padding: 5px" class="progressClass">
+            Progress: {{progressPercentage}}
+            %
+          </h6>
+          <div>
+            <h6>Start Date</h6>
+            <h6>
+              <i class="fa-sharp fa-solid fa-calendar-days"></i>
+              {{(projectDetails.startDate | date:"dd/MM/yyyy")}}
+            </h6>
+          </div>
+          <div>
+            <h6>End Date</h6>
+            <h6>
+              <i class="fa-sharp fa-solid fa-calendar-days"></i>
+              {{(projectDetails.endDate | date:"dd/MM/yyyy")}}
+            </h6>
+          </div>
+        </div>
+        <div ng-show="employeesAsignedFiltered.length" style="margin: 30px">
+          <h5>Employees not started the project:</h5>
+          <table
+            style="width: 60%; text-align: center; background-color: whitesmoke"
+          >
+            <thead>
+              <tr>
+                <th style="color: red">Name</th>
+                <th style="color: red">username</th>
+                <th>Show Task</th>
+                <th>Assign Task</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                ng-repeat="employee in employeesAsignedFiltered track by $index"
+              >
+                <td style="padding: 10px">{{employee.assignedTo.name}}</td>
+                <td style="padding: 10px">{{employee.assignedTo.username}}</td>
+                <td style="padding: 10px">
+                  <button
+                    style="margin: 0px"
+                    class="createButton"
+                    ng-click="getTasks(employee.assignedTo.assignedUserId)"
+                  >
+                    Show Tasks
+                  </button>
+                </td>
+                <td style="padding: 10px">
+                  <button
+                    style="margin: 0px"
+                    data-toggle="modal"
+                    data-target="#assignModal"
+                    class="createButton"
+                    ng-click="assignTask(employee.assignedTo.assignedUserId,employee.assignedTo.name,employee.assignedTo.username )"
+                  >
+                    Assign Task
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <table
+        ng-show="employeesOfProject.length"
+        style="margin: 60px"
+        class="content-table"
+      >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>username</th>
+            <th>Created At</th>
+            <th>progress</th>
+            <th>Show Comments</th>
+            <th>Show Task</th>
+            <th>Assign Task</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="employee in employeesOfProject track by $index">
+            <td>{{employee.user.name}}</td>
+            <td>{{employee.user.username}}</td>
+            <td>{{employee.createdAt | date:"dd/MM/yyyy" }}</td>
+            <td>{{employee.progress.percentage }}%</td>
+
+            <td>
+              <button
+                style="margin: 0px"
+                data-toggle="modal"
+                data-target="#commentModal"
+                class="createButton"
+                ng-click="viewComments(employee._id)"
+              >
+                Show Comments
+              </button>
+            </td>
+            <td>
+              <button
+                style="margin: 0px"
+                class="createButton"
+                ng-click="getTasks(employee.user.userId)"
+              >
+                Show Tasks
+              </button>
+            </td>
+            <td>
+              <button
+                style="margin: 0px"
+                data-toggle="modal"
+                data-target="#assignModal"
+                class="createButton"
+                ng-click="assignTask(employee.user.userId ,employee.user.name ,employee.user.username  )"
+              >
+                Assign Task
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="projectTask">
+    <h6>SELECT SHOW TASKS TO VIEW THE TASK LIST</h6>
+
+    <h4 style="display: flex; justify-content: center; margin: 25px">
+      {{getTasksObject.viewTask[0].user.name}}
+    </h4>
+    <div
+      ng-repeat="item in getTasksObject.viewTask track by $index"
+      style="
+        width: 90%;
+        background-color: white;
+        padding: 14px;
+        border-radius: 12px;
+        margin: 10px;
+      "
+    >
+      <div style="display: flex; justify-content: space-between">
+        <h5>{{item.task.taskName}}</h5>
+        <h5>{{item.status}}</h5>
+        <i
+          data-toggle="modal"
+          data-target="#myModal"
+          style="margin: 10px; color: #af0000; cursor: pointer"
+          class="fa-solid fa-pen-to-square"
+          ng-click="taskDetails(item._id , item.task.taskName, item.task.taskDescription, item.endDate , item.startDate ,$index)"
+        ></i>
+        <i
+          style="margin: 10px; color: #af0000; cursor: pointer"
+          class="fa-solid fa-trash"
+          ng-click="deleteTask(item._id,$index)"
+        ></i>
+      </div>
+
+      <h6>{{item.task.taskDescription}}</h6>
+
+      <h6>
+        Start Date <i class="fa-solid fa-calendar-days"></i> {{item.startDate |
+        date:"dd/MM/yyyy"}}
+      </h6>
+      <h6>
+        End Date <i class="fa-solid fa-calendar-days"></i> {{item.endDate |
+        date:"dd/MM/yyyy"}}
+      </h6>
+    </div>
+    <h5
+      style="color: red; text-align: center"
+      ng-hide="getTasksObject.showNoTaskAssigned"
+    >
+      No task assigned yet
+    </h5>
+  </div>
+
+  <!---------------------------------- comments modal starts ------------------------------------------------>
+
+  <div class="modal" id="commentModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Comments</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div style="overflow: scroll; height: 50vh">
+            <h5>{{commentObject.showNoComments}}</h5>
+            <div ng-repeat="comment in commentObject.comments">
+              <h5>{{comment.comments.comment }}</h5>
+              <image style="height:20% ; width: 20%;"
+              ng-hide={{comment.comments.file==undefined}}
+              src="{{comment.comments.file}}"/>
+              <h5>By:- {{comment.comments.commentBy.name }}</h5>
+              <h5 style="color: #fb7474">
+                {{comment.comments.commentBy.role }}
+              </h5>
+
+              <hr />
+            </div>
+          </div>
+          <form name="addCommentsForm" role="form" autocomplete="off">
+            <input
+              type="text"
+              name="addComments"
+              ng-model="addComments"
+              ng-required="true"
+            />
+            <button
+              ng-click="addCommentsFormSubmit($event)"
+              ng-disabled="addCommentsForm.$invalid"
+              type="submit"
+            >
+              Add Comment
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!---------------------------------- comments modal ends ------------------------------------------------>
+
+  <!----------------------------------update task modal starts ----------------------------------->
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Update Task</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            style="height: fit-content"
+            class="projectClass"
+            name="projectForm"
+            role="form"
+          >
+            <span ng-show="showError" class="formerror"
+              >Project is already present</span
+            >
+            <input
+              type="text"
+              ng-model="updateTaskObject.updatedTaskName"
+              name="updatedTaskName"
+              placeholder="Task Name"
+              style="text-align: center"
+            />
+            <input
+              type="text"
+              ng-model="updateTaskObject.updatedTaskDescription"
+              name="updatedTaskDescription"
+              placeholder="Task Description"
+              style="text-align: center"
+            />
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="updatedStartDate"
+              name="updatedStartDate"
+              value="{{updateTaskObject.StartDateValue}}"
+              placeholder="Start Date"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="updatedEndDate"
+              value="{{updateTaskObject.EndDateValue}}"
+              name="updatedEndDate"
+              placeholder="updatedEndDate"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-click="updateTaskFunction($event)"
+            >
+              Update Task
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--------------------------------------------- update task modal ---------------------------------------------->
+
+  <!---------------------------assign a task to user  ------------------------------------------------------->
+  <div class="modal" id="assignModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Assign task to {{nameForModal}}</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            class="projectClass"
+            style="height: 60vh"
+            name="addTaskForm"
+            role="form"
+          >
+            <label>Task Name</label>
+            <input
+              type="text"
+              ng-model="addTaskObject.taskName"
+              name="taskName"
+              ng-required="true"
+              style="text-align: center"
+            />
+            <label>Task Description</label>
+            <input
+              type="text"
+              ng-model="addTaskObject.taskDescription"
+              name="taskDescription"
+              ng-required="true"
+              style="text-align: center"
+            />
+
+            <div ng-repeat="item in taskEmployeeListView track by $index">
+              <h5>{{item}}</h5>
+            </div>
+
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="addTaskObject.startDate"
+              name="taskStartDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="addTaskObject.endDate"
+              name="TaskendDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-disabled="addTaskForm.$invalid"
+              ng-click="addTaskFunction($event)"
+            >
+              Create Task
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!---------------------------assign a task to user  ------------------------------------------------------->
+</div>

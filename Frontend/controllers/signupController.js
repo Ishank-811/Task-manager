@@ -1,7 +1,7 @@
 myApp.controller("signupController", function ($scope, singupServices) {
   $scope.onfocusfun = function () {
     $scope.displaypasswordMessage = true;
-  };
+  }; 
 
   $scope.onblurfun = function () {
     $scope.displaypasswordMessage = false;

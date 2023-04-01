@@ -1,12 +1,16 @@
 var myApp = angular.module("mymodule", ["ui.router"]);
-myApp.config(function ($stateProvider) {
+myApp.config(function ($stateProvider , $urlRouterProvider){
+  // $urlRouterProvider.otherwise('signinAsOrganization'); 
+  $urlRouterProvider.when('/AdminDashboard', '/AdminDashboard/projectList');
+  $urlRouterProvider.when('/MangerDashboard', '/MangerDashboard/projectsList');
+  $urlRouterProvider.when('/EmployeeDashboard', '/EmployeeDashboard/home');
   $stateProvider
     .state("signinAsOrganization", {
       url: "/signinAsOrganization",
       templateUrl: "views/signinAsOrganization.html",
       controller: "signinAsOrganizationController",
     })
-    .state("superAdmin", {
+    .state("superAdmin", {  
       url: "/superAdmin",
       templateUrl: "views/superAdmin.html",
       controller: "superAdminController",
@@ -28,34 +32,77 @@ myApp.config(function ($stateProvider) {
     })
     .state("MangerDashboard", {
       url: "/MangerDashboard",
-      templateUrl: "views/managerView.html",
+      templateUrl: "views/manager/managerView.html",
       controller: "mangerController",
+    })
+    .state("MangerDashboard.viewProject", {
+      url: "/projectsList",
+      templateUrl: "views/manager/managerProjectsList.html",
+      controller: "managerProjectListController",
+    })
+    .state("MangerDashboard.viewProjectDetails", {
+      url: "/projectDetails/:projectId",
+      templateUrl: "views/manager/managerProjectDetails.html",
+      controller: "managerProjectDetailsController",
     })
     .state("EmployeeDashboard", {
       url: "/EmployeeDashboard",
-      templateUrl: "views/employeeView.html",
+      templateUrl: "views/employeeView/employeeView.html",
       controller: "employeeController",
     })
-    .state("EmployeeDashboard.ticketDetails", {
+    .state("EmployeeDashboard.home", {
+      url: "/home",
+      templateUrl: "views/employeeView/employeeViewProject.html",
+      controller: "employeeController",
+    })
+    .state("EmployeeDashboard.statistics" , {
+      url: "/statistics",
+      templateUrl: "views/employeeView/employeeStatistics.html",
+      controller: "employeeStatsController",
+    })
+    .state("EmployeeDashboard.home.ticketDetails", {
       url: "/ticketDetails/:id",
-      templateUrl: "views/ticketDetails.html",
+      templateUrl: "views/employeeView/ticketDetails.html",
       controller: "ticketDetailsController",
     })
     .state("AdminDashboard", {
       url: "/AdminDashboard",
-      templateUrl: "views/adminView.html",
-      controller: "adminController",
+      templateUrl: "views/admin/adminView.html",
     })
-    .state("AdminDashboard.updateProjectDetails", {
-      url: "/updateProjectDetails/:id",
-      templateUrl: "views/updateProjectDetails.html",
-      controller: "updateProjectDetailsController",
+    .state("AdminDashboard.projectList", {
+      url: "/projectList",
+      templateUrl: "views/admin/adminViewProject.html",
+    })
+    .state("AdminDashboard.statistics", {
+      url: "/statistics",
+      templateUrl: "views/admin/adminStats.html",
+      controller:"adminStatsController"
+    })
+    .state("AdminDashboard.ViewProjectDetails", {
+      url: "/ViewProjectDetails/:projectId",
+      templateUrl: "views/admin/adminProjectDetails.html",
+      controller: "adminProjectDetailsController",
+    })
+    .state("AdminDashboard.employees", {
+      url: "/employees",
+      templateUrl: "views/admin/employees.html",
+      controller: "adminEmployeesController",
     })
     .state("MangerDashboard.viewTask", {
       url: "/viewTask",
-      templateUrl: "views/managerViewTask.html",
-      controller: "mangerController",
-    });
+      templateUrl: "views/manager/managerViewTask.html",
+      controller: "managerViewTaskListController",
+    })
+    .state("MangerDashboard.statistics", {
+      url: "/statistics",
+      templateUrl: "views/manager/managerStats.html",
+      controller: "managerStatsController",
+    })
+    .state("EmployeeDashboard.TaskList", {
+      url:"/TaskList",
+      templateUrl: "views/employeeView/employeeTaskList.html",
+      controller: "employeeTaskListController",
+    })
 });
 
 var mycontroller = function ($scope, $window) {

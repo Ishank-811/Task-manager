@@ -1,0 +1,289 @@
+<div ng-controller="managerViewTaskListController">
+  <div style="padding-bottom: 50px">
+    <!-- <form style="margin: 40px" name="dateAnalysisForm">
+    <label>Start Date</label>
+    <input
+      style="width: 15%"
+      ng-required="true"
+      class="searchClass"
+      type="date"
+      ng-model="startDateForAnalysis"
+    />
+    <label>End Date</label>
+    <input
+      style="width: 15%"
+      ng-required="true"
+      class="searchClass"
+      type="date"
+      ng-model="endDateForAnalysis"
+    />
+    <button
+      class="createUserButton"
+      type="submit"
+      ng-disabled="dateAnalysisForm.$invalid"
+      ng-click="dateWiseAnalysis($event)"
+    >
+      View Analysis
+    </button>
+  </form> -->
+    <!-- <div
+    style="
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+      margin-bottom: 50px;
+    "
+  > -->
+    <!-- <h3 ng-show="showNoAnalysis" style="color:red">No task created between this dates</h3> -->
+    <!-- <div ng-repeat="item in analysis track by $index" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>{{item.status}}</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{item.count}} 
+        </h1>
+      </div>
+    </div> -->
+
+    <!-- </div> -->
+
+
+
+    <table style="width: 80%" class="content-table">
+      <thead>
+        <tr>
+          <th>Projects Name</th>
+          <th>Priority</th>
+          <th>Created At</th>
+          <th>Task Assigned</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="projectName in projectData">
+          <td>{{projectName.projectName}}</td>
+          <td>{{projectName.priority}}</td>
+          <td>{{projectName.createdAt | date: "dd/MM/yyyy"}}</td>
+
+          <td>
+            <buton
+              data-toggle="modal"
+              data-target="#viewTaskModal"
+              class="createButton"
+              style="cursor: pointer"
+              ng-click="showProjectTask( projectName.projectName,projectName._id)"
+              >Show Tasks</buton
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ul class="pagination">
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(1)"
+        >
+          First
+        </button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(currentPage - 1)"
+        >
+          Previous
+        </button>
+      </li>
+      <li
+        ng-repeat="page in pages track by $index"
+        ng-class="{active: currentPage == page}"
+      >
+        <button ng-click="setPage(page)">{{page}}</button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(currentPage + 1)"
+        >
+          Next
+        </button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(totalPages)"
+        >
+          Last
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!----------------------------------------- view task modal starts ------------------------------>
+
+  <div class="modal" id="viewTaskModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">View Tasks ({{projectName}})</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="tasklistclass">
+            <div class="TaskClass" ng-repeat="item in progressDivs ">
+              <h3>{{item}}</h3>
+              <h5 style="color:red" ng-show="viewTask.length==0">No task assigned</h5>
+              <div
+                ng-repeat="projectTask in viewTask |filter :{status:item} "
+                style="
+                  width: 95%;
+                  background-color: white;
+                  padding: 14px;
+                  border-radius: 12px;
+                  margin: 10px;
+                "
+              >
+                <div style="display: flex; justify-content: space-between">
+                  <h5>{{projectTask.task.taskName}}</h5>
+
+                  <h5>{{projectTask.status}}</h5>
+                  <i
+                    data-toggle="modal"
+                    data-target="#myModal"
+                    style="margin: 10px; color: #af0000; cursor: pointer"
+                    class="fa-solid fa-pen-to-square"
+                    ng-click="taskDetails(projectTask._id , projectTask.task.taskName, projectTask.task.taskDescription,
+                    projectTask.endDate , projectTask.startDate)"
+                  ></i>
+                  <i
+                  style="margin: 10px; color: #af0000; cursor: pointer"
+                  class="fa-solid fa-trash"
+                  ng-click="deleteTask(projectTask._id)"
+                ></i>
+                </div>
+                <h5>assigned to: {{projectTask.user.name}}</h5>
+                <h6>{{projectTask.task.taskDescription}}</h6>
+                <h6 style="margin: 20px 0px 20px 0px">
+                  Start Date
+                  <i class="fa-solid fa-calendar-days"></i
+                  >{{projectTask.startDate | date:"dd/MM/yyyy"}}
+                </h6>
+                <h6>
+                  End Date
+                  <i class="fa-solid fa-calendar-days"></i>
+                  {{projectTask.endDate | date:"dd/MM/yyyy"}}
+                </h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!----------------------------------------- view task modal starts ------------------------------>
+
+  <!---------------------------------- modal starts ----------------------------------->
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Update Task</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+         
+          <form
+            style="height: fit-content"
+            class="projectClass"
+            name="projectForm"
+            role="form"
+          >
+            <input
+              type="text"
+              ng-model="updateTaskObject.updatedTaskName"
+              name="updatedTaskName"
+              placeholder="Task Name"
+              style="text-align: center"
+            />
+            <input
+              type="text"
+              ng-model="updateTaskObject.updatedTaskDescription"
+              name="updatedTaskDescription"
+              placeholder="Task Description"
+              style="text-align: center"
+            />
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="updateTaskObject.updatedStartDate"
+              name="updatedStartDate"
+              value="{{updateTaskObject.StartDateValue}}"
+              placeholder="Start Date"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="updateTaskObject.updatedEndDate"
+              value="{{updateTaskObject.EndDateValue}}"
+              name="updatedEndDate"
+              placeholder="updatedEndDate"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-click="updateTaskFunction($event)"
+            >
+              Update Task
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------------------------------------ modal ends ------------------------------------->
+</div>

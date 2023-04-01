@@ -4,6 +4,10 @@ myApp.controller(
     var role = sessionStorage.getItem("role");
     var token = sessionStorage.getItem("token");
 
+    superAdminServices.statistics(function(response){
+      console.log(response); 
+    })
+
     console.log(role);
     if (role == "SuperAdmin") {
       $scope.organizationDetails = [];

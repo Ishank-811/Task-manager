@@ -1,0 +1,161 @@
+<div >
+    <div
+    style="
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+      margin-bottom: 50px;
+    "
+  >
+<div style="width:19%" ng-repeat="item in countBystatus track by $index" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>{{item._id}}</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{item.count}} 
+        </h1>
+      </div>
+    </div>
+    <div style="width:19%" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>Total</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{countBystatus[0].count +countBystatus[1].count+ countBystatus[2].count + countBystatus[3].count }}
+        </h1>
+      </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: space-evenly; margin:40px">
+    <div style="width: 40% ;display: flex; flex-direction: column; align-items: center; justify-content: center; ">
+      <h3 style="margin: auto; display: flex; justify-content: center; margin-bottom: 20px; color:rgb(90, 90, 90)">Upcoming Deadlines</h3>
+    <table class="analysisTable"  >
+      <thead>
+        <tr>
+          <th>Sno</th>
+          <th>Project Name</th>
+          <th>Priority</th>
+          <th>Deadline</th>
+          <th>Days Left</th>
+          <th>Overview</th>
+        
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr ng-repeat="project in isUpcomingProject">
+          <td>{{$index+1}}</td>
+          <td>{{project.projectName}}</td>
+          <td>{{project.priority}}</td>
+          <td>{{project.endDate | date : "dd/MM/yyyy"}}</td>
+          <td>{{timeleft(project.endDate)}} days</td>
+          <td><button data-toggle="modal" data-target="#viewProjectStats" ng-click="overViewOfProject(project._id)" style="margin:1px" class="createButton">overview</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div  style="width: 50% ; display: flex; flex-direction: column; align-items: center; justify-content: center; ">
+    <h3 style="margin: auto; display: flex; justify-content: center; color:rgb(90, 90, 90)">Overdue Projects</h3>
+    <table class="analysisTable">
+      <thead>
+        <tr>
+          <th>Sno</th>
+          <th>Project Name</th>
+          <th>priority</th>
+          <th>Deadline</th>
+          <th>Overdue</th>
+          <th>Overview</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <tr ng-repeat="project in overDueProject">
+          <td>{{$index+1}}</td>
+          <td>{{project.projectName}}</td>
+          <td>{{project.priority}}</td>
+          <td>{{project.endDate | date : "dd/MM/yyyy"}}</td>
+          <td>{{timeleft(project.endDate)}} days</td>
+          <td><button data-toggle="modal" data-target="#viewProjectStats" ng-click="overViewOfProject(project._id)" style="margin:1px" class="createButton">overview</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+  <div style="display: flex; justify-content: space-evenly;">
+  <canvas id="completionRate" style="width: 10%; max-width: 600px"></canvas>
+  <canvas id="line" style="width: 10%; max-width: 600px"></canvas>
+</div>
+<canvas id="perProjectTask" style="width: 10%; max-width: 600px"></canvas>
+  <div class="modal" id="viewProjectStats">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">View Analysis</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button> 
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <canvas id="barchart" style="width: 10%; max-width: 600px"></canvas>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="employeeProgress" >
+
+   <div style="width:30% ; border:1px solid black ; padding:10px ">
+    <div>
+    <label>Name of the employee: </label>
+    <br>
+    <input ng-change="nameOfEmployeeChangeFunction(nameOfEmployee)" ng-model="nameOfEmployee"/>
+    <h6 style="color:red" ng-show="employeeList.length==0">No Employee Matched</h6>
+    <div ng-repeat="item in employeeList ">
+      <div style="width:100% ; display: flex; margin-top:10px">
+      <h6>{{item.firstName}}</h6>
+      <button class="showStatusClassOfEmployee" ng-click="statusFunctionOfEmployee(item.firstName , item._id )">
+        Show Status</button>
+    </div>
+    </div>
+  </div>
+   </div>
+
+   <div style="width:70% ; border:1px solid black;">
+    <canvas id="PerEmployeeStatus" style="width: 10%; max-width: 500px"></canvas>
+   </div>
+
+  </div>
+
+
+
+</div>
+

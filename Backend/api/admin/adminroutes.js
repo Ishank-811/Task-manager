@@ -14,11 +14,17 @@ router.get(
   passport.authenticate("level2", { session: false }),
   adminController.fetchProjects
 );
-router.get("/getProjectDetails/:id", adminController.getProjectDetails);
-router.post("/deleteuser", adminController.deleteuser);
+
+router.patch("/deleteuser", adminController.deleteuser);
 router.post("/addEmployees", adminController.addEmployees);
-router.get("/viewProfile", adminController.viewProfile);
-router.get("/showEmployeeTicket", adminController.showEmployeeTicket);
-// router.patch("/updatingUser/:id" ,organizationController.updatingUser )
+router.get("/showEmployeeProjects", adminController.showEmployeeProjects);
+router.get("/fastestPaceProject" , adminController.fastestPaceProject); 
+router.get("/fetchProjectDetails/:projectId",passport.authenticate("level2", { session: false }),  adminController.fetchProjectDetails); 
+router.get("/viewTicket",  adminController.viewTicket); 
+router.get("/searchProject" , adminController.searchProject) ; 
+router.get("/filterSubmit",passport.authenticate("level2", { session: false }),  adminController.filterSubmit );
+router.patch("/updateProject/:projectId" ,passport.authenticate("level2", { session: false }) , adminController.updateProject ); 
+router.get("/stats" , adminController.stats); 
+router.get("/monthWiseAnalysis/:currentMonthValue" , adminController.monthWiseAnalysis) ; 
 
 module.exports = router;

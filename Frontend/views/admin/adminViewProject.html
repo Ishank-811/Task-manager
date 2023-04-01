@@ -1,0 +1,459 @@
+<div ng-controller="adminProjectController">
+  <div>
+    <div style="display: flex; justify-content: space-around">
+      <div class="searchingDiv">
+        <input
+          class="searchClass"
+          placeholder="Search Project"
+          ng-model="searchProject"
+          ng-change="searchProjectFunction(searchProject)"
+        />
+
+        <button
+          data-toggle="modal"
+          data-target="#filterModal"
+          style="width: 20%"
+          class="createButton"
+        >
+          <i
+            class="fa-solid fa-filter"
+            style="color: #ffffff; margin-right: 20px"
+          ></i>
+          Filter
+        </button>
+      </div>
+      <button
+        data-toggle="modal"
+        data-target="#myModal2"
+        ng-click="createProjectModalFunction()"
+        class="createProjectButton"
+      >
+        Create Project
+      </button>
+    </div>
+    <!---------------------------- create modal --------------------------------------------->
+    <div class="modal" id="myModal2">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Create Project</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <button
+              style="width: 20%; text-align: center"
+              ng-click="createProjectModalFunction()"
+              class="createButton"
+            >
+              Reset
+            </button>
+            <form class="projectClass" name="projectForm" role="form">
+              <span ng-show="errorHandlingObject.showError" class="formerror"
+                >Project is already present</span
+              >
+              <label>Project Name</label>
+              <input
+                type="text"
+                ng-model="createProjectObject.projectName"
+                ng-required="true"
+                style="text-align: center"
+              />
+              <label>Project Manager</label>
+              <select
+                ng-required="true"
+                ng-model="projectManager"
+                ng-change="projectManagerChange(projectManager)"
+              >
+                <option
+                  ng-repeat="item in response track by $index"
+                  value="{{item}}"
+                  name="role"
+                >
+                  {{item.firstName}}
+                </option>
+              </select>
+              <button class="employeeAssignedFunction" ng-click="onfocusfun()">
+                Employee Assigned
+              </button>
+              <div
+                style="
+                  margin: 10px;
+                  background-color: #fbfbfb;
+                  border-radius: 10px;
+                  height:200px; 
+                  overflow: scroll;
+                "
+                ng-style="{'display': displayUserList ? 'block' : 'none'}"
+              >
+                <label
+                  style="display: flex; width: 10%; margin: 10px ;"
+                  ng-repeat="item in employeesAsigned"
+                
+                > 
+                  <label>{{item.firstName}}</label>
+                  <input
+                    style="
+                      margin-top: 0px;
+                      margin-left: 10px;
+                      height: 30px;
+                      box-shadow: 0px 0px 0px 0px white;                     
+                    "
+                    type="checkbox"
+                    ng-change=assignedUserChecksChange()
+                    ng-model="createProjectObject.assignedUserChecks[$index]"
+                    ng-true-value="{{item}}"
+                  />
+                  <br />
+                </label>
+              </div>
+              <div ng-repeat="item in employeeObject.employeeList track by $index">
+                <h5>{{item}}</h5>
+              </div>
+              <label>Priority</label>
+              <select
+                ng-required="true"
+                ng-model="createProjectObject.priority"
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+              <label>Start Date</label>
+              <input
+                type="Date"
+                ng-model="createProjectObject.startDate"
+                name="startDate"
+                placeholder="Start Date"
+                ng-required="true"
+                style="text-align: center"
+              />
+
+              <label>End Date</label>
+              <input
+                type="Date"
+                ng-model="createProjectObject.endDate"
+                name="EndDate"
+                placeholder="Start Date"
+                ng-required="true"
+                style="text-align: center"
+              />
+              <button
+                class="createButton"
+                type="submit"
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+                ng-disabled="projectForm.$invalid || assignedCheck"
+                ng-click="ProjectFormDetails($event)"
+              >
+                Create Project
+                <div
+                  ng-hide="errorHandlingObject.createProjectLoader"
+                  style="margin-left: 20px"
+                  class="loader"
+                ></div>
+              </button>
+            </form>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!---------------------------- create modal ends --------------------------------------------->
+
+    <div class="allProjectClass">
+      <h5 style="text-align: center; color: red" ng-show="showNoProject">
+        No project Present
+      </h5>
+      <div
+        style="height: 100px; width: 100px"
+        ng-hide="allProjectDetailsLoader"
+        class="loader"
+      ></div>
+      <div class="projectDetailsClass" ng-repeat="project in project ">
+        <div class="projectHeader">
+          <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
+          <h4
+            style="font-weight: bold; margin-top: 10px; cursor: pointer"
+            ui-sref="AdminDashboard.ViewProjectDetails({projectId:project._id})"
+          >
+            {{project.projectName}}
+          </h4>
+
+          <div class="projectActions">
+            <h3 style="color: rgb(227, 79, 79); margin-top: 10px">
+              <i
+                class="fa-sharp fa-solid fa-trash"
+                ng-click="deleteProject(project._id)"
+              ></i>
+            </h3>
+            <h3
+              style="color: rgb(3, 127, 59); cursor: pointer; margin-top: 10px"
+              data-toggle="modal"
+              data-target="#myModal3"
+              ng-click="editProject(project._id ,  project.projectName , project.priority , project.startDate  ,project.endDate , $index)"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+            </h3>
+          </div>
+        </div>
+        <hr />
+        <div class="Detailing">
+          <progress
+            style="width: 80%; background-color: whitesmoke;"
+            id="progressOfProject"
+            value="{{timeleft(project.endDate)}}"
+            max="{{getDaysDiff(project.startDate , project.endDate)}}"
+          ></progress>
+
+          <h6
+            ng-init="number=timeleft(project.endDate)"
+            ng-class="{'dayleft':number>=0  ,'noDaysLeft':number<0 }"
+          >
+            {{number>=0 ? number : 'No'}} days left
+          </h6>
+          <h5
+            ng-class="{'highPriority': project.priority=='High' ,
+         'MediumPriority': project.priority=='Medium' , 'lowPriority':project.priority=='Low'}"
+            style="margin-bottom: 20px"
+          >
+            {{project.priority}}
+          </h5>
+          <h6>Start Date</h6>
+          <h6>
+            <i class="fa-sharp fa-solid fa-calendar-days"></i>
+            {{(project.startDate | date:"dd/MM/yyyy")}}
+          </h6>
+          <h6>end Date</h6>
+          <h6>
+            <i class="fa-sharp fa-solid fa-calendar-days"></i>
+            {{(project.endDate | date:"dd/MM/yyyy")}}
+          </h6>
+        </div>
+      </div>
+      <div class="modal" id="myModal3">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Update Form</h4>
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+            </div>
+
+            <form
+              class="UpdatedprojectClass"
+              name="updateProjectForm"
+              role="form"
+            >
+              <span ng-show="projectPresent" class="formerror"
+                >Project is already present</span
+              >
+              <label>Project Name:-</label>
+              <div style="display: flex; width: 100%">
+                <input
+                  type="text"
+                  ng-model="updateProjectObject.projectName"
+                  name="firstName"
+                  placeholder="Project name"
+                  ng-required="true"
+                />
+              </div>
+              <label>Priority:-</label>
+              <select
+              style="width: 90%"
+              ng-model="updateProjectObject.priority"
+              class="searchClass"
+            >
+              <option value="High" name="role">High</option>
+              <option value="Medium" name="role">Medium</option>
+              <option value="Low" name="role">Low</option>
+            </select>
+              <label>Start Date:-</label>
+              <div style="display: flex; width: 100%">
+                <input
+                  type="Date"
+                  ng-model="updateProjectObject.startDate"
+                  value="{{StartDate}}"
+                  name="updatedStartDate"
+                  placeholder="Project name"
+                  ng-required="true"
+                />
+              </div>
+              <label>End Date:-</label>
+              <div style="display: flex; width: 100%">
+                <input
+                  type="Date"
+                  ng-model="updateProjectObject.endDate"
+                  value="{{EndDate}}"
+                  name="updatedEndDate"
+                  placeholder="Project name"
+                  ng-required="true"
+                />
+              </div>
+              <button
+                class="createProjectButton"
+                ng-disabled="updateProjectForm.$pristine"
+                ng-click="updateFormSubmit($event)"
+              >
+                Update
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ul class="pagination">
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(1)"
+        >
+          First
+        </button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(currentPage - 1)"
+        >
+          Previous
+        </button>
+      </li>
+      <li
+        ng-repeat="page in pages track by $index"
+        ng-class="{active: currentPage == page}"
+      >
+        <button ng-click="setPage(page)">{{page}}</button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(currentPage + 1)"
+        >
+          Next
+        </button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(totalPages)"
+        >
+          Last
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!---------------------------------- filter modal starts ------------------------------->
+
+  <div class="modal" id="filterModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Filter</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <button
+            style="width: 20%; text-align: center"
+            ng-click="formReset()"
+            class="createButton"
+          >
+            Reset
+          </button>
+          <form>
+            <label>Priority:</label>
+            <br />
+            <select
+              style="width: 90%"
+              ng-model="filterObject.priorityFilter"
+              class="searchClass"
+            >
+              <option value="High" name="role">High</option>
+              <option value="Medium" name="role">Medium</option>
+              <option value="Low" name="role">Low</option>
+            </select>
+            <br />
+            <div style="margin-top: 30px">
+              <h6 style="color: rgb(253, 80, 6)">Created Between:</h6>
+              <label>Start Date</label>
+              <br />
+              <input
+                style="width: 90%"
+                type="Date"
+                class="searchClass"
+                ng-model="filterObject.createdStartDateFilter"
+              />
+              <br />
+              <label>End Date</label>
+              <br />
+              <input
+                style="width: 90%"
+                type="Date"
+                class="searchClass"
+                ng-model="filterObject.createdEndDateFilter"
+              />
+            </div>
+            <div style="margin-top: 40px">
+              <h6 style="color: rgb(253, 80, 6)">
+                More than start date and less than end date:
+              </h6>
+              <label>Start Date</label>
+              <br />
+              <input
+                style="width: 90%"
+                type="Date"
+                class="searchClass"
+                ng-model="filterObject.startDateFilter"
+              />
+              <br />
+              <label>End Date</label>
+              <br />
+              <input
+                style="width: 90%"
+                type="Date"
+                class="searchClass"
+                ng-model="filterObject.endDateFilter"
+              />
+            </div>
+            <br /><br />
+            <button
+              type="submit"
+              ng-click="filterSubmitForm($event)"
+              class="createButton"
+            >
+              Filter
+            </button>
+          </form>
+        </div> 
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!---------------------------------- filter modal starts ---------------------------------------->
+</div>

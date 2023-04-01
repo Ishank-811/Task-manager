@@ -9,5 +9,5 @@ passport.authenticate("level2", { session: false }), superAdminController.fetchA
 router.patch("/AllowOrganization/:organizationId",  superAdminController.AllowOrganization); 
 router.post("/addOrganization" ,superAdminController.addOrganization); 
 router.patch("/updateOrganization/:organizationId" ,superAdminController.updateOrganization ); 
-
+router.get("/statistics" ,superAdminController.statistics ); 
 module.exports = router;

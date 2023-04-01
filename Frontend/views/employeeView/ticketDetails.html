@@ -1,14 +1,14 @@
 <div ng-controller="ticketDetailsController">
   <div class="ticketClass">
     <div class="ticketHeader">
-      <h5
-        ng-class="{'highPriority': priority=='High' ,
-      'MediumPriority': priority=='Medium' , 'lowPriority':priority=='Low'}"
+      <!-- <h5
+        ng-class="{'highPriority': ticketDetails.priority=='High' ,
+      'MediumPriority': ticketDetails.priority=='Medium' , 'lowPriority':ticketDetails.priority=='Low'}"
         style="margin-bottom: 20px"
       >
-        {{priority}}
-      </h5>
-      <h5 class="ticketStatus">{{status}}</h5>
+        {{ticketDetails.priority}}
+      </h5> -->
+      <h5 class="ticketStatus">{{ticketDetails.status}}</h5>
     </div>
 
     <hr />
@@ -22,8 +22,8 @@
     </button>
     <hr />
     <div class="ticketDetails">
-      <h5>Project Name:- {{projectName}}</h5>
-      <h5>project Manger :- {{projectManagerName}}</h5>
+      <h5>Project Name:- {{ticketDetails.project.ProjectName}}</h5>
+      <h5>project Manger :- {{ticketDetails.project.projectManagerName}}</h5>
     </div>
     <hr />
     <div class="addTags">
@@ -33,8 +33,18 @@
           ng-model="progressStatus"
           style="text-align: center; margin-left: 10px"
         >
-          <option value="started">Started</option>
-          <option value="inProgress">Progress</option>
+          <option
+            ng-disabled="ticketDetails.status=='completed'"
+            value="started"
+          >
+            Started
+          </option>
+          <option
+            ng-disabled="ticketDetails.status=='completed'"
+            value="inProgress"
+          >
+            Progress
+          </option>
           <option value="completed">Completed</option>
         </select>
         <button
@@ -77,6 +87,24 @@
             class="loader"
           ></div>
         </button>
+        <div
+          style="
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <h6>view Comments</h6>
+          <h3
+            style="text-align: center; margin-left: 12px; cursor: pointer"
+            ng-click="viewComments()"
+            data-toggle="modal"
+            data-target="#CreateModal"
+          >
+            <i class="fa-sharp fa-solid fa-comment"></i>
+          </h3>
+        </div>
 
         <hr />
       </form>
@@ -127,24 +155,6 @@
         </form>
 
         <hr />
-      </div>
-      <div
-        style="
-          display: flex;
-          width: 100%;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-        <h6>view Comments</h6>
-        <h3
-          style="text-align: center; margin-left: 12px; cursor: pointer"
-          ng-click="viewComments(tickets)"
-          data-toggle="modal"
-          data-target="#CreateModal"
-        >
-          <i class="fa-sharp fa-solid fa-comment"></i>
-        </h3>
       </div>
     </div>
   </div>
@@ -204,7 +214,7 @@
         <!-- Modal body -->
         <div class="modal-body">
           <!-- <h1>hello</h1> -->
-          <h5 style="color:red">{{showNoTaskAssigned}}</h5>
+          <h5 style="color: red">{{showNoTaskAssigned}}</h5>
           <div
             ng-repeat="item in viewTask track by $index"
             style="
@@ -212,29 +222,40 @@
               background-color: whitesmoke;
               padding: 14px;
               border-radius: 12px;
-              margin:10px;
+              margin: 10px;
             "
           >
             <div style="display: flex; justify-content: space-between">
               <h5>{{item.task.taskName}}</h5>
-             
+
               <select
-          ng-required="true"
-          ng-model="taskStatus"
-          ng-change="taskStatusChangeFunction( $index)"
-          style="text-align: center; margin-left: 10px ; width:50%"
-        >
-        <option value="" disabled selected>{{item.status}}</option>
-          <option value="started">Started</option>
-          <option value="working">Working</option>
-          <option value="completed">Completed</option>
-        </select>
-        <button  ng-show="isSelected===$index" ng-click="taskStatusFunction(taskStatus , item._id)">update</button>
+                ng-required="true"
+                ng-model="taskStatus"
+                ng-change="taskStatusChangeFunction( $index)"
+                style="text-align: center; margin-left: 10px; width: 50%"
+              >
+                <option value="" disabled selected>{{item.status}}</option>
+                <option value="started">Started</option>
+                <option value="working">Working</option>
+                <option value="completed">Completed</option>
+              </select>
+              <button
+                ng-show="isSelected===$index"
+                ng-click="taskStatusFunction(taskStatus , item._id)"
+              >
+                update
+              </button>
             </div>
             <h6>{{item.task.taskDescription}}</h6>
 
-            <h6><i class="fa-solid fa-calendar-days"></i>  {{item.startDate | date:"dd/MM/yyyy"}}</h6>
-            <h6> <i class="fa-solid fa-calendar-days"></i> {{item.endDate | date:"dd/MM/yyyy"}}</h6>
+            <h6>
+              <i class="fa-solid fa-calendar-days"></i> {{item.startDate |
+              date:"dd/MM/yyyy"}}
+            </h6>
+            <h6>
+              <i class="fa-solid fa-calendar-days"></i> {{item.endDate |
+              date:"dd/MM/yyyy"}}
+            </h6>
           </div>
         </div>
 

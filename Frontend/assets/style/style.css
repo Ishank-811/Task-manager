@@ -164,14 +164,11 @@ button{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* height: 100vh; */
-  /* background-color: rgb(243, 243, 243); */
 }
 .projectClass{
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 73vh;
   
 }
 .UpdatedprojectClass{
@@ -209,7 +206,7 @@ button{
   border-radius: 10px;
   text-align: center;
   width: 35%;
-  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.418);
+  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.226);
   border: none;
 }
 .UpdatedprojectClass input{
@@ -296,7 +293,7 @@ button{
 }
 
 .content-table thead tr {
-  background-color: #009879;
+  background-color: #484C7f;
   color: #ffffff;
   text-align: left;
   font-weight: bold;
@@ -513,14 +510,16 @@ align-items: center;
   border-radius: 20px;
   background-color: rgb(245, 245, 245);
   margin:20px;
-  height:75vh;
+  height:50vh;
 
 }
 .allProjectClass{
   display: flex;
+  
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;  
+
 }
 .projectHeader{
   display: flex;
@@ -532,13 +531,10 @@ align-items: center;
 }
 .divCenter{
   font-size:30px;
-  /* position: relative; */
-  /* bottom:60px; */
-  /* right:20px ;   */
-  
   padding:8px;
   border-radius: 10px;
-  background-color: #0ff4c6;
+  background-color: #484C7f;
+  color:white; 
 }
 .projectActions{
   display: flex;
@@ -767,6 +763,21 @@ hr .new1 {
    color:white;
   font: bold!important;
 }
+
+
+#progressOfProject::-webkit-progress-value {
+  -webkit-appearance: none;
+  background-color: #484c7feb  ;
+  border-radius: 10px;
+  color:white;  
+}
+#progressOfProject::-webkit-progress-bar {
+  -webkit-appearance: none;
+  background-color: white  ;
+  border-radius: 10px;
+  border:1px solid black; 
+  color:white;  
+}
 .ticketprogressBar{
   background: linear-gradient(to right, #82CFD0 0%, #82CFD0 50%, #fff 50%, #fff 100%);
   border: solid 1px #82CFD0;
@@ -785,7 +796,7 @@ hr .new1 {
   width:350px ;
   background-color: whitesmoke; 
   border-radius: 12px;
-  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.592);
+  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.514);
 }
 .taskAnalysisHeadingClass{
   display: flex;
@@ -828,4 +839,260 @@ font-size:20px ;
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+.nav__cont {
+  position: fixed;
+  width: 50px;
+  top: 0;
+  height: 100vh;
+  z-index: 100;
+  background-color: #484C7f;
+  overflow: hidden;
+  transition: width 0.3s ease;
+  cursor: pointer;
+  box-shadow: 4px 7px 10px rgba(0, 0, 0, 0.4);
+  padding-top:2rem;
+}
+.nav__cont:hover {
+  width: 200px;
+}
+/* @media screen and (min-width: 600px) {
+  .nav__cont {
+    width: 80px;
+  }
+} */
+
+.nav {
+  list-style-type: none;
+  color: white;
+}
+.nav:first-child {
+  padding-top: 1.5rem;
+}
+
+.nav__items {
+  padding-bottom: 1rem;
+  font-family: "roboto";
+}
+.nav__items a {
+  position: relative;
+  display: block;
+  top: -35px;
+  padding-left: 25px;
+  padding-right: 15px;
+  transition: all 0.3s ease;
+  margin-left: 25px;
+  margin-right: 10px;
+  text-decoration: none;
+  color: white;
+  font-family: "roboto";
+  font-weight: 100;
+  font-size: 1.35em;
+}
+.nav__items a:after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 2px;
+  background: radial-gradient(circle at 94.02% 88.03%, #9dc2ec, transparent 100%);
+  opacity: 0;
+  transition: all 0.5s ease;
+  z-index: -10;
+}
+.nav__items:hover a:after {
+  opacity: 1;
+ 
+}
+.nav__items i {
+margin-left:15px;
+font-size: 21px;
+
+}
+
+@media screen and (min-width: 600px) {
+  .nav__items .navIcons {
+    width: 32px;
+    height: 32px;
+    left: 8px;
+  }
+}
+.SpecificProjectDetailsClass{
+  display: flex;
+}
+.projectSpecification{
+  width:70% ; 
+}
+.projectSpecification div{
+  margin:30px;
+}
+.projectTask{
+  width:23% ; 
+  background-color: whitesmoke;
+  margin:30px;
+  overflow: scroll;
+  box-shadow: 8px 8px 8px 1px rgba(0, 0, 0, 0.178);
+
+}
+.projectAssingedToDiv{
+display: flex;
+align-items: center;
+}
+.projectAssingedToDiv button{
+  width:6%;
+  height:35px;
+  border:none;
+  border-radius: 10px;
+
+}
+.projectAssingedToDiv div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border:1px solid rgba(71, 71, 71, 0.408);
+  width:150px;
+  height: 40px;
+  border-radius: 5px; 
+  margin:10px; 
+  cursor: pointer;
+  box-shadow: 8px 8px 8px 1px rgba(0, 0, 0, 0.178);
+}
+.mangerDivClass{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
+  border:1px solid rgba(71, 71, 71, 0.408);
+  width:150px;
+  box-shadow: 8px 8px 8px 1px rgba(0, 0, 0, 0.178);
+  height: 40px;
+  border-radius: 5px; 
+}
+.projectDetailsInAdminClass{
+
+width:60%  ; 
+background-color: whitesmoke; 
+border-radius:10px ;
+padding:25px;
+box-shadow: 8px 8px 8px 1px rgba(0, 0, 0, 0.178);
+}
+.dayleft{
+  background-color:rgb(255, 191, 0);
+  color:white ; 
+  width:35%;
+  height:25px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+.progressClass{
+  display: flex;
+  justify-content: center;
+  background-color: #484C7f; 
+  width:10% ;
+   color:white ; 
+  border-radius: 10px;
+}
+.modal-lg{
+  max-width: 1200px!important;
+}
+.tasklistclass{
+  display: flex;
+  justify-content: space-evenly;
+  height:70vh ; 
+}
+.TaskClass{
+  width:25% ; 
+  margin:10px;
+  border-radius: 15px;
+  overflow: scroll;
+  background-color: whitesmoke;
+  
+} 
+.TaskClass h3{
+display: flex;
+justify-content: center;
+align-items: center;
+margin:20px;
+}
+
+
+.checkboxclass{
+  background-color: #ffff;
+  height:0px; 
+}
+.employeeAssignedFunction{
+  width: 37%;
+  margin-top: 28px;
+  margin-bottom: 28px;
+  border-radius: 10px;
+  height: 46px;
+  background: #ececec;
+  border: none;
+  box-shadow: 10px 10px 15px 10px rgba(0, 0, 0, 0.178);
+}
+.noDaysLeft{
+  background-color:rgb(78, 78, 78);
+  color:white ; 
+  width:35%;
+  height:25px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.show {
+  display: block !important;
+  background-color: #0000006a;
+
+}
+.managerProjectDetailsClass{
+  background-color: whitesmoke;
+   width:50% ;
+   height:35vh ; 
+   display: flex; 
+   flex-direction:column; 
+   justify-content: space-evenly;
+   padding:20px;
+}
+.analysisTable thead{
+  background-color: whitesmoke;
+  text-align: center;
+}
+
+.analysisTable td,th{
+  padding:10px; 
+  text-align: center;
+  border: 1px solid rgb(0, 0, 0);
+}
+.active{
+   border:2px solid black ; 
+}
+.employeeProgress{
+  display:flex ; 
+  height:250px;
+  background-color: whitesmoke; 
+  margin-top:30px ; 
+  margin-bottom:40px; 
+}
+.showStatusClassOfEmployee{
+  width: 30%;
+  margin-left: 24px;
+  border: none;
+  background: #484C7f;
+  border-radius: 10px;
+  color:white; 
+}
+.activeButton{
+  border: 4px solid rgb(255, 149, 0) ;
+ 
 }

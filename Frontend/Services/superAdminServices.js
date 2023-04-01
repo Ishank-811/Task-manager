@@ -62,6 +62,23 @@ var fac = function ($http) {
           }
         );
     },
+    statistics:function(cb){
+      $http
+        .get(
+          "http://localhost:8080/superAdmin/statistics"
+        
+        )
+        .then(
+          function (res) {
+            console.log(res);
+            cb(res);
+          },
+          function (err) {
+            cb(err);
+            console.log(err);
+          }
+        );
+    }
   };
 };
 myApp.factory("superAdminServices", fac);

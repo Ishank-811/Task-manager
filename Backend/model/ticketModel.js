@@ -4,7 +4,7 @@ const ticketSchema = mongoose.Schema({
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Organization",
+     
     },
     name: { type: String, required: true, trim: true },
   },
@@ -12,7 +12,7 @@ const ticketSchema = mongoose.Schema({
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Users",
+      
     },
     name: { type: String, required: true, trim: true },
     username: { type: String, required: true, trim: true },
@@ -43,7 +43,13 @@ const ticketSchema = mongoose.Schema({
   progress :{
     percentage:{type:Number, Default:0} , 
     UpdatedAt : {type:Date , Default :new Date()},  
-  }
+  },
+  isDeleted:{
+    type:Boolean,
+    default:false,
+    required:true
+}
+
   
    
 });

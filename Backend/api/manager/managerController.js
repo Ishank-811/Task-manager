@@ -1,14 +1,15 @@
 var project = require("../../model/projects");
 var ticket = require("../../model/ticketModel");
 var comments = require("../../model/commentsModel");
+var users = require("../../model/usersModel"); 
 var task = require("../../model/taskModel");
-var moment = require("moment"); 
+var ProjectDetails = require("../../model/projectDetails");
+var moment = require("moment");
 const { default: mongoose } = require("mongoose");
 
-
 var fetchingProjects = function (req, res) {
-  var LIMIT = 4 ;  
-  var startIndex  = (Number(req.query.currentPage)-1)*4; 
+  var LIMIT = 8;
+  var startIndex = (Number(req.query.currentPage) - 1) * 8;
   project
     .aggregate([
       {
@@ -17,32 +18,45 @@ var fetchingProjects = function (req, res) {
         },
         $match: {
           "projectManger.projectMangerId": req.user._id,
+          isDeleted: false,
         },
       },
-    ]).sort({_id:-1}).skip(startIndex).limit(LIMIT)
-    .then(function (projectDetails) {
-      project.find({ "projectManger.projectMangerId": req.user._id}).count().then(function(countNum){
-        res.status(202).json({ projectDetails, userid: req.user._id ,countNum  });
-      })
-     
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-
-const viewTicket = function (req, res) {
-  ticket
-    .find({
-      $and: [
-        {
-          "project.projectId": req.params.projectId,
-          "project.projectManager": req.user._id,
+      {
+        $group: {
+          _id: "$project.projectId",
+          createdAt: { $first: "$createdAt" },
+          endDate: { $first: "$endDate" },
+          projectManger: { $first: "$projectManger" },
+          projectName: { $first: "$project.projectName" },
+          documents: {
+            $push: {
+              assignedTo: "$assignedTo",
+            },
+          },
         },
-      ],
-    })
-    .then(function (ticketDetails) {
-      res.status(202).json({ ticketDetails, userid: req.user._id });
+      },
+      {
+        $project: {
+          _id: 1,
+          projectName: 1,
+          projectManger: 1,
+          documents: 1,
+          endDate: 1,
+          createdAt: 1,
+        },
+      },
+    ])
+    .sort({ _id: -1 })
+    .skip(startIndex)
+    .limit(LIMIT)
+    .then(function (projectDetails) {
+      ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
+        .count()
+        .then(function (countNum) {
+          res
+            .status(202)
+            .json({ projectDetails, userid: req.user._id, countNum });
+        });
     })
     .catch(function (error) {
       console.log(error);
@@ -90,13 +104,13 @@ var addTasks = function (req, res) {
       .save()
       .then(function (response) {
         console.log(response);
+        res.status(202).send(response);
         // res.status(202).send(response);
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
       });
   }
-  res.status(202).send({ taskCreated: true });
 };
 
 var viewAssignedTask = function (req, res) {
@@ -107,6 +121,7 @@ var viewAssignedTask = function (req, res) {
     .find({
       "project.projectId": req.query.projectId,
       "user.userId": req.query.employeeId,
+      isDeleted: false,
     })
     .then(function (ticketData) {
       res.status(202).send(ticketData);
@@ -115,11 +130,101 @@ var viewAssignedTask = function (req, res) {
       console.log(error);
     });
 };
-var managerUserId ; 
-var showAllTask = function (req, res) {
-  managerUserId= (req.user._id);
+var managerUserId;
+
+var updateTask = function (req, res) {
+  console.log(req.body);
+  console.log(req.params);
   task
-    .find({ "project.projectManager": req.user._id })
+    .findByIdAndUpdate(req.params.taskId, req.body, { new: true })
+    .then(function (response) {
+      res.status(200).send(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+var dateWiseAnalysis = function (req, res) {
+  console.log(req.body);
+
+  task
+    .aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              "project.projectManager": mongoose.Types.ObjectId(managerUserId),
+            },
+            {
+              createdAt: {
+                $gte: new Date(req.body.startDate),
+                $lte: new Date(req.body.endDate),
+              },
+            },
+          ],
+        },
+      },
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+
+      {
+        $project: {
+          status: "$_id",
+          count: 1,
+          _id: 0,
+        },
+      },
+    ])
+    .then(function (response) {
+      console.log(response);
+      res.status(200).send(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+var fetchProjectDetail = function (req, res) {
+  ProjectDetails.findById(req.params.projectId)
+    .then(function (projectData) {
+      ticket
+        .find({ "project.projectId": req.params.projectId ,  isDeleted:false })
+        .then(function (ticketsData) {
+          res.status(200).send({ projectData, ticketsData });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+var showAllAssignedProjects = function (req, res) {
+  var LIMIT = 8;
+  var startIndex = (Number(req.query.currentPage) - 1) * 8;
+  ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
+    .sort({ _id: -1 })
+    .skip(startIndex)
+    .limit(LIMIT)
+    .then(function (response) {
+      ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
+        .count()
+        .then(function (countNum) {
+          res.status(200).send({ projectData: response, countNum });
+        });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+var showProjectTask = function (req, res) {
+  task
+    .find({
+      "organization.organizationId": req.user.organization.organizationId,
+      "project.projectId": req.params.projectId,
+      isDeleted: false,
+    })
     .then(function (response) {
       res.status(200).send(response);
     })
@@ -128,53 +233,318 @@ var showAllTask = function (req, res) {
     });
 };
 
-var updateTask = function (req, res) {
-  console.log(req.body);
-  console.log(req.params); 
-  task.findByIdAndUpdate(req.params.taskId ,req.body , {new:true}).then(function(response){
-    res.status(200).send(response); 
-  }).catch(function(error){
-    console.log(error); 
-  })
-};
-var dateWiseAnalysis = function(req,res){
-  console.log(req.body); 
+var searchProject = function (req, res) {
+  console.log(req.query);
 
-  task.aggregate([
-    {$match :{$and :[
-      {'project.projectManager':mongoose.Types.ObjectId(managerUserId)}  , 
-      { createdAt: {
-                  $gte:new Date(req.body.startDate), 
-                  $lte:new Date(req.body.endDate) 
+  var regex = new RegExp(req.query.projectName, "i");
+  project
+    .aggregate([
+      {
+        $match: {
+          "projectManger.projectMangerId": req.query.managerId,
+        },
+        $match: {
+          "project.projectName": regex,
+        },
+      },
+      {
+        $group: {
+          _id: "$project.projectId",
+          createdAt: { $first: "$createdAt" },
+          endDate: { $first: "$endDate" },
+          projectManger: { $first: "$projectManger" },
+          projectName: { $first: "$project.projectName" },
+          documents: {
+            $push: {
+              assignedTo: "$assignedTo",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          projectName: 1,
+          projectManger: 1,
+          documents: 1,
+          endDate: 1,
+          createdAt: 1,
+        },
+      },
+    ])
+    .then(function (projectDetails) {
+      res.status(200).send(projectDetails);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+var deleteTask = function (req, res) {
+  console.log(req.params);
+
+  task
+    .findByIdAndUpdate(req.params.taskId, { isDeleted: true }, { new: true })
+    .then(function (response) {
+      res.status(202).send(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+var projectStatusUpdate = function(req,res){
+  var data  ={
+    status:req.body.status
+  }
+  if(req.body.status=='completed'){
+    var completed ={
+      status:true, 
+      updatedAt:new Date()
+    }
+    data.isCompleted = completed; 
+  }
+
+  ProjectDetails.findByIdAndUpdate(req.params.projectId,  data , {new:true}).then(function(response){
+    res.status(202).send(response); 
+  }).catch(function(error){
+    res.status(404).send(error); 
+  })
+}
+
+
+var stats=  function(req,res){
+
+  Promise.all([
+
+    task.aggregate([
+      {
+        $match :{isDeleted:false}
+      },
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
         }
       }
-  ]}
-},
-  {$group: {_id : "$status"  ,  count:{$sum:1}}},
+    ]),
+    ProjectDetails.aggregate([
+      { $match: { "isCompleted.status": false } },
+      {
+        $project: {
+          projectName: 1,
+          startDate: 1,
+          endDate: 1,
+          priority:1 , 
+          isUpcoming: {
+            $gt: ["$endDate", new Date()],
+          },
+        },
+      },
+      {
+        $match: {
+          isUpcoming: true,
+        },
+      },
+      { $sort: { endDate: 1 } },
+      { $limit: 5 },
+    ]),
+    ProjectDetails.aggregate([
+      { $match: { "isCompleted.status": false } },
+      {
+        $project: {
+          projectName: 1,
+          startDate: 1,
+          endDate: 1,
+          priority:1 ,
+          isOverdue: {
+            $lt: ["$endDate", new Date()],
+          },
+        },
+      },
+      {
+        $match: {
+          isOverdue: true,
+        },
+      },
+      { $sort: { endDate: 1 } },
+      { $limit: 5 },
+    ]),
 
-{
-  $project:{
-    status : "$_id",
-    count:1,
-    _id:0
-  }
+    task.aggregate([
+      {
+        $match: {
+          "isDeleted": false,
+          "isCompleted.status": true
+        }
+      },
+      {
+        $group: {
+          _id: "$project.projectId",
+          projectName: {
+            $first: "$project.ProjectName"
+          },
+          numTasks: {
+            $sum: 1
+          },
+          totalCompletionTime: {
+            $sum: {
+              $subtract: ["$isCompleted.updatedAt", "$createdAt"]
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          projectName: 1,
+          avgCompletionTime: {
+            $divide: ["$totalCompletionTime", "$numTasks"]
+          }
+        }
+      },
+      {
+        $sort: {
+          avgCompletionTime: -1
+        }
+      },
+      {
+        $limit: 5
+      }
+     ])
+    ,  task.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date("2023-03-01"),
+            $lt: new Date("2023-04-01"),
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $dayOfMonth: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          day: "$_id",
+          count: 1,
+        },
+      },
+    ]),
+   
+  ])
+
+.then(function(response){
+  res.status(202).json({
+    countBystatus: response[0],
+    isUpcomingProject:response[1],
+    overDueProject:response[2],
+    completionRateOfProject : response[3], 
+    taskCreatedDayWise : response[4], 
+  }); 
+ }).catch(function(error){
+  res.status(400).send(error); 
+ })
 }
-]).then(function(response){
-  console.log(response); 
-  res.status(200).send(response) ; 
-}).catch(function(error){
-  console.log(error); 
-})
 
 
+var projectTaskStats = function(req,res){
+  task.aggregate([
+    
+    { $match: { "project.projectId": mongoose.Types.ObjectId(req.params.projectId) , isDeleted:false} },
+    {
+      $group: {
+        _id: "$user.userId",
+        name : {$first:'$user.name' },
+        totalTasksAssigned: { $sum: 1 },
+        inactiveTasks: {
+          $sum: { $cond: [{ $eq: ["$status", "Inactive"] }, 1, 0] }
+        },
+        workingTasks: {
+          $sum: { $cond: [{ $eq: ["$status", "working"] }, 1, 0] }
+        },
+        tasksCompleted: {
+          $sum: { $cond: [{ $eq: ["$isCompleted.status", true] }, 1, 0] },
+        },
+      },
+    },
+    {
+      $project:{
+        _id:0, 
+        name:1,
+        totalTasksAssigned:1,
+        tasksCompleted:1,
+        inactiveTasks:1, 
+        workingTasks:1, 
+        tasksCompleted:1
+      }
+    }
+
+  ])
+  .then(function(response){
+    res.status(200).send(response); 
+  }).catch(function(error){
+    res.status(404).send(error); 
+  })
 }
+
+
+var userStats = function(req,res){
+  task.aggregate([
+      {
+        $match: {
+          "user.userId": mongoose.Types.ObjectId(req.params.userId),
+          isDeleted: false,
+        }
+      },
+      {
+        $group: {
+          _id: "$project.projectId",
+          projectName: { $first: "$project.ProjectName" },
+          taskCount: { $sum: 1 },
+        },
+      },
+      // Match projects assigned to the specific user
+      // {
+      //   $match: {
+      //     projectManager: ObjectId("user_id_here"),
+      //   }
+      // },
+    ]).then(function(response){
+      res.status(200).send(response); 
+    }).catch(function(error){
+      res.status(404).send(error); 
+    })
+}
+
+var searchEmployee=  function(req,res){
+  var regex = new RegExp(req.params.name, "i");
+  users.find({username:regex , role:'Employee'}).then(function(response){
+    res.status(200).send(response); 
+  }).catch(function(error){
+    res.status(404).send(error); 
+  })
+}
+
 module.exports = {
   fetchingProjects,
-  viewTicket,
-  viewComments,
+  viewComments, 
   addTasks,
   viewAssignedTask,
-  showAllTask,
   updateTask,
-  dateWiseAnalysis
+  dateWiseAnalysis,
+  fetchProjectDetail,
+  showAllAssignedProjects,
+  showProjectTask,
+  searchProject,
+  deleteTask,
+  projectStatusUpdate,
+  stats,
+  projectTaskStats,
+  userStats,
+  searchEmployee
 };
