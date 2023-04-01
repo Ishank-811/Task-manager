@@ -22,9 +22,8 @@ router.get("/fastestPaceProject" , adminController.fastestPaceProject);
 router.get("/fetchProjectDetails/:projectId",passport.authenticate("level2", { session: false }),  adminController.fetchProjectDetails); 
 router.get("/viewTicket",  adminController.viewTicket); 
 router.get("/searchProject" , adminController.searchProject) ; 
-router.get("/filterSubmit",passport.authenticate("level2", { session: false }),  adminController.filterSubmit );
 router.patch("/updateProject/:projectId" ,passport.authenticate("level2", { session: false }) , adminController.updateProject ); 
 router.get("/stats" , adminController.stats); 
 router.get("/monthWiseAnalysis/:currentMonthValue" , adminController.monthWiseAnalysis) ; 
-
+router.get("/projectWiseAnalysis" , adminController.projectWiseAnalysis); 
 module.exports = router;

@@ -40,16 +40,18 @@ var fac = function ($http) {
         }
       );
     },
-    fetchProjects: function (data, cb) {
+    fetchProjects: function (filterObject, data, cb) {
       var config = {
         headers: {
           Authorization: "Bearer " + data.token,
           Accept: "application/json;odata=verbose",
         },
+
       };
+      console.log(filterObject); 
       $http
         .get(
-          `http://localhost:8080/admin/fetchProjects?currentPage=${data.currentPage}`,
+          `http://localhost:8080/admin/fetchProjects?currentPage=${data.currentPage}&priority=${filterObject.priorityFilter}&createdStartDate=${filterObject.createdStartDateFilter}&createdEndDate=${filterObject.createdEndDateFilter}&startDate=${filterObject.startDateFilter}&endDate=${filterObject.endDateFilter}`,
           config
         )
         .then(
@@ -144,29 +146,7 @@ var fac = function ($http) {
           }
         );
     },
-    filterSubmit: function (filterObject, token, cb) {
-      var config = {
-        headers: {
-          Authorization: "Bearer " + token,
-          Accept: "application/json;odata=verbose",
-        },
-      };
-      console.log(filterObject);
-      $http
-        .get(
-          `http://localhost:8080/admin/filterSubmit/?priority=${filterObject.priorityFilter}&createdStartDate=${filterObject.createdStartDateFilter}&createdEndDate=${filterObject.createdEndDateFilter}&startDate=${filterObject.startDateFilter}&endDate=${filterObject.endDateFilter}`,
-          config
-        )
-        .then(
-          function (res) {
-            console.log(res);
-            cb(res);
-          },
-          function (err) {
-            return err;
-          }
-        );
-    },
+
     updateProject : function(updatedProjectData  ,projectId, token , cb){
 
       var config = {
@@ -244,6 +224,22 @@ var fac = function ($http) {
         function (res) {
           console.log(res);
           cb(res.data);
+        },
+        function (err) {
+          return err;
+        }
+      );
+    },
+    projectWiseAnalysis : function(projectId ,monthValue, cb){
+      console.log(projectId , monthValue); 
+      $http
+      .get(
+        `http://localhost:8080/admin/projectWiseAnalysis?projectId=${projectId}&monthValue=${monthValue}`
+      )
+      .then(
+        function (res) {
+          console.log(res);
+          cb(res.data.numberOfTaskCompleted , res.data.numberOfTaskCreated);
         },
         function (err) {
           return err;

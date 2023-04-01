@@ -144,4 +144,48 @@
               </tr>
             </tbody>
           </table>
+
+          <div class="employeeProgress" >
+
+            <div style="width:30% ; border:1px solid rgba(86, 86, 86, 0.301) ; padding:10px ;overflow: scroll; height:350px">
+             <div>
+             <label>Name of the Project: </label>
+             <br>
+             <input ng-change="searchProjectFunction(searchProject)" ng-model="searchProject"/>
+             <h6 style="color:red" ng-show="project.length==0">No Project Matched</h6>
+             <div  ng-repeat="item in project ">
+               <div style="width:100% ; display: flex; justify-content: space-evenly; margin-top:10px; ">
+                <h6>{{$index+1}}</h6>
+               <h6>{{item.projectName}}</h6>
+               <button class="showStatusClassOfEmployee" ng-click="statusFunctionOfProject(item.projectName , item._id, '03' )">
+                 Show Status</button>
+             </div>
+             </div>
+           </div>
+            </div>
+         
+            <div style="width:70% ; border:1px solid rgba(86, 86, 86, 0.301); padding:30px">
+              <div style="display: flex; justify-content: space-evenly;">
+              <h4 style=" display: flex; text-align: center;">{{projectName}}</h4>
+              <select style="width:20%" ng-change="monthChangeFunctionForProject(monthValue)" ng-model="monthValue">
+           
+                <option value="01">January</option>
+                <option value="02">Febuary</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </div>
+              <canvas id="projectWiseAnalysis" style="width: 100%; max-width: 600px"></canvas>
+            </div>
+         
+           </div>
+
 </div>

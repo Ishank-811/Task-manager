@@ -81,27 +81,54 @@ const creatingPorject = function (req, res) {
 };
 
 const fetchProjects = function (req, res) {
+  const filters = {};
+  // console.log(req.query);
+  if (req.query.priority != "null") {
+    filters.priority = req.query.priority;
+  }
+  if (req.query.createdStartDate != "null") {
+    filters.createdAt = { $gte: new Date(req.query.createdStartDate) };
+  }
+  if (req.query.createdEndDate != "null") {
+    filters.createdAt = {
+      ...filters.createdAt,
+      $lte: new Date(req.query.createdEndDate),
+    };
+  }
+  if (req.query.startDate != "null") {
+    filters.startDate = { $gte: new Date(req.query.startDate) };
+  }
+  if (req.query.endDate != "null") {
+    filters.endDate = { $lte: new Date(req.query.endDate) };
+  }
+
   var LIMIT = 8;
   var startIndex = (Number(req.query.currentPage) - 1) * 8;
+  
   projectDetails
-    .find({})
-    .count()
-    .then(function (projectCount) {
-      projectDetails
         .find({
-          "organization.organizationId": req.user.organization.organizationId,
+          $and: [
+            { "organization.organizationId": req.user.organization.organizationId },
+            filters,
+          ]
         })
         .sort({ _id: -1 })
         .limit(LIMIT)
         .skip(startIndex)
         .then(function (projectList) {
-          res.status(202).json({ projectList, projectCount });
+          projectDetails.countDocuments({$and: [
+            { "organization.organizationId": req.user.organization.organizationId },
+            filters,
+          ]}).then(function(projectCount){
+            res.status(202).json({ projectList, projectCount });
+          })
+        
         })
         .catch(function (err) {
           res.status(404).send(err);
         });
-    });
 };
+
 
 const deleteuser = function (req, res) {
   mongoose.startSession().then(function (session) {
@@ -266,42 +293,6 @@ var searchProject = function (req, res) {
     });
 };
 
-var filterSubmit = function (req, res) {
-  const filters = {};
-  // console.log(req.query);
-  if (req.query.priority != "null") {
-    filters.priority = req.query.priority;
-  }
-  if (req.query.createdStartDate != "null") {
-    filters.createdAt = { $gte: new Date(req.query.createdStartDate) };
-  }
-  if (req.query.createdEndDate != "null") {
-    filters.createdAt = {
-      ...filters.createdAt,
-      $lte: new Date(req.query.createdEndDate),
-    };
-  }
-  if (req.query.startDate != "null") {
-    filters.startDate = { $gte: new Date(req.query.startDate) };
-  }
-  if (req.query.endDate != "null") {
-    filters.endDate = { $lte: new Date(req.query.endDate) };
-  }
-  console.log(filters);
-  projectDetails
-    .find({
-      $and: [
-        { "organization.organizationId": req.user.organization.organizationId },
-        filters,
-      ],
-    })
-    .then(function (response) {
-      res.status(202).send(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
 
 var updateProject = function (req, res) {
   var updatedProject = req.body;
@@ -567,6 +558,79 @@ var monthWiseAnalysis = function(req,res){
   })
 }
 
+
+var projectWiseAnalysis = function(req,res){
+
+var currentMonth = req.query.monthValue ; 
+var nextMonth = (parseInt(currentMonth)+1).toString().padStart(currentMonth.length, '0'); 
+Promise.all([
+  task.aggregate([{
+    $match: {
+      "project.projectId": mongoose.Types.ObjectId(req.query.projectId),
+      isDeleted:false,
+      createdAt: {
+        $gte: new Date("2023-"+currentMonth+"-01"),
+        $lt: new Date("2023-"+nextMonth+"-01"),
+      },
+    },
+  },
+  {
+    $group: {
+      _id: { day: { $dayOfMonth: "$createdAt" } },
+      numberOfTaskCreated: { $sum: 1 },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      numberOfTaskCreated: 1,
+      day: "$_id.day",
+    },
+  },
+  {
+    $sort: { day: 1 },
+  },
+]),
+task.aggregate([
+  {
+    $match: {
+      "project.projectId": mongoose.Types.ObjectId(req.query.projectId),
+      "isCompleted.status": true,
+      isDeleted:false,
+      "isCompleted.updatedAt": {
+        $gte: new Date("2023-"+currentMonth+"-01"),
+        $lt: new Date("2023-"+nextMonth+"-01"),
+      },
+    },
+  },
+  {
+    $group: {
+      _id: { day: { $dayOfMonth: "$isCompleted.updatedAt" } },
+      numberOfTaskCompleted: { $sum: 1 },
+    },
+  },
+  {
+    $project: {
+      _id: 0,
+      numberOfTaskCompleted: 1,
+      day: "$_id.day",
+    },
+  },
+  {
+    $sort: { day: 1 },
+  },
+])
+]).then(function(response){
+  res.status(200).json({
+    numberOfTaskCreated:response[0],
+    numberOfTaskCompleted:response[1]
+  })
+}).catch(function(error){
+  res.status(404).send(error); 
+})
+
+}
+
 module.exports = {
   stats,
   fetchingUsers,
@@ -580,6 +644,6 @@ module.exports = {
   viewTicket,
   searchProject,
   monthWiseAnalysis,
-  filterSubmit,
   updateProject,
+  projectWiseAnalysis
 };

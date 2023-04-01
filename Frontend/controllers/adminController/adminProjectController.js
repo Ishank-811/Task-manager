@@ -3,6 +3,14 @@ myApp.controller("adminProjectController" , function($scope ,$timeout ,$window, 
     
 
 
+    $scope.filterObject = {
+      priorityFilter:null,
+      createdStartDateFilter:null,
+      createdEndDateFilter:null,
+      startDateFilter:null ,
+      endDateFilter:null
+     } 
+    
 
 //time left logic starts
 
@@ -144,8 +152,6 @@ $scope.createProjectObject = {
 
 
 
-
-
       function formatDateForInputDate(date) {
         var year = date.getFullYear();
         var month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -209,10 +215,10 @@ $scope.createProjectObject = {
 
       $scope.currentPage = 1;
       $scope.showNoProject = false  ;
-      var fetchProjectsFunction = function (currentPage) {
+      var fetchProjectsFunction = function (currentPage , filterObject) {
         $scope.project=[]; 
         $scope.allProjectDetailsLoader = false;
-        adminServices.fetchProjects({ token, currentPage }, function (response) {
+        adminServices.fetchProjects(filterObject,{ token, currentPage }, function (response) {
           $scope.allProjectDetailsLoader = true;
           var data = response.data ; 
           $scope.project = data.projectList;
@@ -226,10 +232,10 @@ $scope.createProjectObject = {
          
         });
       };
-      fetchProjectsFunction($scope.currentPage);
+      fetchProjectsFunction($scope.currentPage ,  $scope.filterObject);
       $scope.setPage = function (pageNumber) {
         $scope.currentPage = pageNumber;
-        fetchProjectsFunction($scope.currentPage);
+        fetchProjectsFunction($scope.currentPage ,  $scope.filterObject);
       };
 
 
@@ -262,37 +268,17 @@ $scope.createProjectObject = {
 
 
 
-     $scope.filterObject = {
-      priorityFilter:null,
-      createdStartDateFilter:null,
-      createdEndDateFilter:null,
-      startDateFilter:null ,
-      endDateFilter:null
-     } 
+
      $scope.filterSubmitForm =  function($event){
       $scope.showNoProject = false  ; 
       $event.preventDefault(); 
       
       console.log($scope.filterObject); 
-      adminServices.filterSubmit( $scope.filterObject ,token, function(response){
-        $scope.project = response.data;
-        if(response.data.length==0){
-          $scope.showNoProject = true  ; 
-        }else{
-          $scope.showNoProject = false  ; 
-        }
+      fetchProjectsFunction($scope.currentPage ,  $scope.filterObject);
+ 
         $(function () {
           $("#filterModal").modal("hide");
         });
-        numberOfPages($scope.project.length); 
-        $scope.filterObject = {
-          priorityFilter:null,
-          createdStartDateFilter:null,
-          createdEndDateFilter:null,
-          startDateFilter:null ,
-          endDateFilter:null
-         }
-      })
      }
 
      $scope.formReset = function(){
