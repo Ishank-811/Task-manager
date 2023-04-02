@@ -1,211 +1,26 @@
-<div ng-controller="organizationController" class="organization">
-
-
-
-  <div class="pageHeader">
-    <h2 style="display: flex; flex-direction: column; align-items: center">
-      Employee
-    </h2>
-    <input
-    class="searchClass"
-    placeholder="Search Employee"
-    ng-change = searchEmployeeFunction(searchEmployee)
-    ng-model="searchEmployee"
-  />
-  <button class="createUserButton" data-toggle="modal"
-  data-target="#CreateModal">
-    <i class="fa-solid fa-plus"></i>Add Employee
-  </button>
- 
-
-
+<div style="display: flex;" ng-controller="organizationController" class="organization">
+<div style="width:5%">
+  <nav class="nav__cont">
+    <ul class="nav">
+      <li class="nav__items ">
+        <i  class="fa-solid fa-house"></i>
+        <a ui-sref="organization.employee">Home</a>
+      </li>
+      
+      <li class="nav__items ">
+        <i class="fa-solid fa-list"></i>
+        <a ui-sref="EmployeeDashboard.TaskList" ui-sref-active="Active">Task List</a>
+      </li>
+      <li class="nav__items">
+        <i class="fa-solid fa-chart-simple" ></i>
+       <a ui-sref="EmployeeDashboard.statistics">Statistics</a>
+      </li>
+      
+    </ul>
+  </nav>
 </div>
- 
-  <div class="listOfUsers">
-  <h1 style="color:red ; height:80vh ; display: flex; align-items: center;" ng-show="showNoEmployees">No Employee Added yet </h1>   
-    <div class="employeeCard" ng-repeat="res in response">
-      <div class="profileAvtar">
-        <image
-          class="imageAvtar"
-          src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
-          alt="Avatar"
-        ></image>
-        <div class="profileAvtarRatings">
-          <h2 ng-click="deleteUser(res._id)" style="color: rgb(227, 79, 79)">
-            <i class="fa-sharp fa-solid fa-trash"></i>
-          </h2>
-          <h2
-            data-toggle="modal"
-            data-target="#myModal"
-            style="color: rgb(227, 79, 79)"
-            ng-click="updateUser(res._id,  res.firstName ,res.lastName, res.password,  res.role, res.username )"
-          >
-            <i class="fa-solid fa-pen-to-square"></i>
-          </h2>
-        </div>
-      </div>
-      <div class="employeeDetails">
-        <h2>{{res.firstName}}</h2>
-        <h5 class="profileRole">{{res.role}}</h5>
-        <hr />
-        <p style="font-size: 17px">
-          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices.
-          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices
-        </p>
-        <div>
-          <button class="employeeCardButton">Profile</button>
-        </div>
-      </div>
-    </div>
-  </div>
-<!---------------------------- update modal --------------------------------------------->
-  <div class="modal" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Employee</h4>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          <form class="updateForm" name="updateForm" role="form">
-            <input
-              type="text"
-              ng-model="updatedFirstName"
-              name="firstName"
-              placeholder="First Name"
-              ng-required="true"
-            />
-            <input
-              type="text"
-              ng-model="updatedLastName"
-              name="lastName"
-              placeholder="Last Name"
-              ng-required="true"
-            />
-            <input
-              type="email"
-              ng-model="updatedUsername"
-              name="username"
-              placeholder="Email"
-              ng-required="true"
-            />
-            <input
-              type="password"
-              ng-model="UpdatedPassword"
-              name="password"
-              placeholder="Password"
-              ng-required="true"
-            />
-            <select
-              class="updateSelect"
-              ng-required="true"
-              ng-model="updatedRole"
-            >
-              <option value="" disabled selected>Role</option>
-              <option name="Admin">Admin</option>
-              <option name="Manager">Manager</option>
-              <option name="Employee">Employee</option>
-            </select>
-            <button
-              type="submit"
-              ng-disabled="updateForm.$invalid"
-              ng-click="updateFormDetails($event)"
-            >
-              Update
-            </button>
-          </form>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!---------------------------- update modal ends --------------------------------------------->
-
+<div style="width:95%">
+<ui-view></ui-view>
+</div>
   
-  <!---------------------------- Create Employee modal  --------------------------------------------->
-  <div class="modal" id="CreateModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Create Employee</h4>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          <form class="addUSers" name="addUserForm" role="form">
-            <span ng-show="showError" class="formerror"
-            >Employee is already present</span
-          >
-            <input
-              type="text"
-              ng-model="firstName"
-              name="firstName"
-              placeholder="First Name"
-              ng-required="true"
-            />
-            <input
-              type="text"
-              ng-model="lastName"
-              name="lastName"
-              placeholder="Last Name"
-              ng-required="true"
-            />
-            <input
-              type="email"
-              ng-model="email"
-              name="email"
-              placeholder="Email"
-              ng-required="true"
-            />
-            <input
-              type="password"
-              ng-model="password"
-              name="password"
-              placeholder="Password"
-              ng-required="true"
-            />
-            <select ng-required="true" ng-model="role">
-              <option value="" disabled selected>Role</option>
-              <option name="Admin">Admin</option>
-              <option name="Manager">Manager</option>
-              <option name="Employee">Employee</option>
-            </select>
-            <button
-              type="submit"
-              ng-disabled="addUserForm.$invalid"
-              ng-click="addUsersDetails($event)"
-            >
-              ADD USER
-            </button>
-          </form>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-  <!---------------------------- create employee modal ends --------------------------------------------->
-
 </div>

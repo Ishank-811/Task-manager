@@ -418,11 +418,11 @@ button{
 }
 .employeeCard{
   display: flex;
-  width: 28%;
+  width: 21%;
   border : 1px solid rgb(232, 224, 224);
   border-radius:10px; 
-  margin:30px;
- 
+  margin:20px;
+ height:230px;
 }
 .profileAvtar{
 width: 30%;
@@ -480,6 +480,7 @@ align-items: center;
   font-size:16px;
   padding:6px;
   padding-left:20px;
+
   padding-right:20px; 
 }
 .listOfUsers{

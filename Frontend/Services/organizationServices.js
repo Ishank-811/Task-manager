@@ -1,33 +1,30 @@
 var fac = function ($http) {
   return {
-    sendingdata: function (data, cb) {
-      $http({
-        method: "POST",
-        url: "http://localhost:8080/organization/registeringUsers",
-        headers: {
-          Authorization: "Bearer " + data.token,
-          Accept: "application/json;odata=verbose",
-          "Content-Type": "application/json",
-        },
-        data,
-      })
-        .then(function (res) {
-          console.log(res);
-          cb(res);
-        })
-        .catch(function (err) {
-          cb(err);
-        });
-    },
-    ReadingData: function (token, cb) {
+    sendingdata: function (data,token ,cb) {
       var config = {
         headers: {
           Authorization: "Bearer " + token,
           Accept: "application/json;odata=verbose",
         },
       };
+      $http.post("http://localhost:8080/organization/registeringUsers" , data, config).then(function(response){
+        cb(response);  
+      }).catch(function(error){
+        cb(error);  
+        console.log(error); 
+      })
+      
+    },
+    ReadingData: function (currentPage,filterEmployee, token, cb) {
+      var config = {
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json;odata=verbose",
+        },
+      };
+      console.log(filterEmployee); 
 
-      $http.get("http://localhost:8080/organization/fetchingUser", config).then(
+      $http.get(`http://localhost:8080/organization/fetchingUser?currentPage=${currentPage}&filterEmployee=${filterEmployee}`, config).then(
         function (res) {
           console.log(res);
           cb(res);
