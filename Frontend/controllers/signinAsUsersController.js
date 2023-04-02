@@ -22,12 +22,18 @@ myApp.controller(
         if (data.data.token && data.data.role == "Admin") {
           $window.location.href = "#!/AdminDashboard";
           sessionStorage.setItem("role", data.data.role);
+          sessionStorage.setItem("organization", data.data.organizationDetails);
+          sessionStorage.setItem("username", data.data.username);
         } else if (data.data.token && data.data.role == "Manager") {
           $window.location.href = "#!/MangerDashboard";
           sessionStorage.setItem("role", data.data.role);
+          sessionStorage.setItem("organization", data.data.organizationDetails);
+          sessionStorage.setItem("username", data.data.username);
         } else if (data.data.token && data.data.role == "Employee") {
           $window.location.href = "#!/EmployeeDashboard";
           sessionStorage.setItem("role", data.data.role);
+          sessionStorage.setItem("organization", data.data.organizationDetails);
+          sessionStorage.setItem("username", data.data.username);
         } else if (data.data.token && data.data.role == "SuperAdmin") {
           $window.location.href = "#!/superAdmin";
           sessionStorage.setItem("role", data.data.role);

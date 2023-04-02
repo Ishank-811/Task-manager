@@ -6,6 +6,7 @@ const { aggregate } = require("../../model/projects");
 const ProjectDetails = require("../../model/projectDetails");
 var task = require("../../model/taskModel");
 var mongoose = require("mongoose");
+var adminPipeLine = require("./adminPipeline"); 
 var organizationId, organizationName;
 
 const fetchingUsers = function (req, res) {
@@ -365,157 +366,16 @@ var updateProject = function (req, res) {
 };
 
 var stats = function (req, res) {
-  var startOfMonth = new Date("2022-03-01"); // replace with your desired start date
-  var endOfMonth = new Date("2024-03-31");
   Promise.all([
-    project.aggregate([
-      { $match: { isDeleted: false } },
-      {
-        $group: {
-          _id: "$assignedTo.assignedUserId",
-          name: { $first: "$assignedTo.name" },
-          username: { $first: "$assignedTo.username" },
-          count: { $sum: 1 },
-        },
-      },
-      { $sort: { count: -1 } },
-      {
-        $limit: 5,
-      },
-    ]),
-   
-
-    task.aggregate([
-      {
-        $match: { isDeleted: false },
-      },
-      {
-        $group: {
-          _id: "$user.userId",
-          name: { $first: "$user.name" },
-          tasksCompleted: {
-            $sum: { $cond: [{ $eq: ["$isCompleted.status", true] }, 1, 0] },
-          },
-          tasksAssigned: { $sum: 1 },
-          totalTime: {
-            $sum: {
-              $cond: [
-                { $eq: ["$isCompleted.status", true] },
-                { $subtract: ["$isCompleted.updatedAt", "$createdAt"] },
-                0,
-              ],
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: 1,
-          tasksCompleted: 1,
-          tasksAssigned: 1,
-          completionRate: { $divide: ["$tasksCompleted", "$tasksAssigned"] },
-          averageTime: {
-            $cond: [
-              { $gt: ["$tasksCompleted", 0] },
-              { $divide: ["$totalTime", "$tasksCompleted"] },
-              0,
-            ],
-          },
-        },
-      },
-      {
-        $sort: { completionRate: -1, averageTime: 1 },
-      },
-      {
-        $limit: 3,
-      },
-    ]),
-    projectDetails.aggregate([
-      {
-        $match: { endDate: { $gte: new Date() } },
-      },
-      {
-        $project: {
-          progress: 1,
-          projectName: 1,
-          pace: {
-            pace: {
-              $divide: [
-                "$progress.percentage",
-                {
-                  $divide: [
-                    { $subtract: ["$progress.UpdatedAt", "$startDate"] },
-                    86400000,
-                  ],
-                },
-              ],
-            },
-          },
-        },
-      },
-      {
-        $sort: { pace: -1 },
-      },
-      {
-        $limit: 5,
-      },
-    ]),
-    projectDetails.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 },
-        },
-      },
-    ]),
-    projectDetails.aggregate([
-      { $match: { "isCompleted.status": false } },
-      {
-        $project: {
-          projectName: 1,
-          startDate: 1,
-          endDate: 1,
-          'projectManger.name':1,
-          isUpcoming: {
-            $gt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isUpcoming: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
-
-    projectDetails.aggregate([
-      { $match: { "isCompleted.status": false } },
-      {
-        $project: {
-          projectName: 1,
-          startDate: 1,
-          endDate: 1,
-          'projectManger.name':1,
-          isOverdue: {
-            $lt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isOverdue: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
+    project.aggregate(adminPipeLine.perUserProject()),
+    task.aggregate(adminPipeLine.top3Employees()),
+    projectDetails.aggregate(adminPipeLine.fastestPaceProject()),
+    projectDetails.aggregate(adminPipeLine.projectStatusNumber()),
+    projectDetails.aggregate(adminPipeLine.isUpcoming()),
+    projectDetails.aggregate(adminPipeLine.overDueProjects()),
   ]).then(function (response) {
     res.status(200).json({
       perUserProject: response[0],
-      
       top3Employees: response[1],
       fastestPaceProject: response[2],
       projectStatusNumber: response[3],

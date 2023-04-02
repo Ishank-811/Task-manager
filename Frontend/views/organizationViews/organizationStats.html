@@ -1,0 +1,95 @@
+<div>
+    <div
+    style="
+      display: flex;
+      width: 100%;
+      justify-content: space-evenly;
+      margin-bottom: 50px;
+    "
+  >
+<div style="width:19%" ng-repeat="item in numOfRole track by $index" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>{{item._id}}</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{item.count}} 
+        </h1>
+      </div>
+    </div>
+    <div style="width:19%" class="taskAnalysis">
+      <div class="taskAnalysisHeadingClass">
+        <h2>Total</h2>
+        <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
+      </div>
+      <div>
+        <h1
+          style="
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          {{numOfRole[0].count +numOfRole[1].count+ numOfRole[2].count +numOfRole[3].count }}
+        </h1>
+      </div>
+    </div>
+</div>
+<table style="width: 67% ; margin-top:70px ; margin-bottom:70px ;" class="content-table">
+            <thead>
+              <tr>
+                <th>Sno</th>
+                <th>Employee Name</th>
+                <th>Average Time</th>
+                <th>Completion Rate</th>
+                <th>Task Assigned</th>
+                <th>Task Completed</th>
+              </tr>
+            </thead>
+      
+            <tbody>
+              <tr ng-repeat="Employee in top3Employee">
+                <td>{{$index+1}}</td>
+                <td>{{Employee.name}}</td>
+                <td>{{((Employee.averageTime)/(1000*60*60*24)).toFixed(3)}}</td>
+                <td>{{Employee.completionRate.toFixed(1)}}</td>
+                <td>{{Employee.tasksAssigned}}</td>
+                <td>{{Employee.tasksCompleted}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+
+          <table style="width: 67% ; margin-top:70px ; margin-bottom:70px ;" class="content-table">
+            <thead>
+              <tr>
+                <th>Sno</th>
+                <th>Manager Name</th>
+                <th>Average Time</th>
+              
+                <th>Project Assigned</th>
+                <th>Project Completed</th>
+              </tr>
+            </thead>
+      
+            <tbody>
+              <tr ng-repeat="Employee in top2Manager">
+                <td>{{$index+1}}</td>
+                <td>{{Employee.managerName}}</td>
+                <td>{{((Employee.avgCompletionTime)/(1000*60*60*24)).toFixed(3)}}</td>
+               
+                <td>{{Employee.projectsCount}}</td>
+                <td>{{Employee.projectCompleted}}</td>
+              </tr>
+            </tbody>
+          </table>
+</div>

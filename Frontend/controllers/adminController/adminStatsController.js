@@ -35,6 +35,7 @@ myApp.controller(
     ) {
       $scope.projectName = projectName;
       $scope.projectId = projectId;
+      $scope.monthValue=monthValue ; 
       monthNum = parseInt(monthValue);
       adminServices.projectWiseAnalysis(
         projectId,monthValue,
@@ -101,13 +102,14 @@ myApp.controller(
         }
       );
     };
-
+    $scope.monthValue='03';
     $scope.monthChangeFunctionForProject = function (monthValue) {
       $scope.statusFunctionOfProject(
         $scope.projectName,
         $scope.projectId,
         monthValue
       );
+      $scope.monthValue = monthValue;  
     };
 
     var monthWiseChar;

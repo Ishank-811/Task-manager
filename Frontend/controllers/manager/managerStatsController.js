@@ -1,6 +1,7 @@
 myApp.controller(
   "managerStatsController",
   function ($scope, $timeout, managerServices) {
+    var token = sessionStorage.getItem("token");
     $scope.timeleft = function (endDate) {
       var today = new Date();
       var endTimestamp = Date.parse(endDate);
@@ -135,7 +136,7 @@ myApp.controller(
       });
     };
 
-    managerServices.statistics(function (
+    managerServices.statistics(token , function (
       countBystatus,
       isUpcomingProject,
       overDueProject,

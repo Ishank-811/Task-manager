@@ -1,8 +1,12 @@
 myApp.controller(
   "employeeController",
   function ($scope, $window, employeeServices) {
-    var role = sessionStorage.getItem("role");
+
     var token = sessionStorage.getItem("token");
+    var role = sessionStorage.getItem("role");
+    $scope.username = sessionStorage.getItem("username");  
+    $scope.organization = sessionStorage.getItem("organization"); 
+    
     if (role == "Employee") {
 
 

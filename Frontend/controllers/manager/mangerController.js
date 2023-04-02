@@ -2,6 +2,8 @@ myApp.controller(
   "mangerController",
   function ($scope, $window, $timeout, managerServices, employeeServices) {
     var role = sessionStorage.getItem("role");
+    $scope.username = sessionStorage.getItem("username");  
+    $scope.organization = sessionStorage.getItem("organization"); 
     var token = sessionStorage.getItem("token");
     $scope.message = "Manager Dashboard";
     // console.log($scope.loggedOut) ; 

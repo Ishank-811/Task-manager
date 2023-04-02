@@ -196,13 +196,15 @@ $scope.createProjectObject = {
         if($scope.updateProjectObject.endDate){
           $scope.project[$scope.updatedIndex].endDate =  $scope.updateProjectObject.endDate ;  
           }
+          $scope.timeleft($scope.updateProjectObject.endDate); 
+          $scope.getDaysDiff($scope.updateProjectObject.startDate , $scope.updateProjectObject.endDate)   
       }
         
-        // $scope.project[$scope.updatedIndex].endDate =  $scope.updateProjectObject.endDate ; 
-
+        
+ 
        })
       }
-
+ 
 
       var numberOfPages = function(count){
         $scope.pageSize = 8;
@@ -270,18 +272,20 @@ $scope.createProjectObject = {
 
 
      $scope.filterSubmitForm =  function($event){
+      if($scope.filterObject.createdStartDateFilter <= $scope.filterObject.createdEndDateFilter ){
       $scope.showNoProject = false  ; 
       $event.preventDefault(); 
-      
-      console.log($scope.filterObject); 
       fetchProjectsFunction($scope.currentPage ,  $scope.filterObject);
  
         $(function () {
           $("#filterModal").modal("hide");
         });
-     }
-
-     $scope.formReset = function(){
+       
+     }else{
+      alert("Invalid Date Input")
+     }     
+    }
+    $scope.formReset = function(){
       $scope.filterObject = {
         priorityFilter:null,
         createdStartDateFilter:null,

@@ -9,6 +9,7 @@ var mongodb = require("mongodb");
 const unlinkfile = util.promisify(fs.unlink);
 const { uploadFile } = require("../../s3");
 const multer = require("multer");
+var employeePipeline  = require("./employeePipelines"); 
 const { default: mongoose } = require("mongoose");
 
 const upload = multer({ dest: "uploads/" });
@@ -299,87 +300,11 @@ var employeeStatistics = function (req, res) {
 };
 
 var employeeStats = function (req, res) {
-  console.log(req.user._id);
+  var employeeId = (req.user._id);
   Promise.all([
-    project.aggregate([
-      {
-        $match: {
-          isDeleted: false,
-          "assignedTo.assignedUserId": mongoose.Types.ObjectId(req.user._id),
-        },
-      },
-      {
-        $group: {
-          _id: "$assignedTo.isStarted",
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          isStarted: "$_id",
-          count: 1,
-        },
-      },
-    ]),
-
-    project.aggregate([
-      {
-        $match: {
-          isDeleted: false,
-          "assignedTo.assignedUserId": mongoose.Types.ObjectId(req.user._id),
-        },
-      },
-      {
-        $project: {
-          "project.projectName": 1,
-          "assignedTo.isStarted": 1,
-          "project.projectId": 1,
-          startDate: 1,
-          endDate: 1,
-          priority: 1,
-          isUpcoming: {
-            $gt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isUpcoming: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
-    project.aggregate([
-      {
-        $match: {
-          isDeleted: false,
-          "assignedTo.assignedUserId": mongoose.Types.ObjectId(req.user._id),
-        },
-      },
-      {
-        $project: {
-          "project.projectName": 1,
-          "assignedTo.isStarted": 1,
-          "project.projectId": 1,
-          projectName: 1,
-          startDate: 1,
-          endDate: 1,
-          priority: 1,
-          isOverdue: {
-            $lt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isOverdue: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
+    project.aggregate(employeePipeline.countTheProjects(employeeId)),
+    project.aggregate(employeePipeline.upcomingProjects(employeeId)),
+    project.aggregate(employeePipeline.overdueProjects(employeeId)),
   ]).then(function (response) {
     res.status(200).json({
       countTheProjects: response[0],

@@ -30,6 +30,11 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
       templateUrl: "views/organizationViews/organizationEmployees.html",
       controller: "organizationController",
     })
+    .state("organization.statistics", {
+      url: "/statistics",
+      templateUrl: "views/organizationViews/organizationStats.html",
+      controller: "organizationStatsController",
+    })
     .state("signinAsUsers", {
       url: "/singinAsUsers",
       templateUrl: "views/signinAsUser.html",

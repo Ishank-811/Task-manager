@@ -41,7 +41,7 @@ const singinAsUsers = function (req, res) {
       expiresIn: "1d",
     });
     console.log(token);
-    return res.status(202).json({ token, role: req.user.role });
+    return res.status(202).json({ token, role: req.user.role , organizationDetails:req.user.organization.name ,username:req.user.username  });
   } else {
     res.status(404).send({ message: "user not authorized" });
   }

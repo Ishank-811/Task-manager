@@ -1,6 +1,8 @@
 myApp.controller("adminController", function ($scope, $window,$timeout ,  adminServices) {
 
   var role = sessionStorage.getItem("role");
+  $scope.username = sessionStorage.getItem("username");  
+  $scope.organization = sessionStorage.getItem("organization"); 
   var token = sessionStorage.getItem("token");
 
   adminServices.readingData(token, function (data) {

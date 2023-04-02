@@ -225,4 +225,106 @@ const searchUser = function (req, res) {
     });
 };
 
-module.exports = { registeringUsers, fetchingUsers, updatingUser, searchUser };
+var stats = function(req,res){
+  Promise.all([
+  users.aggregate([
+    {
+      $group: {
+        _id: "$role",
+        count: { $sum: 1 }
+      }
+    }
+  ]),
+  ProjectDetails.aggregate([
+    {
+      $group: {
+        _id: "$projectManger.projectMangerId",
+        managerName: { $first: "$projectManger.name" },
+        projectsCount: { $sum: 1 },
+        projectCompleted: {
+          $sum: { $cond: [{ $eq: ["$isCompleted.status", true] }, 1, 0] },
+        },
+        totalCompletionTime: {
+          $sum: {
+            $cond: {
+              if: { $eq: [ "$isCompleted.status", true ] },
+              then: { $subtract: [ "$isCompleted.updatedAt", "$createdAt" ] },
+              else: 0
+            }
+          }
+        },
+      }
+    },
+    {
+      $sort: { projectsCount: -1 }
+    },
+    {
+      $limit: 2
+    },
+    {
+      $project: {
+        _id: 0,
+        managerName: 1,
+        projectsCount: 1,
+        projectCompleted:1, 
+        avgCompletionTime: { $divide: [ "$totalCompletionTime", "$projectsCount" ] }
+      }
+    },
+  ]),
+      task.aggregate([
+      {
+        $match: { isDeleted: false },
+      },
+      {
+        $group: {
+          _id: "$user.userId",
+          name: { $first: "$user.name" },
+          tasksCompleted: {
+            $sum: { $cond: [{ $eq: ["$isCompleted.status", true] }, 1, 0] },
+          },
+          tasksAssigned: { $sum: 1 },
+          totalTime: {
+            $sum: {
+              $cond: [
+                { $eq: ["$isCompleted.status", true] },
+                { $subtract: ["$isCompleted.updatedAt", "$createdAt"] },
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          tasksCompleted: 1,
+          tasksAssigned: 1,
+          completionRate: { $divide: ["$tasksCompleted", "$tasksAssigned"] },
+          averageTime: {
+            $cond: [
+              { $gt: ["$tasksCompleted", 0] },
+              { $divide: ["$totalTime", "$tasksCompleted"] },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $sort: { completionRate: -1, averageTime: 1 },
+      },
+      {
+        $limit: 3,
+      },
+    ]),
+]).then(function(response){
+  res.status(200).json({
+    numOfRole:response[0],
+    top2Manager:response[1], 
+    top3Employee:response[2]
+  })
+})
+
+}
+
+module.exports = { registeringUsers, fetchingUsers, updatingUser, searchUser , stats };

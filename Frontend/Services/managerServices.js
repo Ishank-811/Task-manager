@@ -238,10 +238,16 @@
         }
       );  
     },
-   statistics : function(cb){
+   statistics : function(token , cb){
+    var config = {
+      headers: {
+        Authorization: "Bearer " + token,
+        Accept: "application/json;odata=verbose",
+      },
+    };
     $http
       .get(
-        "http://localhost:8080/manager/stats/", 
+        "http://localhost:8080/manager/stats/", config
       )
       .then(
         function (res) {

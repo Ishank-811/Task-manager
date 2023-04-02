@@ -28,7 +28,7 @@ router.get("/showAllAssignedProjects",passport.authenticate("level2", { session:
 router.get("/searchProject" , managerController.searchProject); 
 router.patch("/deleteTask/:taskId",  managerController.deleteTask)  ; 
 router.patch("/projectStatusUpdate/:projectId" , managerController.projectStatusUpdate) ; 
-router.get("/stats" ,managerController.stats); 
+router.get("/stats" ,passport.authenticate("level2", { session: false }),managerController.stats); 
 router.get("/projectTaskStats/:projectId" , managerController.projectTaskStats); 
 router.get("/userStats/:userId" , managerController.userStats) ;
 router.get("/searchEmployee/:name" ,  managerController.searchEmployee) ;  

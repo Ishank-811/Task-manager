@@ -4,6 +4,7 @@ var comments = require("../../model/commentsModel");
 var users = require("../../model/usersModel"); 
 var task = require("../../model/taskModel");
 var ProjectDetails = require("../../model/projectDetails");
+var managerPipeLine = require("./managerPipeline"); 
 var moment = require("moment");
 const { default: mongoose } = require("mongoose");
 
@@ -312,130 +313,15 @@ var projectStatusUpdate = function(req,res){
   })
 }
 
-
+var projectManagerId; 
 var stats=  function(req,res){
-
+  projectManagerId = req.user._id; 
   Promise.all([
-
-    task.aggregate([
-      {
-        $match :{isDeleted:false}
-      },
-      {
-        $group: {
-          _id: '$status',
-          count: { $sum: 1 }
-        }
-      }
-    ]),
-    ProjectDetails.aggregate([
-      { $match: { "isCompleted.status": false } },
-      {
-        $project: {
-          projectName: 1,
-          startDate: 1,
-          endDate: 1,
-          priority:1 , 
-          isUpcoming: {
-            $gt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isUpcoming: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
-    ProjectDetails.aggregate([
-      { $match: { "isCompleted.status": false } },
-      {
-        $project: {
-          projectName: 1,
-          startDate: 1,
-          endDate: 1,
-          priority:1 ,
-          isOverdue: {
-            $lt: ["$endDate", new Date()],
-          },
-        },
-      },
-      {
-        $match: {
-          isOverdue: true,
-        },
-      },
-      { $sort: { endDate: 1 } },
-      { $limit: 5 },
-    ]),
-
-    task.aggregate([
-      {
-        $match: {
-          "isDeleted": false,
-          "isCompleted.status": true
-        }
-      },
-      {
-        $group: {
-          _id: "$project.projectId",
-          projectName: {
-            $first: "$project.ProjectName"
-          },
-          numTasks: {
-            $sum: 1
-          },
-          totalCompletionTime: {
-            $sum: {
-              $subtract: ["$isCompleted.updatedAt", "$createdAt"]
-            }
-          }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          projectName: 1,
-          avgCompletionTime: {
-            $divide: ["$totalCompletionTime", "$numTasks"]
-          }
-        }
-      },
-      {
-        $sort: {
-          avgCompletionTime: -1
-        }
-      },
-      {
-        $limit: 5
-      }
-     ])
-    ,  task.aggregate([
-      {
-        $match: {
-          createdAt: {
-            $gte: new Date("2023-03-01"),
-            $lt: new Date("2023-04-01"),
-          },
-        },
-      },
-      {
-        $group: {
-          _id: { $dayOfMonth: "$createdAt" },
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          day: "$_id",
-          count: 1,
-        },
-      },
-    ]),
-   
+    task.aggregate(managerPipeLine.countBystatus(projectManagerId)),
+    ProjectDetails.aggregate(managerPipeLine.isUpcomingProject(projectManagerId)),
+    ProjectDetails.aggregate(managerPipeLine.overDueProject(projectManagerId)),
+    task.aggregate(managerPipeLine.completionRateOfProject(projectManagerId)),
+    task.aggregate(managerPipeLine.taskCreatedDayWise(projectManagerId)),
   ])
 
 .then(function(response){
@@ -455,7 +341,8 @@ var stats=  function(req,res){
 var projectTaskStats = function(req,res){
   task.aggregate([
     
-    { $match: { "project.projectId": mongoose.Types.ObjectId(req.params.projectId) , isDeleted:false} },
+    { $match: { 
+      "project.projectId": mongoose.Types.ObjectId(req.params.projectId) , isDeleted:false} },
     {
       $group: {
         _id: "$user.userId",
@@ -489,7 +376,7 @@ var projectTaskStats = function(req,res){
     res.status(200).send(response); 
   }).catch(function(error){
     res.status(404).send(error); 
-  })
+  })  
 }
 
 
@@ -508,12 +395,6 @@ var userStats = function(req,res){
           taskCount: { $sum: 1 },
         },
       },
-      // Match projects assigned to the specific user
-      // {
-      //   $match: {
-      //     projectManager: ObjectId("user_id_here"),
-      //   }
-      // },
     ]).then(function(response){
       res.status(200).send(response); 
     }).catch(function(error){

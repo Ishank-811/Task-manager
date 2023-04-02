@@ -15,5 +15,5 @@ router.post(
 );
 router.get("/searchUser",organizationController.searchUser ); 
 router.patch("/updatingUser/:id", organizationController.updatingUser);
-
+router.get("/stats" , organizationController.stats); 
 module.exports = router;

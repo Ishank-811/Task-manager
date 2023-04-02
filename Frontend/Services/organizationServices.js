@@ -63,6 +63,19 @@ var fac = function ($http) {
         function (err) {
           console.log(err);
         };
+    },
+    stats:function(cb){
+      
+      $http
+      .get(
+        "http://localhost:8080/organization/stats"
+      )
+      .then(function (res) {
+        cb(res.data.numOfRole , res.data.top2Manager , res.data.top3Employee);
+      }),
+      function (err) {
+        console.log(err);
+      };
     }
   };
 };

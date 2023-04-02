@@ -99,13 +99,13 @@
 </div>
         <div style="display:flex ; justify-content: space-evenly; margin:100px">
           
-        <canvas id="pie-chart" style="width: 10%; max-width: 300px"></canvas>
-        <canvas id="barchart" style="width: 10%; max-width: 500px"></canvas>
+        <canvas id="pie-chart" style="width: 10%; max-width: 350px"></canvas>
+        <canvas id="barchart" style="width: 10%; max-width: 550px"></canvas>
       </div>
       <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin:60px">
           <label>Month:</label>
           <select style="width:10%" ng-change="monthChangeFunction(monthValue)" ng-model="monthValue">
-           
+            <!-- <option disabled selected value="03">March</option>-->
             <option value="01">January</option>
             <option value="02">Febuary</option>
             <option value="03">March</option>
@@ -121,7 +121,8 @@
           </select>
         <canvas id="line" style="width: 100%; max-width: 800px"></canvas>
       </div>
-        <table style="width: 67% ; margin-top:70px ; margin-bottom:70px ;" class="content-table">
+      <h3 style="display: flex; justify-content: center; align-items: center;">Top 3 Employees</h3>
+        <table style="width: 67% ; margin-top:10px ; margin-bottom:70px ;" class="content-table">
             <thead>
               <tr>
                 <th>Sno</th>
@@ -144,9 +145,9 @@
               </tr>
             </tbody>
           </table>
-
+          <h3>Project Wise Analysis</h3>
           <div class="employeeProgress" >
-
+          
             <div style="width:30% ; border:1px solid rgba(86, 86, 86, 0.301) ; padding:10px ;overflow: scroll; height:350px">
              <div>
              <label>Name of the Project: </label>
