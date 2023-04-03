@@ -4,6 +4,7 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
   $urlRouterProvider.when('/AdminDashboard', '/AdminDashboard/projectList');
   $urlRouterProvider.when('/MangerDashboard', '/MangerDashboard/projectsList');
   $urlRouterProvider.when('/EmployeeDashboard', '/EmployeeDashboard/home');
+  $urlRouterProvider.when("/organizationDashboard", 'organizationDashboard/employees');
   $stateProvider
     .state("signinAsOrganization", {
       url: "/signinAsOrganization",

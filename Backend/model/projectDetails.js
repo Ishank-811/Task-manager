@@ -6,6 +6,11 @@ const ProjectDetailSchema =  mongoose.Schema({
         trim:true,
         
     },
+    projectDescription:{
+        type:String, 
+        required:true,
+        trime:true, 
+    },
     organization :{
         organizationId : {type:mongoose.Schema.Types.ObjectId ,   required:true}, 
         name:{type:String , required:true , trim:true}

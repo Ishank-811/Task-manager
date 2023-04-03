@@ -47,6 +47,7 @@ $scope.createProjectObject = {
   priority:"", 
   startDate:"", 
   endDate:"",
+  projectDescription:"",
   assignedTo:[],
   assignedUserChecks:[]
   }
@@ -69,6 +70,7 @@ $scope.createProjectObject = {
       priority:"", 
       startDate:"", 
       endDate:"",
+      projectDescription:"",
       assignedTo:[],
       assignedUserChecks:[]
       }
@@ -111,6 +113,7 @@ $scope.createProjectObject = {
                   priority:"",
                   startDate:"", 
                   endDate:"",
+                  projectDescription:"",
                   assignedTo:[],
                   }
                   $scope.projectManger = {

@@ -26,6 +26,11 @@ const userSchema =  mongoose.Schema({
          default : "Employee",
          enum : ["Employee", "Manager" ,"Admin" ]
     },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+        required:true
+    }
     })
 const users= mongoose.model("Users", userSchema);
 module.exports = users ; 

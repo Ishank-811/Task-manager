@@ -46,7 +46,7 @@ myApp.controller(
               $scope.showComments = false; 
             }
           }
-        );
+        ); 
       };
 
 
@@ -111,6 +111,7 @@ myApp.controller(
         employeeServices.addComment($scope.addComments ,$scope.ticketDetails._id ,token ,function () {
           $scope.CommentLoader = true;
           alert("comment added");
+          $scope.showComments = false;
           $scope.addComments = "";
         });
 

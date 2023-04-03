@@ -4,7 +4,7 @@
       <h1>USER SIGNIN</h1>
       <form name="singininform" role="form" autocomplete="off">
         <span ng-show="showError" class="formerror"
-          >Invalid email and password</span
+          >{{errorMessage}}</span
         >
         <div id="emailvalid" class="txt_field" class="form-group">
           <input

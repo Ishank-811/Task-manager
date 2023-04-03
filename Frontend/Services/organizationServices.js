@@ -51,11 +51,11 @@ var fac = function ($http) {
           console.log(err);
         };
     },
-    searchUser : function(data , cb){
-      console.log(data); 
+    searchUser : function(adminId , employeeValue , cb){
+      
       $http
         .get(
-          `http://localhost:8080/organization/searchUser?adminId=${data.adminId}&value=${data.val} `
+          `http://localhost:8080/organization/searchUser?adminId=${adminId}&value=${employeeValue} `
         )
         .then(function (res) {
           cb(res);
@@ -76,7 +76,31 @@ var fac = function ($http) {
       function (err) {
         console.log(err);
       };
-    }
+    },
+    deleteUser:function(employeeId , role ,cb){
+      $http
+      .patch(
+        `http://localhost:8080/organization/deleteUser?employeeId=${employeeId}&role=${role}`,
+      )
+      .then(function (res) {
+        cb(res);
+      }),
+      function (err) {
+        console.log(err);
+      };
+    },
+    activateUser:function(employeeId , cb){
+      $http
+      .patch(
+        `http://localhost:8080/organization/activateUser?employeeId=${employeeId}`,
+      )
+      .then(function (res) {
+        cb(res);
+      }),
+      function (err) {
+        console.log(err);
+      };
+    },
   };
 };
 

@@ -3,9 +3,7 @@
     <div class="projectDetailsHeader">
       <h3 style="margin: 30px">{{projectDetails.projectName}}</h3>
       <h6 style="width: 80%; margin: 30px">
-        Lorem ipsum dolor Consequuntur facilis at minima temporibus tempora
-        beatae commodi dolores nemo voluptatem, cum repudiandaeadipisci
-        veritatis
+        {{projectDetails.projectDescription}}
       </h6>
       <div style="margin: 50px">
         <div style="width: 40%">
@@ -26,8 +24,8 @@
             <option value="" disabled selected>
               {{projectDetails.status}}
             </option>
-            <option value="progress">progress</option>
-            <option ng-disabled='progressPercentage!=100.0'  value="completed">Completed</option>
+            <option ng-show="projectDetails.status!='progress'" value="progress">progress</option>
+            <option ng-show="projectDetails.status!='completed'" ng-disabled='progressPercentage!=100.0'  value="completed">Completed</option>
           </select>
         </div>
         <button style="width:10%" class="createButton" ng-show="isSelected" ng-click="projectstatusFunction(projectStatus , projectDetails._id)">update</button>

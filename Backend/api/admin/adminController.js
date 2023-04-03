@@ -16,8 +16,9 @@ const fetchingUsers = function (req, res) {
   users
     .find({
       $and: [
-        { "organization.organizationId": req.user.organization.organizationId },
+        { "organization.organizationId": req.user.organization.organizationId , isDeleted:false },
         { $or: [{ role: "Manager" }, { role: "Employee" }] },
+
       ],
     })
     .then(function (response) {
@@ -38,6 +39,7 @@ const creatingPorject = function (req, res) {
       } else {
         var response = new projectDetails({
           projectName: data.projectName,
+          projectDescription:data.projectDescription,
           organization: { organizationId, name: organizationName },
           projectManger: data.projectManger,
           priority: data.priority,
@@ -491,6 +493,17 @@ task.aggregate([
 
 }
 
+const updateProjectDescription = function(req,res){
+// console.log("hello"); 
+projectDetails.updateMany({} , {$set:{projectDescription:'Lorem ipsum dolor Consequuntur facilis at minima temporibus tempora beatae commodi dolores nemo voluptatem, cum repudiandaeadipisci veritatis'}} ,
+ {new:true}).then(function(response){
+  res.status(200).send(response); 
+ }).catch(function(error){
+  res.status(404).send(error); 
+ })
+
+}
+
 module.exports = {
   stats,
   fetchingUsers,
@@ -505,5 +518,6 @@ module.exports = {
   searchProject,
   monthWiseAnalysis,
   updateProject,
-  projectWiseAnalysis
+  projectWiseAnalysis,
+  updateProjectDescription
 };

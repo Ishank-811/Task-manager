@@ -1,291 +1,386 @@
 <div class="pageHeader">
-   
-    <input
+  <input
     class="searchClass"
     placeholder="Search Employee"
-    ng-change = searchEmployeeFunction(searchEmployee)
+    ng-change="searchEmployeeFunction(searchEmployee)"
     ng-model="searchEmployee"
   />
-  <button class="createUserButton" data-toggle="modal"
-  data-target="#CreateModal">
+  <button
+    class="createUserButton"
+    data-toggle="modal"
+    data-target="#CreateModal"
+  >
     <i class="fa-solid fa-plus"></i>Add Employee
   </button>
- <div style="width:30% ; display: flex;">
+  <div style="width: 30%; display: flex">
     <div>
-    <label>SortBy:-</label>
-  <Select  ng-change="filterEmployeeChange(filterEmployee)" ng-model="filterEmployee">
-    <option value="Admin">Admin</option>
-    <option value="Manager">Manager</option>
-    <option value="Employee">Employee</option>
-  </Select>
-</div>
-<button ng-click="resetFilter()" style="width:20%; margin:0px; padding:1px ; height:30px ; margin-top:30px" class="createButton" >Reset Filter</button>
+      <label>SortBy:-</label>
+      <select
+        ng-change="filterEmployeeChange(filterEmployee)"
+        ng-model="filterEmployee"
+      >
+        <option value="Admin">Admin</option>
+        <option value="Manager">Manager</option>
+        <option value="Employee">Employee</option>
+      </select>
+    </div>
+    <button
+      ng-click="resetFilter()"
+      style="
+        width: 20%;
+        margin: 0px;
+        padding: 1px;
+        height: 30px;
+        margin-top: 30px;
+      "
+      class="createButton"
+    >
+      Reset Filter
+    </button>
+  </div>
 </div>
 
-</div>
- 
-  <div  class="listOfUsers">
-  <h1 style="color:red ; height:80vh ; display: flex; align-items: center;" ng-show="showNoEmployees">No Employee Added yet </h1>   
-    <div class="employeeCard" ng-repeat="res in response |filter:{role:'Admin'}">
-      <div class="profileAvtar">
-        <image
-          class="imageAvtar"
-          src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
-          alt="Avatar"
-        ></image>
-        <div class="profileAvtarRatings">
-          <h4 ng-click="deleteUser(res._id)" style="color: rgb(227, 79, 79); margin-right:10px; cursor: pointer;">
-            <i class="fa-sharp fa-solid fa-trash"></i>
-          </h4>
-          <h4
-            data-toggle="modal"
-            data-target="#myModal"
-            style="color: rgb(227, 79, 79); cursor: pointer;"
-            ng-click="updateUser(res)"
-          >
-            <i class="fa-solid fa-pen-to-square"></i>
-          </h4>
-        </div>
-      </div>
-      <div class="employeeDetails">
-        <h2>{{res.firstName}}</h2>
-        <h5 class="profileRole">{{res.role}}</h5>
-        <hr />
-        <p style="font-size: 17px">
-          Vestibulum ante ipsum primis
-        </p>
-        <div>
-          <button class="employeeCardButton">Profile</button>
-        </div>
+<div class="listOfUsers">
+  <h1
+    style="color: red; height: 80vh; display: flex; align-items: center"
+    ng-show="showNoEmployees"
+  >
+    No Employee Added yet
+  </h1>
+  <div class="employeeCard" ng-repeat="res in response |filter:{role:'Admin'}">
+    <div class="profileAvtar">
+      <image
+        class="imageAvtar"
+        src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+        alt="Avatar"
+      ></image>
+      <div class="profileAvtarRatings">
+        <h4
+          ng-click="deleteUser(res._id , res.role)"
+          style="color: rgb(227, 79, 79); margin-right: 10px; cursor: pointer"
+        >
+          <i class="fa-sharp fa-solid fa-trash"></i>
+        </h4>
+        <h4
+          data-toggle="modal"
+          data-target="#myModal"
+          style="color: rgb(227, 79, 79); cursor: pointer"
+          ng-click="updateUser(res)"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </h4>
       </div>
     </div>
-
-    <div class="employeeCard" ng-repeat="res in response | filter:{role:'Manager'}">
-        <div class="profileAvtar">
-          <image
-            class="imageAvtar"
-            src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
-            alt="Avatar"
-          ></image>
-          <div class="profileAvtarRatings">
-            <h4 ng-click="deleteUser(res._id)" style="color: rgb(227, 79, 79); margin-right:10px; cursor: pointer;">
-              <i class="fa-sharp fa-solid fa-trash"></i>
-            </h4>
-            <h4
-              data-toggle="modal"
-              data-target="#myModal"
-              style="color: rgb(227, 79, 79); cursor: pointer;"
-              ng-click="updateUser(res)"
-            >
-              <i class="fa-solid fa-pen-to-square"></i>
-            </h4>
-          </div>
-        </div>
-        <div class="employeeDetails">
-          <h2>{{res.firstName}}</h2>
-          <h5 class="profileRole">{{res.role}}</h5>
-          <hr />
-          <p style="font-size: 17px">
-            Vestibulum ante ipsum primis 
-          </p>
-          <div>
-            <button class="employeeCardButton">Profile</button>
-          </div>
-        </div>
-    
-    </div>
-
-      <div class="employeeCard" ng-repeat="res in response |filter:{role:'Employee'}">
-        <div class="profileAvtar">
-          <image
-            class="imageAvtar"
-            src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
-            alt="Avatar"
-          ></image>
-          <div class="profileAvtarRatings">
-            <h4 ng-click="deleteUser(res._id)" style="color: rgb(227, 79, 79); margin-right:10px; cursor: pointer;">
-              <i class="fa-sharp fa-solid fa-trash"></i>
-            </h4>
-            <h4
-              data-toggle="modal"
-              data-target="#myModal"
-              style="color: rgb(227, 79, 79); cursor: pointer;"
-              ng-click="updateUser(res)"
-            >
-              <i class="fa-solid fa-pen-to-square"></i>
-            </h4>
-          </div>
-        </div>
-        <div class="employeeDetails">
-          <h2>{{res.firstName}}</h2>
-          <h5 class="profileRole">{{res.role}}</h5>
-          <hr />
-          <p style="font-size: 17px">
-            Vestibulum ante ipsum primis 
-          </p>
-          <div>
-            <button class="employeeCardButton">Profile</button>
-          </div>
-        </div>
+    <div class="employeeDetails">
+      <h2>{{res.firstName}}</h2>
+      <h5 class="profileRole">{{res.role}}</h5>
+      <hr />
+      <p style="font-size: 17px">Vestibulum ante ipsum primis</p>
+      <div>
+        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
+        <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
       </div>
+    </div>
+  </div>
 
+  <div
+    class="employeeCard"
+    ng-repeat="res in response | filter:{role:'Manager'}"
+  >
+    <div class="profileAvtar">
+      <image
+        class="imageAvtar"
+        src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+        alt="Avatar"
+      ></image>
+      <div class="profileAvtarRatings">
+        <h4
+          ng-click="deleteUser(res._id , res.role)"
+          style="color: rgb(227, 79, 79); margin-right: 10px; cursor: pointer"
+        >
+          <i class="fa-sharp fa-solid fa-trash"></i>
+        </h4>
+        <h4
+          data-toggle="modal"
+          data-target="#myModal"
+          style="color: rgb(227, 79, 79); cursor: pointer"
+          ng-click="updateUser(res)"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </h4>
+      </div>
+    </div>
+    <div class="employeeDetails">
+      <h2>{{res.firstName}}</h2>
+      <h5 class="profileRole">{{res.role}}</h5>
+      <hr />
+      <p style="font-size: 17px">Vestibulum ante ipsum primis</p>
+      <div>
+        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
+        <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="employeeCard"
+    ng-repeat="res in response |filter:{role:'Employee'}"
+  >
+    <div
+      ng-class="{'displayDeleted': res.isDeleted==true}"
+      class="profileAvtar"
+    >
+      <image
+        class="imageAvtar"
+        src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+        alt="Avatar"
+      ></image>
+      <div class="profileAvtarRatings">
+        <h4
+          ng-click="deleteUser(res._id , res.role)"
+          ng-style="{'display': res.isDeleted ? 'none' : 'block'}"
+          style="color: rgb(227, 79, 79); margin-right: 10px; cursor: pointer"
+        >
+          <i class="fa-sharp fa-solid fa-trash"></i>
+        </h4>
+        <h4
+          ng-style="{'display': res.isDeleted ? 'none' : 'block'}"
+          data-toggle="modal"
+          data-target="#myModal"
+          style="color: rgb(227, 79, 79); cursor: pointer"
+          ng-click="updateUser(res)"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </h4>
+      </div>
+    </div>
+    <div
       
-  </div>
-  <ul class="pagination">
-    <li>
-    <button  ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(1)">First</button>
-    </li>
-    <li >
-    <button ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(currentPage - 1)">Previous</button>
-    </li>
-    <li ng-repeat="page in pages track by $index" ng-class="{active: currentPage == page}">
-    <button ng-click="setPage(page)">{{page}}</button>
-    </li>
-    <li>
-    <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(currentPage + 1)">Next</button>
-    </li>
-    <li>
-    <button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(totalPages)">Last</button>
-    </li>
-    </ul>
-<!---------------------------- update modal --------------------------------------------->
-  <div class="modal" id="myModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Employee</h4>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
-          </button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-            <h6 style="color:red" ng-show="showUserExist">User already exist</h6>
-          <form class="updateForm" name="updateForm" role="form">
-            <label>First Name:</label>
-            <input
-              type="text"
-              ng-model="employeeUpdateDetails.firstName"
-              name="firstName"
-              ng-required="true"
-            />
-            <label>Last Name:</label>
-            <input
-              type="text"
-              ng-model="employeeUpdateDetails.lastName"
-              name="lastName"
-              ng-required="true"
-            />
-            <label>Email:</label>
-            <input
-              type="email"
-              ng-model="employeeUpdateDetails.username"
-              name="username"
-              ng-required="true"
-            />
-            <label>Password:</label>
-            <input
-              type="password"
-              ng-model="employeeUpdateDetails.password"
-              name="password"
-              ng-required="true"
-            />
-           
-            <button
-              type="submit"
-              ng-disabled="updateForm.$invalid || updateForm.$pristine"
-              ng-click="updateFormDetails($event)"
-            >
-              Update
-            </button>
-          </form>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
-        </div>
+      class="employeeDetails"
+    >
+      <h2 ng-class="{'displayDeleted': res.isDeleted==true}">{{res.firstName}}</h2>
+      <h5 ng-class="{'displayDeleted': res.isDeleted==true}" class="profileRole">{{res.role}}</h5>
+      <hr />
+      <p  ng-class="{'displayDeleted': res.isDeleted==true}" style="font-size: 17px">Vestibulum ante ipsum primis</p>
+      <div>
+        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
+        <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
       </div>
     </div>
   </div>
-  <!---------------------------- update modal ends --------------------------------------------->
+</div>
+<ul class="pagination">
+  <li>
+    <button ng-class="{disabledPage: currentPage == 1}" ng-click="setPage(1)">
+      First
+    </button>
+  </li>
+  <li>
+    <button
+      ng-class="{disabledPage: currentPage == 1}"
+      ng-click="setPage(currentPage - 1)"
+    >
+      Previous
+    </button>
+  </li>
+  <li
+    ng-repeat="page in pages track by $index"
+    ng-class="{active: currentPage == page}"
+  >
+    <button ng-click="setPage(page)">{{page}}</button>
+  </li>
+  <li>
+    <button
+      ng-class="{disabledPage: currentPage == totalPages}"
+      ng-click="setPage(currentPage + 1)"
+    >
+      Next
+    </button>
+  </li>
+  <li>
+    <button
+      ng-class="{disabledPage: currentPage == totalPages}"
+      ng-click="setPage(totalPages)"
+    >
+      Last
+    </button>
+  </li>
+</ul>
+<!---------------------------- update modal --------------------------------------------->
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Employee</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
 
-  
-  <!---------------------------- Create Employee modal  --------------------------------------------->
-  <div class="modal" id="CreateModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Create Employee</h4>
-          <button type="button" class="close" data-dismiss="modal">
-            &times;
+      <!-- Modal body -->
+      <div class="modal-body">
+        <h6 style="color: red" ng-show="showUserExist">User already exist</h6>
+        <form class="updateForm" name="updateForm" role="form">
+          <label>First Name:</label>
+          <input
+            type="text"
+            ng-model="employeeUpdateDetails.firstName"
+            name="firstName"
+            ng-required="true"
+          />
+          <label>Last Name:</label>
+          <input
+            type="text"
+            ng-model="employeeUpdateDetails.lastName"
+            name="lastName"
+            ng-required="true"
+          />
+          <label>Email:</label>
+          <input
+            type="email"
+            ng-model="employeeUpdateDetails.username"
+            name="username"
+            ng-required="true"
+          />
+          <label>Password:</label>
+          <input
+            type="password"
+            ng-model="employeeUpdateDetails.password"
+            name="password"
+            ng-required="true"
+          />
+
+          <button
+            type="submit"
+            ng-disabled="updateForm.$invalid || updateForm.$pristine"
+            ng-click="updateFormDetails($event)"
+          >
+            Update
           </button>
-        </div>
+        </form>
+      </div>
 
-        <!-- Modal body -->
-        <div class="modal-body">
-          <form class="addUSers" name="addUserForm" role="form">
-            <span ng-show="showError" class="formerror"
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!---------------------------- update modal ends --------------------------------------------->
+
+<!---------------------------- Create Employee modal  --------------------------------------------->
+<div class="modal" id="CreateModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Create Employee</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form class="addUSers" name="addUserForm" role="form">
+          <span ng-show="showError" class="formerror"
             >Employee is already present</span
           >
           <label>First Name:</label>
-            <input
-              type="text"
-              ng-model="createEmployee.firstName"
-              name="firstName"
-              ng-required="true"
-            />
-            <label>Last Name:</label>
-            <input
-              type="text"
-              ng-model="createEmployee.lastName"
-              name="lastName"
-              ng-required="true"
-            />
-            <label>Email:</label>
-            <input
-              type="email"
-              ng-model="createEmployee.email"
-              name="email"
-              ng-required="true"
-            />
-            <label>Password:</label>
-            <input
-              type="password"
-              ng-model="createEmployee.password"
-              name="password"
-              ng-required="true"
-            />
-            <label>Role:</label>
-            <select ng-required="true" ng-model="createEmployee.role">
-              <option name="Admin">Admin</option>
-              <option name="Manager">Manager</option>
-              <option name="Employee">Employee</option>
-            </select>
-            <button
-              type="submit"
-              ng-disabled="addUserForm.$invalid"
-              ng-click="addUsersDetails($event)"
-            >
-              ADD USER
-            </button>
-          </form>
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
+          <input
+            type="text"
+            ng-model="createEmployee.firstName"
+            name="firstName"
+            ng-required="true"
+          />
+          <label>Last Name:</label>
+          <input
+            type="text"
+            ng-model="createEmployee.lastName"
+            name="lastName"
+            ng-required="true"
+          />
+          <label>Email:</label>
+          <input
+            type="email"
+            ng-model="createEmployee.email"
+            name="email"
+            ng-required="true"
+          />
+          <label>Password:</label>
+          <input
+            type="password"
+            ng-model="createEmployee.password"
+            name="password"
+            ng-required="true"
+          />
+          <label>Role:</label>
+          <select ng-required="true" ng-model="createEmployee.role">
+            <option name="Admin">Admin</option>
+            <option name="Manager">Manager</option>
+            <option name="Employee">Employee</option>
+          </select>
+          <button
+            type="submit"
+            ng-disabled="addUserForm.$invalid"
+            ng-click="addUsersDetails($event)"
+          >
+            ADD USER
           </button>
-        </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-  
-  <!---------------------------- create employee modal ends --------------------------------------------->
+<!---------------------------- create employee modal ends --------------------------------------------->
+
+
+
+<!----------------------------------------- view profile employee modal ------------------------------------->
+<div class="modal" id="viewProfile">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">View Profile</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button> 
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <h5>FirstName:</h5>
+        <h6>{{employeeDetails.firstName}}</h6>
+        <h5>LastName:</h5>
+        <h6>{{employeeDetails.lastName}}</h6>
+        <h5>Username:</h5>
+        <h6>{{employeeDetails.username}}</h6>
+        <h5>Role:</h5>
+        <h6>{{employeeDetails.role}}</h6>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!----------------------------------------- view profile employee modal ends ------------------------------------->

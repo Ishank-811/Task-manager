@@ -21,16 +21,16 @@ $scope.currentPage = 1 ;
     }
     adminServices.showEmployeeProjects(userData._id, userData.organization.organizationId,currentPage, userData.role,
       function (response) {
-        console.log(response);
-        $scope.employeeProjects = response.data.projectData;
-        numberOfPages(response.data.count);
-        if (response.data.length == 0) {
+
+        $scope.employeeProjects = response.projectData;
+        numberOfPages(response.count);
+        if (response.length == 0) {
           $scope.object.showError = false;
           $scope.showEmployeeTicketTable = true;
         } else {
           $scope.object.showError = true;
           $scope.object.showEmployeeTicketTable = false;
-          $scope.object.EmployeeticketDetails = response.data;
+          $scope.object.EmployeeticketDetails = response;
         }
       }
     );

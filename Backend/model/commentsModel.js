@@ -1,6 +1,12 @@
 const mongoose = require("mongoose"); 
 const commentSchema =  mongoose.Schema({
-    ticketId:{type:mongoose.Schema.Types.ObjectId , required:true} , 
+    organization :{
+        organizationId : {type:mongoose.Schema.Types.ObjectId ,   required:true}, 
+        name:{type:String , required:true , trim:true}
+    },
+    ticket:{
+    ticketId:{type:mongoose.Schema.Types.ObjectId , required:true} 
+    }, 
     comments :{
         comment:{type:String},
         file:{type:String} , 

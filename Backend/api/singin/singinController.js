@@ -31,6 +31,7 @@ const singinAsOrganization = function (req, res) {
 
 const singinAsUsers = function (req, res) {
   if (req.user) {
+    if(!(req.user.isDeleted)){
     var dataToSendForJwt = {
       id: req.user._id,
       organization: req.user.organization,
@@ -42,7 +43,11 @@ const singinAsUsers = function (req, res) {
     });
     console.log(token);
     return res.status(202).json({ token, role: req.user.role , organizationDetails:req.user.organization.name ,username:req.user.username  });
-  } else {
+  }else{
+    res.status(404).send({ message: "user is Disabled , contact admin" });
+  } } 
+
+  else {
     res.status(404).send({ message: "user not authorized" });
   }
 };

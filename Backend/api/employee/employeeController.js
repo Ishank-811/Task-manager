@@ -26,7 +26,6 @@ var fetchingProjects = function (req, res) {
       filter.endDate = { $gt: new Date() };
     }
   }
-  console.log(filter);
   var LIMIT = 5;
   var startIndex = (Number(req.query.currentPage) - 1) * 5;
   var sortBy = req.query.sortBy;
@@ -107,9 +106,15 @@ const viewTicket = function (req, res) {
 };
 
 const addComment = function (req, res) {
+  console.log(req.body); 
   var response = new comments({
-    ticketId: req.params.ticketId,
-
+    organization:{
+      name:req.user.organization.name,
+      organizationId:req.user.organization.organizationId
+    },
+    ticket:{
+      ticketId:req.params.ticketId,
+    },
     comments: {
       comment: req.body.comments,
       commentBy: {
@@ -167,7 +172,13 @@ var uploadFileToUrl = async (req, res) => {
   await unlinkfile(req.file.path);
 
   var response = new comments({
-    ticketId: req.params.ticketId,
+    organization:{
+      name:req.user.organization.name,
+      organizationId:req.user.organization.organizationId
+    },
+    ticket:{
+      ticketId:req.params.ticketId,
+    },
     comments: {
       file: result.Location,
       commentBy: {

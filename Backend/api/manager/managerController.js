@@ -65,9 +65,8 @@ var fetchingProjects = function (req, res) {
 };
 
 var viewComments = function (req, res) {
-  console.log(req.params);
   comments
-    .find({ ticketId: req.params.ticketId })
+    .find({ 'ticket.ticketId': req.params.ticketId })
     .then(function (response) {
       console.log(response);
       res.status(202).send(response);
@@ -404,7 +403,7 @@ var userStats = function(req,res){
 
 var searchEmployee=  function(req,res){
   var regex = new RegExp(req.params.name, "i");
-  users.find({username:regex , role:'Employee'}).then(function(response){
+  users.find({username:regex , role:'Employee' , isDeleted:false}).then(function(response){
     res.status(200).send(response); 
   }).catch(function(error){
     res.status(404).send(error); 

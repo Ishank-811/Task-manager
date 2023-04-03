@@ -25,6 +25,7 @@ var fac = function ($http) {
         assignedTo: projectDetails.assignedTo,
         priority: projectDetails.priority,
         createdAt: new Date(),
+        projectDescription:projectDetails.projectDescription,
         startDate: projectDetails.startDate,
         endDate: projectDetails.endDate,
       };
@@ -98,7 +99,7 @@ var fac = function ($http) {
         .then(
           function (res) {
             console.log(res);
-            cb(res);
+            cb(res.data);
           },
           function (err) {
             return err;
@@ -245,7 +246,8 @@ var fac = function ($http) {
           return err;
         }
       );
-    }
+    },
+    
   };
 };
 

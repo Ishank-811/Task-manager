@@ -1115,3 +1115,7 @@ margin:20px;
   opacity: 0.4;
   background-color: #96fcaa;
 }
+.displayDeleted{
+  opacity: 0.4;
+ cursor: not-allowed;
+}

@@ -92,22 +92,43 @@ myApp.controller(
 
     var debounceTimer;
 
-    $scope.searchEmployeeFunction = function (val) {
+    $scope.searchEmployeeFunction = function (employeeValue) {
       if (debounceTimer) {
         $timeout.cancel(debounceTimer);
       }
       debounceTimer = $timeout(function () {
-        var data = {
-          adminId: $scope.adminId,
-          val,
-        };
-        organizationServices.searchUser(data, function (response) {
+        organizationServices.searchUser( $scope.adminId , employeeValue, function (response) {
           console.log(response);
           $scope.response = response.data;
         });
       }, 800);
     };
 
+
+    $scope.deleteUser = function(employeeId , role){
+      organizationServices.deleteUser(employeeId , role , function(response){  
+        var indexToReplace = $scope.response.findIndex(function(element){
+          return element._id == employeeId
+      });
+      if (indexToReplace !== -1) {
+          $scope.response.splice(indexToReplace, 1, response.data);
+        }
+        alert("employee Deleted") ; 
+      })
+    }
+
+
+    $scope.activateUser= function(employeeId){
+      organizationServices.activateUser(employeeId  , function(response){
+        var indexToReplaceForActivate = $scope.response.findIndex(function(element){
+          return element._id == employeeId
+      });
+      if (indexToReplaceForActivate !== -1) {
+          $scope.response.splice(indexToReplaceForActivate, 1, response.data);
+        }
+        alert("employee Activated") ; 
+      })
+    }
 
     $scope.showUserExist = false;  
     $scope.updateUser = function (employeeUpdateDetails) {
@@ -132,6 +153,9 @@ myApp.controller(
     }
     };
 
+    $scope.profileViewFunction = function(employeeDetails){
+      $scope.employeeDetails = employeeDetails ; 
+    }
     
   }
 );

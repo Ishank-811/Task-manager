@@ -12,6 +12,7 @@ const registeringUsers = function (req, res) {
     .findOne({
       "organization.organizationId": req.user._id,
       username: req.body.email,
+      isDeleted:false , 
     })
     .then(function (userdetail) {
       if (userdetail) {
@@ -194,7 +195,7 @@ users
 .then(function (response) {
   if (response.username != req.body.username) {
     users
-      .findOne({ username: req.body.username })
+      .findOne({ username: req.body.username ,isDeleted:false })
       .then(function (response) {
       
         if (response) {
@@ -324,7 +325,24 @@ var stats = function(req,res){
     top3Employee:response[2]
   })
 })
+}
+
+const deleteUser=  function(req,res){
+users.findByIdAndUpdate(req.query.employeeId , {isDeleted:true},  {new:true}).then(function(response){
+  res.status(202).send(response)
+}).catch(function(error){
+  res.status(400).send(error); 
+})
 
 }
 
-module.exports = { registeringUsers, fetchingUsers, updatingUser, searchUser , stats };
+var activateUser = function(req,res){
+  users.findByIdAndUpdate(req.query.employeeId , {isDeleted:false},  {new:true}).then(function(response){
+    res.status(202).send(response)
+  }).catch(function(error){
+    res.status(400).send(error); 
+  })
+  
+}
+
+module.exports = { registeringUsers, fetchingUsers, updatingUser, searchUser , stats , deleteUser, activateUser };

@@ -15,6 +15,13 @@ myApp.controller(
         if (data.data.token) {
           sessionStorage.setItem("token", data.data.token);
         } else {
+          console.log(data);
+       if(data.status==401){
+        $scope.errorMessage = "Inavlid user and password"
+       }
+       else if(data.status==404){
+        $scope.errorMessage = "User is disable , contact the admin"
+       }
           $scope.showError = true; 
           $scope.signinMessage = "SIGN IN";
           return;

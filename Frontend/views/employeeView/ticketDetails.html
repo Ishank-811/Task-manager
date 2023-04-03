@@ -235,9 +235,9 @@
                 style="text-align: center; margin-left: 10px; width: 50%"
               >
                 <option value="" disabled selected>{{item.status}}</option>
-                <option value="started">Started</option>
-                <option value="working">Working</option>
-                <option value="completed">Completed</option>
+                <option ng-show="item.status!='completed'" value="started">Started</option>
+                <option  ng-show="item.status!='completed'" value="working">Working</option>
+                <option  ng-show="item.status!='completed'" value="completed">Completed</option>
               </select>
               <button
                 ng-show="isSelected===$index"

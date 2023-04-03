@@ -63,6 +63,13 @@
                 ng-required="true"
                 style="text-align: center"
               />
+              <label>Project Description</label>
+              <input
+                type="text"
+                ng-model="createProjectObject.projectDescription"
+                ng-required="true"
+                style="text-align: center"
+              />
               <label>Project Manager</label>
               <select
                 ng-required="true"
@@ -184,7 +191,7 @@
         class="loader"
       ></div>
       <div class="projectDetailsClass"  ng-repeat="project in project ">
-        
+         
         <div  ng-class="{'displayHeader': project.isCompleted.status==true}" class="projectHeader">
           
           <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
@@ -198,10 +205,10 @@
  
           <div class="projectActions">
             <h3 style="color: rgb(227, 79, 79); margin-top: 10px">
-              <i
+              <!-- <i
                 class="fa-sharp fa-solid fa-trash"
                 ng-click="deleteProject(project._id)"
-              ></i>
+              ></i> -->
             </h3>
             <h3
               style="color: rgb(3, 127, 59); cursor: pointer; margin-top: 10px"

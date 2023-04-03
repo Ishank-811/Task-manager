@@ -152,7 +152,7 @@ myApp.controller(
 
 
     $scope.deleteAssingedUser = function(projectId,  userId ,firstName, index){
-    
+      if($scope.employeesOfProject.length>1){
       adminServices.deleteuser(projectId,  userId  , function(){
        alert("employee Deleted"); 
        $(function () {
@@ -162,6 +162,10 @@ myApp.controller(
        $scope.employeesAsignedFiltered.push({firstName, _id:userId}) ; 
        
       })
+      }else{
+        alert("Add more employee to delete this user") ; 
+      }
+      
     }
   }
 );
