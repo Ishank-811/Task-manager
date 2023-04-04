@@ -27,7 +27,7 @@ myApp.controller(
                 numberOfPages(data.data.countNum);
                 $scope.response = data.data.usersdata;
                 $scope.adminId = data.data.adminId;
-                console.log($scope.response);
+              
                 if ($scope.response.length == 0) {
                   $scope.showNoEmployees = true;
                 } else {
@@ -70,7 +70,7 @@ myApp.controller(
         $scope.createEmployee,
         token,
         function (data) {
-          console.log(data);
+         
           if (data.status == 404) {
             $scope.showError = true;
           } else {
@@ -98,7 +98,7 @@ myApp.controller(
       }
       debounceTimer = $timeout(function () {
         organizationServices.searchUser( $scope.adminId , employeeValue, function (response) {
-          console.log(response);
+       
           $scope.response = response.data;
         });
       }, 800);
@@ -138,7 +138,7 @@ myApp.controller(
         organizationServices.updateUser(
           $scope.employeeUpdateDetails,
           function (response) {
-            console.log(response);
+        
             if(response.status==204){
               $scope.showUserExist = true;  
             }else{

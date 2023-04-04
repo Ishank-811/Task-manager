@@ -32,6 +32,11 @@
         <h6 style="width: 80%; margin: 30px">
          {{projectDetails.projectDescription}}
         </h6>
+        <button style="width:17%"   data-toggle="modal"
+        data-target="#viewTaskModal"
+        class="createButton"
+        style="cursor: pointer"
+        ng-click="showProjectTask( projectDetails.projectName,projectDetails._id)" class="createButton">View All Tasks</button>
       </div>
       <div class="projectAssignedTo">
         <div>
@@ -276,4 +281,77 @@
   </div>
 
   <!----------------Add employee modal ends------------------->
+
+
+
+<!----------------------------------------- view task modal starts ------------------------------>
+
+<div class="modal" id="viewTaskModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">View Tasks ({{projectName}})</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="tasklistclass">
+          <div class="TaskClass" ng-repeat="item in progressDivs ">
+            <h3>{{item}}</h3>
+            <h5 style="color:red" ng-show="viewTask.length==0">No task assigned</h5>
+            <div
+              ng-repeat="projectTask in viewTask |filter :{status:item} "
+              style="
+                width: 95%;
+                background-color: white;
+                padding: 14px;
+                border-radius: 12px;
+                margin: 10px;
+              "
+            >
+              <div style="display: flex; justify-content: space-between">
+                <h5>{{projectTask.task.taskName}}</h5>
+
+                <h5>{{projectTask.status}}</h5>
+               
+              </div>
+              <h5>assigned to: {{projectTask.user.name}}</h5>
+              <h6>{{projectTask.task.taskDescription}}</h6>
+              <h6 style="margin: 20px 0px 20px 0px">
+                Start Date
+                <i class="fa-solid fa-calendar-days"></i
+                >{{projectTask.startDate | date:"dd/MM/yyyy"}}
+              </h6>
+              <h6>
+                End Date
+                <i class="fa-solid fa-calendar-days"></i>
+                {{projectTask.endDate | date:"dd/MM/yyyy"}}
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!----------------------------------------- view task modal starts ------------------------------>
+
+
+
+
+
+
+
 </div>

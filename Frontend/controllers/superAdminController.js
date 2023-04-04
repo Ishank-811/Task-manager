@@ -8,12 +8,11 @@ myApp.controller(
       console.log(response); 
     })
 
-    console.log(role);
+ 
     if (role == "SuperAdmin") {
       $scope.organizationDetails = [];
       $scope.message = "superAdmin Dashboard";
       superAdminServices.fetchAllOrganization(token, function (response) {
-        // console.log(response);
         $scope.organizationDetails = response.data;
       });
 
@@ -70,11 +69,7 @@ myApp.controller(
           $scope.ConfirmPasswordMatchingFalse = true;
           return;
         }
-        console.log(
-          $scope.organizationName,
-          $scope.emailValid,
-          $scope.Password
-        );
+      
         var newUser = {
           organizationName: $scope.organizationName,
           email: $scope.emailValid,
@@ -82,7 +77,7 @@ myApp.controller(
         };
 
         superAdminServices.addOrganization(newUser, function (data) {
-          console.log(data);
+     
           if (data.status == 400) {
             $scope.showError = true;
           } else {
@@ -97,7 +92,7 @@ myApp.controller(
 
       $scope.createOrganization = function (val) {
         superAdminServices.AllowOrganization(val, function (response) {
-          console.log(response);
+       
           $scope.organizationDetails.forEach(function (element) {
             if (element._id == val) {
               element.valid = true;
@@ -122,19 +117,14 @@ myApp.controller(
 
       $scope.UpdateOrganizationFunction = function ($event) {
         $event.preventDefault();
-        console.log(
-          $scope.updateOrganizationId,
-          $scope.updateOrganizationUsername,
-          $scope.updateOrganizationName
-        );
-
+       
         var data = {
           organizationId: $scope.updateOrganizationId,
           organizationName: $scope.updateOrganizationName,
           organizationUsername: $scope.updateOrganizationUsername,
         };
         superAdminServices.updateOrganization(data, function (response) {
-          console.log(response);
+         
           if (response.status == 400) {
             $scope.showErrorInUpdateForm = true;
           } else {

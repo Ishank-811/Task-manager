@@ -1,6 +1,6 @@
 myApp.controller(
   "mangerController",
-  function ($scope, $window, $timeout, managerServices, employeeServices) {
+  function ($scope, $window) {
     var role = sessionStorage.getItem("role");
     $scope.username = sessionStorage.getItem("username");  
     $scope.organization = sessionStorage.getItem("organization"); 

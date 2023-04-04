@@ -1,8 +1,12 @@
 myApp.controller(
-    "managerViewTaskListController",function($scope , managerServices){
+    "managerViewTaskListController",function($scope ,$timeout,  managerServices){
 
         var token = sessionStorage.getItem("token");
 
+        $scope.errorHandlingObject = {
+          viewManagerDashBoardLoader: false,
+          showNoProjectAssigned: false,
+        };
         $scope.currentPage= 1  ;
         var numberOfPages = function(count){
             $scope.pageSize = 8;
@@ -14,7 +18,13 @@ myApp.controller(
           }
         var showProjectTaskFunction = function(currentPage){
         managerServices.showAllAssignedProjects(currentPage,token, function(response){
+          $scope.errorHandlingObject = {
+            viewManagerDashBoardLoader: true,
+            showNoProjectAssigned: false,
+          };
             $scope.projectData= response.data.projectData; 
+            $scope.managerId = response.data.projectData[0].projectManger.projectMangerId; 
+            console.log($scope.managerId); 
             numberOfPages(response.data.countNum) ; 
         })
     }
@@ -60,8 +70,7 @@ myApp.controller(
             })
     }
         $scope.updateTaskFunction = function ($event) {
-            console.log($scope.updateTaskObject.taskId) ; 
-           
+             
             $event.preventDefault();
             if($scope.updatedEndDate!=undefined){
               $scope.updateTaskObject['EndDateValue']=$scope.updatedEndDate;
@@ -77,7 +86,7 @@ myApp.controller(
                     $scope.viewTask.splice(indexToReplace, 1, response.data);
                   }
                   
-              alert("Task updated");
+               alert("Task updated");
               $(function () {
                 $("#myModal").modal("hide");
               });
@@ -103,7 +112,7 @@ myApp.controller(
 
           $scope.deleteTask=  function(taskId, index){
             if (confirm("Want to delete this task ?") == true) {
-              console.log(taskId); 
+           
             managerServices.deleteTask(taskId , function(response){
               $(function () {
                 $("#myModal").modal("hide");
@@ -118,5 +127,39 @@ myApp.controller(
             }) 
             }
           }
+
+
+
+    var debounceTimer;
+    $scope.searchProjectFunction = function (projectNameValue) {
+      $scope.errorHandlingObject.viewManagerDashBoardLoader = false;
+      $scope.projectData=[]; 
+      if (debounceTimer) {
+        $timeout.cancel(debounceTimer);
+      }
+      debounceTimer = $timeout(function () {
+        console.log(projectNameValue); 
+        managerServices.searchProject(
+          projectNameValue,
+          $scope.managerId,
+          function (response) {
+            $scope.projectData = response.data;
+            console.log($scope.projectData); 
+            numberOfPages($scope.projectData.length);
+            if ($scope.projectData.length == 0) {
+              $scope.errorHandlingObject = {
+                viewManagerDashBoardLoader: true,
+                showNoProjectAssigned: true,
+              };
+            } else {
+              $scope.errorHandlingObject = {
+                viewManagerDashBoardLoader: true,
+                showNoProjectAssigned: false,
+              };
+            }
+          }
+        );
+      }, 800);
+    };
  
     }); 

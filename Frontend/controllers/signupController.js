@@ -52,7 +52,7 @@ myApp.controller("signupController", function ($scope, singupServices) {
       $scope.ConfirmPasswordMatchingFalse = true;
       return;
     }
-    console.log($scope.organizationName, $scope.emailValid, $scope.Password);
+  
     var newUser = {
       organizationName: $scope.organizationName,
       email: $scope.emailValid,
@@ -60,7 +60,6 @@ myApp.controller("signupController", function ($scope, singupServices) {
     };
 
     singupServices.sendingdata(newUser, function (data) {
-      console.log(data);
       alert("Successfully signup");
     });
   };

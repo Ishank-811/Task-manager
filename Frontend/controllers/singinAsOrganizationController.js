@@ -9,7 +9,7 @@ myApp.controller(
         username: $scope.email,
         password: $scope.password,
       };
-      console.log(signinServices); 
+    
       signinServices.SiginAsOrganization(LoggedinOrganization, function (data) {
         if (data.data.token) {
           $window.alert("successfully logged in as organization");

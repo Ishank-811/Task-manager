@@ -130,9 +130,11 @@ class="loader"
             style="text-align: center"
           />
     
-          <button class="employeeAssignedFunction" ng-click="onfocusfun()">
-            Employee Assigned
-          </button>
+          
+          <label> Employee Assigned</label>
+          <input ng-model="searchQuery" ng-click="onfocusfun()" ng-model-options="{ debounce: 500 }">
+                
+            </input>
           <div
                 style="
                   margin: 10px;
@@ -143,9 +145,10 @@ class="loader"
                 "
                  ng-style="{'display': displayUserList ? 'block' : 'none'}"
               >
+              <p style="color:red">{{((employeesAssignedToTask | filter:searchQuery).length)<=0 ? "No employee Found":"" }}</p>
                 <label
                   style="display: flex; width: 10%; margin: 10px ;"
-                  ng-repeat="item in employeesAssignedToTask"
+                  ng-repeat="item in employeesAssignedToTask |filter:searchQuery"
                 
                 >
                   <label>{{item.assignedTo.name}}</label>

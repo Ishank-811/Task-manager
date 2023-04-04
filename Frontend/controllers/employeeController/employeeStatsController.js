@@ -20,7 +20,7 @@ myApp.controller(
         $scope.monthWiseAnalysis = function(currentMonthValue){
             
         employeeServices.employeeStatistics(currentMonthValue , token , function(taskcompletedDayWise){
-            console.log(taskcompletedDayWise); 
+        
             var monthNumber  = [31,28,31,30,31,30,31,31,30,31,30,31 ]
         var dates = [];
       var createdData = [];
@@ -73,8 +73,7 @@ myApp.controller(
         })
 
         employeeServices.progressProject(token , function(response){
-            console.log(response); 
-            
+          
               var projectName = response.map((element) => {
                 return element.projectName;
               });

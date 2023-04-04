@@ -148,7 +148,15 @@ myApp.controller(
 
 
 
-
+    $scope.showProjectTask = function(projectName,projectId){
+    
+      $scope.projectName = projectName; 
+        managerServices.showProjectTask(projectId,token, function(response){
+         
+        $scope.viewTask = response.data; 
+        })
+}
+$scope.progressDivs  = ['Inactive' , 'Started' , 'working', 'completed'];
 
 
     $scope.deleteAssingedUser = function(projectId,  userId ,firstName, index){

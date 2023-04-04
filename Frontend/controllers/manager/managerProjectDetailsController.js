@@ -14,7 +14,6 @@ myApp.controller(
             $scope.projectDetails = data.projectData;
             $scope.progressPercentage =(($scope.projectDetails.progress.percentage)/($scope.totalEmployees.length)).toFixed(1);
             $scope.employeesOfProject =  data.ticketsData  ;
-            console.log($scope.employeesOfProject); 
             storingArray = $scope.employeesOfProject.map(function (element) {
               return element.user.userId;
             }); 
@@ -155,7 +154,6 @@ myApp.controller(
             }  
           };
           $scope.updateTaskFunction = function ($event) {
-            console.log($scope.updateTaskObject.index) ; 
             $event.preventDefault();
             if($scope.updatedEndDate!=undefined){
               $scope.updateTaskObject['EndDateValue']=$scope.updatedEndDate;
@@ -198,7 +196,6 @@ myApp.controller(
           $scope.deleteTask=  function(taskId, index){
             if (confirm("Want to delete this task ?") == true) {
             managerServices.deleteTask(taskId , function(response){
-              console.log(response);
               $scope.getTasksObject.viewTask.splice(index,1);
 
             }) 

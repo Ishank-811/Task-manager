@@ -34,7 +34,7 @@ $scope.assignedUserChecksChange = function(){
 
 $scope.displayUserList=false ; 
 $scope.onfocusfun = function () {
-  $scope.displayUserList  = !$scope.displayUserList ; 
+  $scope.displayUserList  = true ; 
 }; 
 
 //create Project Starts
@@ -65,6 +65,8 @@ $scope.createProjectObject = {
     createProjectLoader:true,
   }
   $scope.createProjectModalFunction = function(){
+    $scope.searchQuery=""; 
+    $scope.displayUserList  = false ; 
     $scope.createProjectObject = {
       projectName:"",
       priority:"", 

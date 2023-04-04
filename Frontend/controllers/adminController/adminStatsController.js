@@ -40,7 +40,7 @@ myApp.controller(
       adminServices.projectWiseAnalysis(
         projectId,monthValue,
         function (numberOfTaskCompleted, numberOfTaskCreated) {
-          console.log(numberOfTaskCreated, numberOfTaskCompleted);
+        
           var ProjectWisedates = [];
           var ProjectWiseData = [];
           var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -119,7 +119,7 @@ myApp.controller(
         function (projectCreatedDayWise) {
           var dates = [];
           var data = [];
-          console.log(parseInt(currentMonthValue));
+       
           var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
           for (var i = 0; i <= monthNumber[currentMonthValue - 1]; i++) {

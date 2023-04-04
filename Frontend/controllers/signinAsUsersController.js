@@ -10,12 +10,9 @@ myApp.controller(
         password: $scope.password,
       };
       signinServices.SiginAsUsers(LoggedinOrganization, function (data) {
-        console.log(data.data.token);
-        console.log(data);
         if (data.data.token) {
           sessionStorage.setItem("token", data.data.token);
         } else {
-          console.log(data);
        if(data.status==401){
         $scope.errorMessage = "Inavlid user and password"
        }

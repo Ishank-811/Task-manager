@@ -84,22 +84,25 @@
                   {{item.firstName}}
                 </option>
               </select>
-              <button class="employeeAssignedFunction" ng-click="onfocusfun()">
-                Employee Assigned
-              </button>
+           
+              <label>Employee Assigned</label>
+              <input ng-model="searchQuery" ng-click="onfocusfun()" ng-model-options="{ debounce: 500 }">
+                
+            </input>
               <div
                 style="
                   margin: 10px;
-                  background-color: #fbfbfb;
+                  background-color: #fefefe;
                   border-radius: 10px;
-                  height:200px; 
+                  height:150px; 
                   overflow: scroll;
                 "
                 ng-style="{'display': displayUserList ? 'block' : 'none'}"
               >
+              <p style="color:red">{{((employeesAsigned | filter:searchQuery).length)<=0 ? "No employee Found":"" }}</p>
                 <label
                   style="display: flex; width: 10%; margin: 10px ;"
-                  ng-repeat="item in employeesAsigned"
+                  ng-repeat="item in employeesAsigned |filter:searchQuery "
                 
                 > 
                   <label>{{item.firstName}}</label>
@@ -195,14 +198,17 @@
         <div  ng-class="{'displayHeader': project.isCompleted.status==true}" class="projectHeader">
           
           <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
+          <div style="display: flex; flex-direction: column;">
           <h4
             style="font-weight: bold; margin-top: 10px; cursor: pointer"
             ui-sref="AdminDashboard.ViewProjectDetails({projectId:project._id})"
           >
             {{project.projectName}} 
-            <h5 ng-show="project.isCompleted.status">(Completed)</h4>
+            
           </h4>
- 
+         
+          <h6 ng-show="project.isCompleted.status">(Completed)</h6>
+        </div>
           <div class="projectActions">
             <h3 style="color: rgb(227, 79, 79); margin-top: 10px">
               <!-- <i

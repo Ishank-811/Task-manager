@@ -493,16 +493,7 @@ task.aggregate([
 
 }
 
-const updateProjectDescription = function(req,res){
-// console.log("hello"); 
-projectDetails.updateMany({} , {$set:{projectDescription:'Lorem ipsum dolor Consequuntur facilis at minima temporibus tempora beatae commodi dolores nemo voluptatem, cum repudiandaeadipisci veritatis'}} ,
- {new:true}).then(function(response){
-  res.status(200).send(response); 
- }).catch(function(error){
-  res.status(404).send(error); 
- })
 
-}
 
 module.exports = {
   stats,
@@ -519,5 +510,5 @@ module.exports = {
   monthWiseAnalysis,
   updateProject,
   projectWiseAnalysis,
-  updateProjectDescription
+  
 };

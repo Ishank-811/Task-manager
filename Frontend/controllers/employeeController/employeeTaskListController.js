@@ -5,7 +5,7 @@ myApp.controller(
         $scope.searchFilterInTask= function(filterValue){
            $scope.filterObject.status = filterValue ; 
            $scope.allTasks =  $scope.storeVariable ; 
-           console.log($scope.filterObject) ; 
+          
         }
         $scope.endDateFilter=  function(){
             $scope.filterObject= {}; 
@@ -15,7 +15,6 @@ myApp.controller(
            
          })
 
-         console.log($scope.allTasks); 
         
 
         }   
@@ -34,7 +33,6 @@ myApp.controller(
             }
         var token = sessionStorage.getItem("token");
         employeeServices.getAllTasks(token , function(response){
-            console.log(response); 
             $scope.allTasks = response ; 
             $scope.storeVariable=response ; 
         })

@@ -176,7 +176,7 @@ var perUserProject=  function(){
             name: { $first: "$assignedTo.name" },
             username: { $first: "$assignedTo.username" },
             count: { $sum: 1 },
-          },
+          },  
         },
         { $sort: { count: -1 } },
         {

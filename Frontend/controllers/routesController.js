@@ -118,7 +118,6 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
 
 var mycontroller = function ($scope, $window) {
   var token = sessionStorage.getItem("token");
-  console.log(token);
   if (token) {
     $scope.loggedin = true;
     $scope.loggedOut = false;

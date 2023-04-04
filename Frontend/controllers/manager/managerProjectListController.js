@@ -21,7 +21,7 @@ myApp.controller(
     };
     $scope.displayUserList = false;
     $scope.onfocusfun = function () {
-      $scope.displayUserList = !$scope.displayUserList;
+      $scope.displayUserList = true;
     };
 
 
@@ -50,11 +50,11 @@ myApp.controller(
       $scope.response = [];
       managerServices.readingdata({ token, currentPage }, function (data) {
         numberOfPages(data.data.countNum);
-        console.log(data.data.countNum);
+      
         $scope.response = data.data.projectDetails;
 
         $scope.managerId = $scope.response[0].projectManger.projectMangerId;
-        console.log($scope.managerId);
+     
 
         if ($scope.response.length == 0) {
           $scope.errorHandlingObject = {
