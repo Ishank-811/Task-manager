@@ -252,8 +252,27 @@
       .then(
         function (res) {
           console.log(res);
+      var dates = [];
+      var createdData = [];
+      for (var i = 0; i < 31; i++) {
+        createdData.push(0);
+        dates.push(i);
+      }
+      res.data.taskCreatedDayWise.forEach(function (element) {
+        createdData.splice(element.day, 1, element.count);
+      });
+      var projectName = res.data.completionRateOfProject.map(function (element) {
+        return element.projectName;
+      });
+      var avgCompletionTime = res.data.completionRateOfProject.map(function (element) {
+        return element.avgCompletionTime / (1000 * 60 * 60);
+      });
           cb(res.data.countBystatus,  res.data.isUpcomingProject  , res.data.overDueProject ,
-             res.data.completionRateOfProject, res.data.taskCreatedDayWise );
+             completionRateOfProject={
+              projectName , avgCompletionTime
+             }, taskCreatedDayWise={
+              dates ,createdData 
+             } );
         },
         function (err) {
           return err;
@@ -266,9 +285,26 @@
       `http://localhost:8080/manager/projectTaskStats/${projectId}`, 
     )
     .then(
-      function (res) {
-        console.log(res);
-        cb(res);
+      function (response) {
+        var users = response.data.map(function (element) {
+          return element.name;
+        });
+        var completedTask = response.data.map(function (element) {
+          return element.tasksCompleted;
+        });
+        var workingTasks = response.data.map(function (element) {
+          return element.workingTasks;
+        });
+        var inactiveTasks = response.data.map(function (element) {
+          return element.inactiveTasks;
+        });
+        var totalTasks = response.data.map(function (element) {
+          return element.totalTasksAssigned;
+        });
+        
+        cb(projectTaskStats={
+          users,completedTask,workingTasks,inactiveTasks,totalTasks
+        }); 
       },
       function (err) {
         return err;
@@ -297,9 +333,17 @@
       `http://localhost:8080/manager/userStats/${userId}`, 
     )
     .then(
-      function (res) {
-        console.log(res);
-        cb(res);
+      function (response) {
+       
+        var projectNameLabel = response.data.map(function(element){
+          return element.projectName ; 
+        }) 
+        var numberOfTaskData= response.data.map(function(element){
+          return element.taskCount  ; 
+        })
+        cb(userStats={
+          projectNameLabel ,numberOfTaskData
+        });
       },
       function (err) {
         return err;
@@ -310,4 +354,4 @@
   };
 };
 
-myApp.factory("managerServices", fac);
+myApp.service("managerServices", fac);

@@ -31,4 +31,4 @@ var fac = function ($http) {
   };
 };
 
-myApp.factory("signinServices", fac);
+myApp.service("signinServices", fac);

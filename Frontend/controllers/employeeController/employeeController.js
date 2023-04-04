@@ -54,7 +54,7 @@ myApp.controller(
         $scope.projectSortedBy="" ;  
         fetchingProjects($scope.currentPage , $scope.sortedFormObject  , undefined);
       }
-
+ 
 
 
 

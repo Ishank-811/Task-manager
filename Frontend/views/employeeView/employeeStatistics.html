@@ -9,7 +9,7 @@
   >
     <div
       style="width: 19%"
-      ng-repeat="item in countTheProjects track by $index"
+      ng-repeat="item in statistics.countTheProjects track by $index"
       class="taskAnalysis"
     >
       <div class="taskAnalysisHeadingClass">
@@ -43,7 +43,7 @@
             align-items: center;
           "
         >
-          {{countTheProjects[0].count +countTheProjects[1].count }}
+          {{statistics.countTheProjects[0].count +statistics.countTheProjects[1].count }}
         </h1>
       </div>
     </div>
@@ -84,7 +84,7 @@
         </thead>
 
         <tbody>
-          <tr ng-repeat="project in upcomingProjects">
+          <tr ng-repeat="project in statistics.upcomingProjects">
             <td>{{$index+1}}</td>
             <td>{{project.project.projectName}}</td>
             <td>{{project.priority}}</td>
@@ -149,7 +149,7 @@
         </thead>
 
         <tbody>
-          <tr ng-repeat="project in overdueProjects">
+          <tr ng-repeat="project in statistics.overdueProjects">
             <td>{{$index+1}}</td>
             <td>{{project.project.projectName}}</td>
             <td>{{project.priority}}</td>

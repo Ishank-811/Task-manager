@@ -257,8 +257,20 @@ var fac = function ($http) {
 
       $http.get(`http://localhost:8080/employee/employeeStatistics/${currentMonthValue}`, config).then(
         function (res) {
-          console.log(res);
-          cb(res.data);
+          var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+          var dates = [];
+          var createdData = [];
+          for (var i = 0; i <= monthNumber[currentMonthValue - 1]; i++) {
+            createdData.push(0);
+            dates.push(i);
+          }
+          res.data.forEach(function (element) {
+            createdData.splice(element._id, 1, element.count);
+          });
+
+          cb(taskcompletedDayWise={
+            createdData , dates
+          });
         },
         function (err) {
           return err;
@@ -271,7 +283,7 @@ var fac = function ($http) {
           Authorization: "Bearer " + token,
           Accept: "application/json;odata=verbose",
         },
-      };
+      }; 
 
       $http.get("http://localhost:8080/employee/employeeStats", config).then(
         function (res) {
@@ -292,9 +304,17 @@ var fac = function ($http) {
       };
 
       $http.get("http://localhost:8080/employee/progressProject", config).then(
-        function (res) {
-          console.log(res);
-          cb(res.data);
+        function (response) {
+        
+          var projectName = response.data.map((element) => {
+            return element.projectName;
+          });
+          var projectProgress = response.data.map((element) => {
+            return element.progress;
+          });
+          cb(progressProject={
+            projectName , projectProgress
+          });
         },
         function (err) {
           return err;
@@ -304,4 +324,4 @@ var fac = function ($http) {
   };
 };
 
-myApp.factory("employeeServices", fac);
+myApp.service("employeeServices", fac);

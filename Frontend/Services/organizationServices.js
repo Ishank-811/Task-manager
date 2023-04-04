@@ -104,4 +104,4 @@ var fac = function ($http) {
   };
 };
 
-myApp.factory("organizationServices", fac);
+myApp.service("organizationServices", fac);

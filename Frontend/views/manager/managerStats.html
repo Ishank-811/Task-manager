@@ -7,7 +7,7 @@
       margin-bottom: 50px;
     "
   >
-<div style="width:19%" ng-repeat="item in countBystatus track by $index" class="taskAnalysis">
+<div style="width:19%" ng-repeat="item in statistics.countBystatus track by $index" class="taskAnalysis">
       <div class="taskAnalysisHeadingClass">
         <h2>{{item._id}}</h2>
         <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
@@ -39,7 +39,7 @@
             align-items: center;
           "
         >
-          {{countBystatus[0].count +countBystatus[1].count+ countBystatus[2].count + countBystatus[3].count }}
+          {{statistics.countBystatus[0].count +statistics.countBystatus[1].count+ statistics.countBystatus[2].count + statistics.countBystatus[3].count }}
         </h1>
       </div>
     </div>
@@ -62,7 +62,7 @@
       </thead>
   
       <tbody>
-        <tr ng-repeat="project in isUpcomingProject">
+        <tr ng-repeat="project in statistics.isUpcomingProject">
           <td>{{$index+1}}</td>
           <td>{{project.projectName}}</td>
           <td>{{project.priority}}</td>
@@ -88,7 +88,7 @@
       </thead>
   
       <tbody>
-        <tr ng-repeat="project in overDueProject">
+        <tr ng-repeat="project in statistics.overDueProject">
           <td>{{$index+1}}</td>
           <td>{{project.projectName}}</td>
           <td>{{project.priority}}</td>

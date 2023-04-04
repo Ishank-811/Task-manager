@@ -25,7 +25,7 @@ var fac = function ($http) {
         assignedTo: projectDetails.assignedTo,
         priority: projectDetails.priority,
         createdAt: new Date(),
-        projectDescription:projectDetails.projectDescription,
+        projectDescription: projectDetails.projectDescription,
         startDate: projectDetails.startDate,
         endDate: projectDetails.endDate,
       };
@@ -47,9 +47,8 @@ var fac = function ($http) {
           Authorization: "Bearer " + data.token,
           Accept: "application/json;odata=verbose",
         },
-
       };
-      console.log(filterObject); 
+      console.log(filterObject);
       $http
         .get(
           `http://localhost:8080/admin/fetchProjects?currentPage=${data.currentPage}&priority=${filterObject.priorityFilter}&createdStartDate=${filterObject.createdStartDateFilter}&createdEndDate=${filterObject.createdEndDateFilter}&startDate=${filterObject.startDateFilter}&endDate=${filterObject.endDateFilter}`,
@@ -85,7 +84,13 @@ var fac = function ($http) {
           }
         );
     },
-    showEmployeeProjects: function (employeeId, organizationId,currentPage, role, cb) {
+    showEmployeeProjects: function (
+      employeeId,
+      organizationId,
+      currentPage,
+      role,
+      cb
+    ) {
       var data = {
         employeeId,
         organizationId,
@@ -148,8 +153,7 @@ var fac = function ($http) {
         );
     },
 
-    updateProject : function(updatedProjectData  ,projectId, token , cb){
-
+    updateProject: function (updatedProjectData, projectId, token, cb) {
       var config = {
         headers: {
           Authorization: "Bearer " + token,
@@ -157,14 +161,14 @@ var fac = function ($http) {
         },
       };
       var data = {
-      projectName:updatedProjectData.projectName,
-      priority:updatedProjectData.priority,
+        projectName: updatedProjectData.projectName,
+        priority: updatedProjectData.priority,
+      };
+      if (updatedProjectData.startDate != undefined) {
+        data.startDate = updatedProjectData.startDate;
       }
-      if(updatedProjectData.startDate!=undefined){
-        data.startDate = updatedProjectData.startDate; 
-      }
-      if(updatedProjectData.endDate!=undefined){
-        data.endDate = updatedProjectData.endDate; 
+      if (updatedProjectData.endDate != undefined) {
+        data.endDate = updatedProjectData.endDate;
       }
       $http
         .patch(
@@ -182,73 +186,141 @@ var fac = function ($http) {
           }
         );
     },
-    deleteuser: function (projectId , userId, cb) {
-      $http.patch(`http://localhost:8080/admin/deleteuser?projectId=${projectId}&userId=${userId}`).then(
-        function (res) {
-          console.log(res);
-          cb(res);
-        },
-        function (err) {
-          return err;
-        }
-      );
+    deleteuser: function (projectId, userId, cb) {
+      $http
+        .patch(
+          `http://localhost:8080/admin/deleteuser?projectId=${projectId}&userId=${userId}`
+        )
+        .then(
+          function (res) {
+            console.log(res);
+            cb(res);
+          },
+          function (err) {
+            return err;
+          }
+        );
     },
-    statistics: function(token , cb){
+    statistics: function (token, cb) {
       var config = {
         headers: {
           Authorization: "Bearer " + token,
           Accept: "application/json;odata=verbose",
         },
       };
+      $http.get("http://localhost:8080/admin/stats", config).then(
+        function (res) {
+          console.log(res);
+          var projectName =  res.data.fastestPaceProject.map((element) => {
+            return element.projectName;
+          });
+          var projectPace =  res.data.fastestPaceProject.map((element) => {
+            return element.pace.pace;
+          });
+
+          var workloadedEmployees = res.data.perUserProject.map((element) => {
+            return element.name;
+          });
+          var workloadedEmployeesCount = res.data.perUserProject.map((element) => {
+            return element.count;
+          });
+          
+
+          cb(
+            perUserProject={
+              workloadedEmployees, workloadedEmployeesCount
+            },
+            res.data.top3Employees,
+            fastestPaceProject={
+              projectName, 
+              projectPace
+            },
+            res.data.projectStatusNumber,
+            res.data.isUpcoming,
+            res.data.overDueProjects
+          );
+        },
+        function (err) {
+          return err;
+        }
+      );
+    },
+    monthWiseAnalysis: function (currentMonthValue, cb) {
       $http
         .get(
-          "http://localhost:8080/admin/stats",
-          config
+          `http://localhost:8080/admin/monthWiseAnalysis/${currentMonthValue}`
         )
         .then(
           function (res) {
             console.log(res);
-            cb(res.data.perUserProject , res.data.top3Employees , 
-              res.data.fastestPaceProject , res.data.projectStatusNumber ,  res.data.isUpcoming , res.data.overDueProjects);
+            var dates = [];
+          var data = [];
+       
+          var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+          for (var i = 0; i <= monthNumber[currentMonthValue - 1]; i++) {
+            data.push(0);
+            dates.push(i);
+          }
+
+          res.data.forEach(function (element) {
+            data.splice(element.day, 1, element.count);
+          });
+            cb(projectCreatedDayWise={
+              dates , data
+            });
           },
           function (err) {
             return err;
           }
-        ); 
-    } , 
-    monthWiseAnalysis : function(currentMonthValue , cb){
-      $http
-      .get(
-        `http://localhost:8080/admin/monthWiseAnalysis/${currentMonthValue}`
-      )
-      .then(
-        function (res) {
-          console.log(res);
-          cb(res.data);
-        },
-        function (err) {
-          return err;
-        }
-      );
+        );
     },
-    projectWiseAnalysis : function(projectId ,monthValue, cb){
-      console.log(projectId , monthValue); 
+    projectWiseAnalysis: function (projectId, monthValue,monthNum, cb) {
+      console.log(projectId, monthValue);
       $http
-      .get(
-        `http://localhost:8080/admin/projectWiseAnalysis?projectId=${projectId}&monthValue=${monthValue}`
-      )
-      .then(
-        function (res) {
-          console.log(res);
-          cb(res.data.numberOfTaskCompleted , res.data.numberOfTaskCreated);
-        },
-        function (err) {
-          return err;
-        }
-      );
+        .get(
+          `http://localhost:8080/admin/projectWiseAnalysis?projectId=${projectId}&monthValue=${monthValue}`
+        )
+        .then(
+          function (res) {
+         
+            var ProjectWisedates = [];
+            var ProjectWiseData = [];
+            var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            for (var i = 0; i <= monthNumber[monthNum - 1]; i++) {
+              ProjectWiseData.push(0);
+              ProjectWisedates.push(i);
+            }
+  
+            var CreatedProjectWiseData = [];
+            for (var i = 0; i <= 31; i++) {
+              CreatedProjectWiseData.push(0);
+            }
+            res.data.numberOfTaskCreated.forEach(function (element) {
+              ProjectWiseData.splice(
+                element.day,
+                1,
+                element.numberOfTaskCreated
+              );
+             
+            });
+            res.data.numberOfTaskCompleted.forEach(function (element) {
+              CreatedProjectWiseData.splice(
+                element.day,
+                1,
+                element.numberOfTaskCompleted
+              );
+            });
+            cb(projectWiseAnalysisObject={
+              ProjectWiseData,ProjectWisedates , CreatedProjectWiseData
+            });
+          },
+          function (err) {
+            return err;
+          }
+        );
     },
-    
   };
 };
 
-myApp.factory("adminServices", fac);
+myApp.service("adminServices", fac);

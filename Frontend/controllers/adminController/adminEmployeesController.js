@@ -6,14 +6,14 @@ myApp.controller("adminEmployeesController", function ($scope, adminServices) {
     $scope.pageSize = 5;
       $scope.totalPages = Math.ceil(count/ $scope.pageSize);
       $scope.pages = [];
-      for (var i = 1; i <= $scope.totalPages; i++) {
+      for (var i = 1; i < $scope.totalPages; i++) {
         $scope.pages.push(i);
       }
   }
 
 $scope.currentPage = 1 ; 
   $scope.fetchUserDetails = function (userData , currentPage) {
-    $scope.object = {
+    $scope.employeeHandlingObject = {
       showError:true ,
       userData,
       EmployeeticketDetails:[],
@@ -21,16 +21,15 @@ $scope.currentPage = 1 ;
     }
     adminServices.showEmployeeProjects(userData._id, userData.organization.organizationId,currentPage, userData.role,
       function (response) {
-
         $scope.employeeProjects = response.projectData;
         numberOfPages(response.count);
         if (response.length == 0) {
-          $scope.object.showError = false;
+          $scope.employeeHandlingObject.showError = false;
           $scope.showEmployeeTicketTable = true;
         } else {
-          $scope.object.showError = true;
-          $scope.object.showEmployeeTicketTable = false;
-          $scope.object.EmployeeticketDetails = response;
+          $scope.employeeHandlingObject.showError = true;
+          $scope.employeeHandlingObject.showEmployeeTicketTable = false;
+          $scope.employeeHandlingObject.EmployeeticketDetails = response;
         }
       }
     );
@@ -39,6 +38,6 @@ $scope.currentPage = 1 ;
 
   $scope.setPage = function (pageNumber) {
     $scope.currentPage = pageNumber;
-    $scope.fetchUserDetails( $scope.object.userData ,$scope.currentPage);
+    $scope.fetchUserDetails( $scope.employeeHandlingObject.userData ,$scope.currentPage);
   };
 });

@@ -28,4 +28,4 @@ var fac = function ($http) {
   };
 };
 
-myApp.factory("updateProjectDetailsServices", fac);
+myApp.service("updateProjectDetailsServices", fac);

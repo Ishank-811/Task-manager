@@ -18,7 +18,9 @@ myApp.controller("adminController", function ($scope, $window,$timeout ,  adminS
       $scope.response = userData.filter(function (val) {
         return val.role == "Manager";
       });
-      
+     $scope.employeesAsignedStore= userData.filter(function (val) {
+      return val.role == "Employee";
+    });
     }
   });
 

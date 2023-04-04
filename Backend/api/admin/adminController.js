@@ -59,7 +59,12 @@ const creatingPorject = function (req, res) {
                 },
                 organization: { organizationId, name: organizationName },
                 projectManger: data.projectManger,
-                assignedTo: data.assignedTo[i],
+                assignedTo:{
+                  assignedUserId:data.assignedTo[i]._id, 
+                  name:data.assignedTo[i].firstName,
+                  username:data.assignedTo[i].username,
+                  isStarted : false,
+                },
                 priority: data.priority,
                 createdAt: data.createdAt,
                 startDate: data.startDate,

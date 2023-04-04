@@ -7,7 +7,7 @@
       margin-bottom: 50px;
     "
   >
-<div ng-repeat="item in projectStatusNumber track by $index" class="taskAnalysis">
+<div ng-repeat="item in statistics.projectStatusNumber track by $index" class="taskAnalysis">
       <div class="taskAnalysisHeadingClass">
         <h2>{{item._id}}</h2>
         <i style="font-size: 30px" class="fa-solid fa-bars-progress"></i>
@@ -39,7 +39,7 @@
             align-items: center;
           "
         >
-          {{projectStatusNumber[0].count +projectStatusNumber[1].count+ projectStatusNumber[2].count }}
+          {{statistics.projectStatusNumber[0].count +statistics.projectStatusNumber[1].count+ statistics.projectStatusNumber[2].count }}
         </h1>
       </div>
     </div>
@@ -62,7 +62,7 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="project in isUpcomingProjects">
+      <tr ng-repeat="project in statistics.isUpcomingProjects">
         <td>{{$index+1}}</td>
         <td>{{project.projectName}}</td>
         <td>{{project.projectManger.name}}</td>
@@ -86,7 +86,7 @@
     </thead>
 
     <tbody>
-      <tr ng-repeat="project in overDueProjects">
+      <tr ng-repeat="project in statistics.overDueProjects">
         <td>{{$index+1}}</td>
         <td>{{project.projectName}}</td>
         <td>{{project.projectManger.name}}</td>
@@ -135,7 +135,7 @@
             </thead>
       
             <tbody>
-              <tr ng-repeat="Employee in top3Employees">
+              <tr ng-repeat="Employee in statistics.top3Employees">
                 <td>{{$index+1}}</td>
                 <td>{{Employee.name}}</td>
                 <td>{{((Employee.averageTime)/(1000*60*60*24)).toFixed(3)}}</td>

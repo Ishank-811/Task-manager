@@ -38,53 +38,28 @@ myApp.controller(
       $scope.monthValue=monthValue ; 
       monthNum = parseInt(monthValue);
       adminServices.projectWiseAnalysis(
-        projectId,monthValue,
-        function (numberOfTaskCompleted, numberOfTaskCreated) {
-        
-          var ProjectWisedates = [];
-          var ProjectWiseData = [];
-          var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-          for (var i = 0; i <= monthNumber[monthNum - 1]; i++) {
-            ProjectWiseData.push(0);
-            ProjectWisedates.push(i);
-          }
-
-          var CreatedProjectWiseData = [];
-          for (var i = 0; i <= 31; i++) {
-            CreatedProjectWiseData.push(0);
-          }
-          numberOfTaskCompleted.forEach(function (element) {
-            ProjectWiseData.splice(
-              element.day,
-              1,
-              element.numberOfTaskCompleted
-            );
-          });
-          numberOfTaskCreated.forEach(function (element) {
-            CreatedProjectWiseData.splice(
-              element.day,
-              1,
-              element.numberOfTaskCreated
-            );
-          });
+        projectId,monthValue,monthNum,
+        function (projectWiseAnalysisObject  ) {
+         
+          
           if (projectWiseChart) {
             projectWiseChart.destroy();
           }
           projectWiseChart = new Chart("projectWiseAnalysis", {
             type: "line",
             data: {
-              labels: ProjectWisedates,
+              labels: projectWiseAnalysisObject.ProjectWisedates,
               datasets: [
                 {
-                  label: "Number of projects completed this month",
-                  data: ProjectWiseData,
+                  label: "Number of projects created this month",
+                  data: projectWiseAnalysisObject.ProjectWiseData,
                   fill: false,
                   borderColor: "rgb(75, 192, 192)",
                   tension: 0.1,
                 },
                 {
-                  label: "Number of projects created this month",
-                  data: CreatedProjectWiseData,
+                  label: "Number of projects completed this month",
+                  data: projectWiseAnalysisObject.CreatedProjectWiseData,
                   fill: false,
                   borderColor: "red",
                   tension: 0.1,
@@ -93,7 +68,7 @@ myApp.controller(
             },
             options: {
               scales: {
-                y: {
+                y : {
                   stacked: true,
                 },
               },
@@ -117,19 +92,7 @@ myApp.controller(
       adminServices.monthWiseAnalysis(
         currentMonthValue,
         function (projectCreatedDayWise) {
-          var dates = [];
-          var data = [];
-       
-          var monthNumber = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-          for (var i = 0; i <= monthNumber[currentMonthValue - 1]; i++) {
-            data.push(0);
-            dates.push(i);
-          }
-
-          projectCreatedDayWise.forEach(function (element) {
-            data.splice(element.day, 1, element.count);
-          });
+          
           if (monthWiseChar) {
             monthWiseChar.destroy();
           }
@@ -137,11 +100,11 @@ myApp.controller(
             monthWiseChar = new Chart("line", {
               type: "line",
               data: {
-                labels: dates,
+                labels: projectCreatedDayWise.dates,
                 datasets: [
                   {
                     label: "Number of projects Created this month",
-                    data: data,
+                    data: projectCreatedDayWise.data,
                     fill: false,
                     borderColor: "rgb(75, 192, 192)",
                     tension: 0.1,
@@ -169,39 +132,23 @@ myApp.controller(
       token,
       function (
         perUserProject,
-
         top3Employees,
         fastestPaceProject,
         projectStatusNumber,
         isUpcomingProjects,
         overDueProjects
       ) {
-        $scope.projectStatusNumber = projectStatusNumber;
-        $scope.top3Employees = top3Employees;
-        $scope.isUpcomingProjects = isUpcomingProjects;
-        $scope.overDueProjects = overDueProjects;
-        var workloadedEmployees = perUserProject.map((element) => {
-          return element.name;
-        });
-        var workloadedEmployeesCount = perUserProject.map((element) => {
-          return element.count;
-        });
-        var projectName = fastestPaceProject.map((element) => {
-          return element.projectName;
-        });
-        var projectPace = fastestPaceProject.map((element) => {
-          return element.pace.pace;
-        });
+        $scope.statistics = {projectStatusNumber ,top3Employees ,isUpcomingProjects ,overDueProjects  }
 
         $timeout(function () {
           new Chart("barchart", {
             type: "bar",
             data: {
-              labels: projectName,
+              labels: fastestPaceProject.projectName,
               datasets: [
                 {
                   label: "Fastest Pace Project",
-                  data: projectPace,
+                  data: fastestPaceProject.projectPace,
                   backgroundColor: [
                     "rgba(255, 99, 132)",
                     "rgba(255, 159, 64)",
@@ -220,12 +167,12 @@ myApp.controller(
           new Chart("pie-chart", {
             type: "pie",
             data: {
-              labels: workloadedEmployees,
+              labels: perUserProject.workloadedEmployees,
               datasets: [
                 {
                   label: "Population (millions)",
                   backgroundColor: ["#5bf556", "#ffc107", "#dc3545", "#6610f2"],
-                  data: workloadedEmployeesCount,
+                  data: perUserProject.workloadedEmployeesCount,
                 },
               ],
             },
