@@ -1,17 +1,13 @@
 myApp.controller(
   "managerProjectListController",
-  function ($scope, $timeout, managerServices) {
+  function ($scope, $timeout, managerServices , managerFactory) {
     var token = sessionStorage.getItem("token");
 
 
 
     $scope.timeleft = function (endDate) {
-      var today = new Date();
-      var endTimestamp = Date.parse(endDate);
-      var diff = endTimestamp - today.getTime();
-      return Math.round(diff / 86400000);
+    return managerFactory.timeleft(endDate); 
     };
-
 
 
     
@@ -28,8 +24,6 @@ myApp.controller(
 
 
 
-
-
     var numberOfPages = function (count) {
       $scope.pageSize = 8;
       $scope.totalPages = Math.ceil(count / $scope.pageSize);
@@ -38,28 +32,22 @@ myApp.controller(
         $scope.pages.push(i);
       }
     };
-
+    $scope.filterObject={}; 
     $scope.resetFilter = function(){
       $scope.filterObject={}; 
     }
-
-
-    $scope.filterObject={}; 
-
     $scope.currentPage = 1;
     var fetchProjectsFunction = function (currentPage , filterObject) {
       $scope.errorHandlingObject.viewManagerDashBoardLoader = false;
       $scope.response = [];
-      
-      managerServices.readingdata({ token, currentPage },filterObject, function (data) {
-        numberOfPages(data.data.countNum);
-      
-        $scope.response = data.data.projectDetails;
-          if($scope.response[0]){
-        $scope.managerId = $scope.response[0].projectManger.projectMangerId;
-          }
-
-        if ($scope.response.length == 0) {
+      managerServices.readingdata({ token, currentPage },filterObject, function (countNum ,projectDetails) {
+        numberOfPages(countNum);
+        console.log(projectDetails); 
+        $scope.response = projectDetails;
+          if(projectDetails[0]){
+        $scope.managerId = projectDetails[0].projectManger.projectMangerId;
+          } 
+        if (projectDetails.length == 0) {
           $scope.errorHandlingObject = {
             viewManagerDashBoardLoader: true,
             showNoProjectAssigned: true,
@@ -72,6 +60,9 @@ myApp.controller(
         }
       });
     };
+
+
+    
     fetchProjectsFunction($scope.currentPage , $scope.filterObject);
     $scope.setPage = function (pageNumber) {
       $scope.currentPage = pageNumber;
@@ -95,16 +86,12 @@ myApp.controller(
       taskeEmployeesAssigned: [],
     };
     $scope.employeesAssignedToTask=[];
-    
-
     $scope.addTasks = function (
       _id,projectName,projectMangerId,username,name,documents
     ) {
-      $scope.employeesAssignedToTask =  documents.map(function(element){
-        return element.assignedTo ; 
-      })
-      $scope.employeesAssignedToTaskStore =  documents.map(function(element){
-        return element.assignedTo ; 
+      managerFactory.addTaskCallingFactory(documents , function(employeesAssignedToTask ,employeesAssignedToTaskStore ){
+        $scope.employeesAssignedToTask = employeesAssignedToTask  ;
+        $scope.employeesAssignedToTaskStore = employeesAssignedToTaskStore ; 
       })
       $scope.projectDetails = {_id,projectName,
         projectManger: {projectMangerId,username,name,},
@@ -113,6 +100,7 @@ myApp.controller(
       $scope.displayUserList = false;
     };
   
+
     $scope.selectedUser=[];
     $scope.assignedUserChecksChange = function (index) {
       $scope.selectedUser.push($scope.employeesAssignedToTask[index]);
@@ -127,13 +115,10 @@ myApp.controller(
 
     $scope.addTaskFunction = function ($event) {
       $event.preventDefault();
-      if (
-        Date.now() <= $scope.addTaskObject.startDate &&Date.now() <= $scope.addTaskObject.endDate
-      ) {
-        if ($scope.addTaskObject.startDate <= $scope.addTaskObject.endDate) {
-          $scope.addTaskObject["taskeEmployeesAssigned"] =$scope.selectedUser;            
-          managerServices.addTasks( $scope.addTaskObject,$scope.projectDetails, token,
-            function (response) {
+      managerFactory.addTaskFunctionValidation($scope.addTaskObject ,$scope.selectedUser , function(valid , addTaskObject){
+        if(valid){
+          managerServices.addTasks( addTaskObject,$scope.projectDetails, token,
+            function () {
               alert("Task Assigned");
               $(function () {
                 $("#addTaskModal").modal("hide");
@@ -143,13 +128,11 @@ myApp.controller(
               $scope.displayUserList = false;
             }
           );
-        } else {
-          alert("Enter the valid Date");
+        }else{
+          alert("Enter the Valid Date"); 
         }
-      } else {
-        alert("Enter the valid Date");
-      }
-    };
+      }); 
+    }
 
 
    
@@ -181,9 +164,9 @@ myApp.controller(
           projectNameValue,
           $scope.managerId,
           function (response) {
-            $scope.response = response.data;
-            numberOfPages($scope.response.length);
-            if ($scope.response.length == 0) {
+            $scope.response = response;
+            numberOfPages(response.length);
+            if (response.length == 0) {
               $scope.errorHandlingObject = {
                 viewManagerDashBoardLoader: true,
                 showNoProjectAssigned: true,

@@ -20,11 +20,12 @@ var fetchingProjects = function (req, res) {
       var regex = new RegExp(req.body.filterObject.nameOfEmployee, "i");
       filter['assignedTo.username']=regex ; 
 }
-  }
+  } 
   project
     .aggregate([
       {
-        $match: filter
+        $match: filter,
+        
       },
       {
       $match: req.body.filterObject.sortBy!=null ?
@@ -39,6 +40,7 @@ var fetchingProjects = function (req, res) {
           createdAt: { $first: "$createdAt" },
           endDate: { $first: "$endDate" },
           projectManger: { $first: "$projectManger" },
+          priority:{$first:"$priority"},
           projectName: { $first: "$project.projectName" },
           documents: {
             $push: {
@@ -53,6 +55,7 @@ var fetchingProjects = function (req, res) {
           projectName: 1,
           projectManger: 1,
           documents: 1,
+          priority:1,
           endDate: 1,
           createdAt: 1,
          
@@ -266,11 +269,12 @@ var searchProject = function (req, res) {
     .aggregate([
       {
         $match: {
-          "projectManger.projectMangerId": req.query.managerId,
-        },
-        $match: {
+          "projectManger.projectMangerId": mongoose.Types.ObjectId(req.query.managerId),
           "project.projectName": regex,
+          
+          isDeleted:false ,
         },
+        
       },
       {
         $group: {
@@ -279,6 +283,7 @@ var searchProject = function (req, res) {
           endDate: { $first: "$endDate" },
           projectManger: { $first: "$projectManger" },
           projectName: { $first: "$project.projectName" },
+          priority:{$first:"$priority"},
           documents: {
             $push: {
               assignedTo: "$assignedTo",
@@ -292,6 +297,7 @@ var searchProject = function (req, res) {
           projectName: 1,
           projectManger: 1,
           documents: 1,
+          priority:1,
           endDate: 1,
           createdAt: 1,
         },

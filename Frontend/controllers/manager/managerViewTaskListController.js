@@ -1,5 +1,5 @@
 myApp.controller(
-    "managerViewTaskListController",function($scope ,$timeout,  managerServices){
+    "managerViewTaskListController",function($scope ,$timeout,  managerServices, managerFactory){
 
         var token = sessionStorage.getItem("token");
 
@@ -16,19 +16,21 @@ myApp.controller(
                 $scope.pages.push(i);
               }
           }
+
         var showProjectTaskFunction = function(currentPage){
-        managerServices.showAllAssignedProjects(currentPage,token, function(response){
+        managerServices.showAllAssignedProjects(currentPage,token, function(projectData , countNum){
           $scope.errorHandlingObject = {
             viewManagerDashBoardLoader: true,
             showNoProjectAssigned: false,
           };
-            $scope.projectData= response.data.projectData; 
-            $scope.managerId = response.data.projectData[0].projectManger.projectMangerId; 
-            console.log($scope.managerId); 
-            numberOfPages(response.data.countNum) ; 
-        })
+            $scope.projectData= projectData; 
+            if(projectData[0]){
+            $scope.managerId = projectData[0].projectManger.projectMangerId; 
+            }
+            numberOfPages(countNum) ; 
+        }) 
     }
-    showProjectTaskFunction($scope.currentPage); 
+       showProjectTaskFunction($scope.currentPage); 
         $scope.setPage = function (pageNumber) {
         $scope.currentPage = pageNumber;
         showProjectTaskFunction($scope.currentPage);
@@ -39,21 +41,11 @@ myApp.controller(
 
         $scope.progressDivs  = ['Inactive' , 'Started' , 'working', 'completed'];
         function formatDateForInputDate(date) {
-            var year = date.getFullYear();
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var day = ("0" + date.getDate()).slice(-2);
-            return year + "-" + month + "-" + day;
+          return managerFactory.formatDateForInputDate(date)
           }
           
         $scope.taskDetails = function (taskId ,updatedTaskName  ,updatedTaskDescription , EndDateValue ,StartDateValue ) {
           $('#viewTaskModal').addClass('show');
-        
-         
-
-
-
-          
-       
 
             $scope.updateTaskObject = {
               taskId,
@@ -79,51 +71,28 @@ myApp.controller(
               $scope.updateTaskObject['StartDateValue']=$scope.updatedStartDate;
             }
             managerServices.updateTask($scope.updateTaskObject, function (response) {
-                var indexToReplace = $scope.viewTask.findIndex(function(element){
-                    return element._id == $scope.updateTaskObject.taskId
-                });
-                if (indexToReplace !== -1) {
-                    $scope.viewTask.splice(indexToReplace, 1, response.data);
-                  }
-                  
+              managerFactory.updateTaskFrontEnd($scope.viewTask , $scope.updateTaskObject,response, function(viewTask){
+                $scope.viewTask = viewTask ; 
+              })
                alert("Task updated");
               $(function () {
                 $("#myModal").modal("hide");
               });
-              $scope.updateTaskObject = {
-                taskId:"",
-                updatedTaskName:"",
-                updatedTaskDescription:"",
-                EndDateValue:"",
-                StartDateValue:"",
-             
-              }
-             
+              $scope.updateTaskObject = {}
             });
           };
 
 
 
-
-
-
-
-
-
           $scope.deleteTask=  function(taskId, index){
             if (confirm("Want to delete this task ?") == true) {
-           
-            managerServices.deleteTask(taskId , function(response){
+            managerServices.deleteTask(taskId , function(){
               $(function () {
                 $("#myModal").modal("hide");
               });
-              var indexToReplace = $scope.viewTask.findIndex(function(element){
-                return element._id == taskId
-            });
-            if (indexToReplace !== -1) {
-                $scope.viewTask.splice(indexToReplace, 1);
-              }
-       
+              managerFactory.updateDeleteFrontEnd($scope.viewTask,taskId,  function(viewTask){
+                $scope.viewTask = viewTask ; 
+              })
             }) 
             }
           }
@@ -143,7 +112,7 @@ myApp.controller(
           projectNameValue,
           $scope.managerId,
           function (response) {
-            $scope.projectData = response.data;
+            $scope.projectData = response;
             console.log($scope.projectData); 
             numberOfPages($scope.projectData.length);
             if ($scope.projectData.length == 0) {

@@ -101,7 +101,7 @@ var fac = function ($http) {
         .then(
           function (res) {
             console.log(res);
-            cb(res);
+            cb(res.data);
           },
           function (err) {
             return err;

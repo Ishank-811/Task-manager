@@ -1,34 +1,19 @@
 myApp.controller(
     "managerProjectDetailsController",
-    function ($scope ,$stateParams, managerServices , employeeServices) {
+    function ($scope ,$stateParams, managerServices , employeeServices,  managerFactory) {
         
+      var token = sessionStorage.getItem("token");
+      $scope.totalEmployees = JSON.parse(localStorage.getItem('myData')); 
 
-
-
-        var token = sessionStorage.getItem("token");
-        $scope.totalEmployees = JSON.parse(localStorage.getItem('myData')); 
-        var storingArray = [];
-        $scope.employeesAsignedFiltered = [];
-          managerServices.fetchProjectDetail($stateParams.projectId , function(response){
-            var data=response.data; 
-            $scope.projectDetails = data.projectData;
-            $scope.progressPercentage =(($scope.projectDetails.progress.percentage)/($scope.totalEmployees.length)).toFixed(1);
-            $scope.employeesOfProject =  data.ticketsData  ;
-            storingArray = $scope.employeesOfProject.map(function (element) {
-              return element.user.userId;
-            }); 
-            $scope.employeesAsignedFiltered = $scope.totalEmployees.filter(function (
-              element
-            ) {
-              return !storingArray.includes(element.assignedTo.assignedUserId);
-            });
+       
+        
+          managerServices.fetchProjectDetail($stateParams.projectId,$scope.totalEmployees , 
+            function(employeesAsignedFiltered , projectData , ticketsData , progressPercentage){
+            $scope.projectDetails = projectData;
+            $scope.progressPercentage =progressPercentage
+            $scope.employeesOfProject =  ticketsData ;
+            $scope.employeesAsignedFiltered =employeesAsignedFiltered  ;
           })
-
-
-          
-          
-
-
 
 
 
@@ -55,10 +40,6 @@ myApp.controller(
       };
 
 
-
-
-
-
       $scope.employeeDetails=[] ; 
       $scope.assignTask = function(assignedUserId , name, username){
         $scope.nameForModal = name ; 
@@ -69,48 +50,27 @@ myApp.controller(
         });
       }
       $scope.addTaskObject = {
-        taskName:"" , 
-        taskDescription:"",
         taskeEmployeesAssigned:[],
-        startDate:"",
-        endDate:"",
       }
       $scope.addTaskFunction = function ($event) {
         $event.preventDefault();
-        if (Date.now() <= $scope.addTaskObject.startDate && Date.now() <= $scope.addTaskObject.endDate) {
-          if ($scope.addTaskObject.startDate <= $scope.addTaskObject.endDate) {
-            $scope.addTaskObject['taskeEmployeesAssigned'] = $scope.employeeDetails ; 
-            managerServices.addTasks($scope.addTaskObject ,$scope.projectDetails,token , function (response) {
+        console.log(managerFactory); 
+        managerFactory.addTaskFunctionValidation($scope.addTaskObject ,$scope.employeeDetails  , function(valid , addTaskObject){
+        if(valid){
+            managerServices.addTasks(addTaskObject ,$scope.projectDetails,token , function (response) {
               alert("Task Assigned");
-              $scope.addTaskObject = {
-                taskName:"" , 
-                taskDescription:"",
-                taskeEmployeesAssigned:[],
-                startDate:"",
-                endDate:"",
-              }
+              $scope.addTaskObject.taskeEmployeesAssigned=[]; 
               $scope.employeeDetails=[] ; 
               $scope.getTasksObject.showNoTaskAssigned=true, 
-              
               $scope.getTasksObject.viewTask.push(response.data); 
             });
-          } else {
-            alert("Enter the valid Date");
+          }else{
+            alert("Enter the valid Date") ; 
           }
-        } else {
-          alert("Enter the valid Date");
-        }
-      };
+    })
+  }
 
 
-
-
-
-
-
-
-  
-     
       $scope.getTasksObject = {
         showNoTaskAssigned:true, 
         viewTask:[]
@@ -129,20 +89,17 @@ myApp.controller(
                 viewTask:viewTask
               }
             }
-          }); 
+          });  
           };
 
 
 
-
-
-
           function formatDateForInputDate(date) {
-            var year = date.getFullYear();
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var day = ("0" + date.getDate()).slice(-2);
-            return year + "-" + month + "-" + day;
+           return managerFactory.formatDateForInputDate(date)
           }
+
+
+
           $scope.taskDetails = function (taskId ,updatedTaskName  ,updatedTaskDescription , EndDateValue ,StartDateValue, index ) {
             $scope.updateTaskObject = {
               taskId,
@@ -162,18 +119,12 @@ myApp.controller(
               $scope.updateTaskObject['StartDateValue']=$scope.updatedStartDate;
             }
             managerServices.updateTask($scope.updateTaskObject, function (response) {
-              $scope.getTasksObject.viewTask[$scope.updateTaskObject.index]=response.data
-              
+              $scope.getTasksObject.viewTask[$scope.updateTaskObject.index]=response
+              $(function () {
+                $("#myModal").modal("hide");
+              });
               alert("Task updated");
-              $scope.updateTaskObject = {
-                taskId:"",
-                updatedTaskName:"",
-                updatedTaskDescription:"",
-                EndDateValue:"",
-                StartDateValue:"",
-                index:""
-              }
-             
+              $scope.updateTaskObject = {}
             });
           };
 
@@ -182,7 +133,7 @@ myApp.controller(
           $scope.addCommentsFormSubmit = function ($event) {
             $event.preventDefault(); 
             employeeServices.addComment( $scope.addComments , $scope.ticketIdForComment,token, function (response) {
-              $scope.commentObject.comments.push(response.data);
+              $scope.commentObject.comments.push(response);
               alert("Comment submitted");
               $(function () {
                 $("#commentModal").modal("hide");
@@ -193,21 +144,24 @@ myApp.controller(
             });
           };
 
+
+
           $scope.deleteTask=  function(taskId, index){
             if (confirm("Want to delete this task ?") == true) {
-            managerServices.deleteTask(taskId , function(response){
+            managerServices.deleteTask(taskId , function(){
               $scope.getTasksObject.viewTask.splice(index,1);
-
             }) 
             }
           }
+
 
           $scope.isSelected = false; 
           $scope.projectStatusChangeFunction = function(){
             $scope.isSelected = true ;
           }
+
           $scope.projectstatusFunction = function(status , projectId){
-          managerServices.projectStatusUpdate(status , projectId,  function(response){
+          managerServices.projectStatusUpdate(status , projectId,  function(){
             alert("status updated"); 
             $scope.isSelected = false;
           })

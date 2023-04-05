@@ -27,6 +27,7 @@
         <tr>
           <th>Projects Assigned</th>
           <th>Employee Assigned</th>
+          <th>Priority</th>
           <th>Time left</th>
           <th>Assigned At</th>
           <th>Status</th>
@@ -46,6 +47,7 @@
               </h6>
             </li>
           </td>
+          <td>{{project.priority}}</td>
           <td>
             {{timeleft(project.endDate)>=0?timeleft(project.endDate):(-timeleft(project.endDate))}}
             {{timeleft(project.endDate)>=0?"days lefts":"days overdue" }}
