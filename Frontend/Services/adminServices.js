@@ -10,7 +10,7 @@ var fac = function ($http) {
       $http.get("http://localhost:8080/admin/fetchingUsers", config).then(
         function (res) {
           console.log(res);
-          cb(res);
+          cb(res.data.response , res.data.role);
         },
         function (err) {
           cb(err);
@@ -77,7 +77,11 @@ var fac = function ($http) {
         .then(
           function (res) {
             console.log(res);
-            cb(res);
+            var storingArray=[]; 
+            storingArray = res.data.usersData.map(function (element) {
+              return element.assignedTo.assignedUserId;
+            });
+            cb(res.data.usersData , res.data.projectData , storingArray);
           },
           function (error) {
             console.log(error);
@@ -130,7 +134,7 @@ var fac = function ($http) {
         .then(
           function (res) {
             console.log(res);
-            cb(res);
+            cb(res.data);
           },
           function (err) {
             return err;
@@ -275,6 +279,31 @@ var fac = function ($http) {
           }
         );
     },
+    addEmployees: function (projectDetails , userDetails, cb) {
+      var data=  {
+      project:{projectName:projectDetails.projectName ,  projectId:projectDetails._id},
+      organization:projectDetails.organization,
+      projectManger:projectDetails.projectManger,
+      assignedTo : {
+        assignedUserId:userDetails._id ,
+        name:userDetails.firstName,
+        username:userDetails.username,
+        isisStarted:false
+      }, priority: projectDetails.priority,
+      createdAt:new Date(),
+      startDate: projectDetails.startDate,
+      endDate: projectDetails.endDate,
+      }
+      $http.post("http://localhost:8080/admin/addEmployees", data).then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      );
+    },
     projectWiseAnalysis: function (projectId, monthValue,monthNum, cb) {
       console.log(projectId, monthValue);
       $http
@@ -311,6 +340,7 @@ var fac = function ($http) {
                 element.numberOfTaskCompleted
               );
             });
+
             cb(projectWiseAnalysisObject={
               ProjectWiseData,ProjectWisedates , CreatedProjectWiseData
             });

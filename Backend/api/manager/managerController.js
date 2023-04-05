@@ -5,23 +5,34 @@ var users = require("../../model/usersModel");
 var task = require("../../model/taskModel");
 var ProjectDetails = require("../../model/projectDetails");
 var managerPipeLine = require("./managerPipeline"); 
-var moment = require("moment");
 const { default: mongoose } = require("mongoose");
 
 var fetchingProjects = function (req, res) {
   var LIMIT = 8;
-  var startIndex = (Number(req.query.currentPage) - 1) * 8;
+  var startIndex = (Number(req.body.currentPage) - 1) * 8;
+  var filter= {"organization.organizationId": req.user.organization.organizationId,
+  "projectManger.projectMangerId": req.user._id, isDeleted: false,}; 
+  if(req.body.filterObject!={}){
+    if(req.body.filterObject.priority!=null){
+      filter.priority=req.body.filterObject.priority ; 
+    }
+    if(req.body.filterObject.nameOfEmployee!=null){
+      var regex = new RegExp(req.body.filterObject.nameOfEmployee, "i");
+      filter['assignedTo.username']=regex ; 
+}
+  }
   project
     .aggregate([
       {
-        $match: {
-          "organization.organizationId": req.user.organization.organizationId,
-        },
-        $match: {
-          "projectManger.projectMangerId": req.user._id,
-          isDeleted: false,
-        },
+        $match: filter
       },
+      {
+      $match: req.body.filterObject.sortBy!=null ?
+      req.body.filterObject.sortBy=="overDue" ? 
+       {endDate: { $lt: new Date() }} : 
+       {endDate: { $gt: new Date() }} :   
+      filter
+    },
       {
         $group: {
           _id: "$project.projectId",
@@ -44,19 +55,36 @@ var fetchingProjects = function (req, res) {
           documents: 1,
           endDate: 1,
           createdAt: 1,
+         
         },
       },
     ])
-    .sort({ _id: -1 })
+    .sort(req.body.filterObject.sortBy==null ? { _id: -1 }: req.body.filterObject.sortBy=='deadlines' ? { endDate: 1}:{endDate: -1})
     .skip(startIndex)
     .limit(LIMIT)
     .then(function (projectDetails) {
-      ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
-        .count()
-        .then(function (countNum) {
-          res
+      project
+    .aggregate([
+      {
+        $match: filter
+      },
+      {
+      $match: req.body.filterObject.sortBy!=null ?
+      req.body.filterObject.sortBy=="overDue" ? 
+       {endDate: { $lt: new Date() }} : 
+       {endDate: { $gt: new Date() }} :   
+      filter
+    },
+      {
+        $group: {
+          _id: "$project.projectId",
+
+        },
+      }
+    ]).then(function(response){
+      res
             .status(202)
-            .json({ projectDetails, userid: req.user._id, countNum });
+            .json({ projectDetails, userid: req.user._id, countNum:response.length });
         });
     })
     .catch(function (error) {
@@ -77,8 +105,7 @@ var viewComments = function (req, res) {
 };
 
 var addTasks = function (req, res) {
-  console.log(req.user);
-  console.log(req.body);
+
   for (var i = 0; i < req.body.taskeEmployeesAssigned.length; i++) {
     var data = {
       organization: {
@@ -114,8 +141,7 @@ var addTasks = function (req, res) {
 };
 
 var viewAssignedTask = function (req, res) {
-  console.log(req.query.projectId);
-  console.log(req.query.employeeId);
+
 
   task
     .find({
@@ -133,8 +159,7 @@ var viewAssignedTask = function (req, res) {
 var managerUserId;
 
 var updateTask = function (req, res) {
-  console.log(req.body);
-  console.log(req.params);
+
   task
     .findByIdAndUpdate(req.params.taskId, req.body, { new: true })
     .then(function (response) {
@@ -410,6 +435,7 @@ var searchEmployee=  function(req,res){
   })
 }
 
+
 module.exports = {
   fetchingProjects,
   viewComments, 
@@ -426,5 +452,6 @@ module.exports = {
   stats,
   projectTaskStats,
   userStats,
-  searchEmployee
+  searchEmployee,
+  
 };

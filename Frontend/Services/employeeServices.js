@@ -22,7 +22,7 @@ var fac = function ($http) {
       $http.post(`http://localhost:8080/employee/fetchingProjects?currentPage=${currentPage}&sortBy=${sortedFormObject._id}`,data, config).then(
         function (res) {
           console.log(res);
-          cb(res);
+          cb(res.data.projectDetails , res.data.countNum);
         },
         function (err) {
           return err;
@@ -75,7 +75,7 @@ var fac = function ($http) {
         .then(
           function (res) {
             console.log(res);
-            cb(res.data);
+            cb(res.data ,  res.data.progress.percentage);
           },
           function (err) {
             return err;

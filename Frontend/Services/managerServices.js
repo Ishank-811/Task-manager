@@ -10,15 +10,20 @@
       localStorage.setItem('myData', JSON.stringify(data));
     },
 
-    readingdata: function (data, cb) {
+    readingdata: function (data,filterObject, cb) {
       var config = {
         headers: {
           Authorization: "Bearer " + data.token,
           Accept: "application/json;odata=verbose",
         },
       };
+      var data  = {
+        currentPage:data.currentPage ,
+        filterObject ,   
+      }
+      console.log(filterObject); 
       $http
-        .get(`http://localhost:8080/manager/fetchingProjects?currentPage=${data.currentPage}`, config)
+        .post(`http://localhost:8080/manager/fetchingProjects`,data, config)
         .then(function (res) {
           console.log(res);
           cb(res);
@@ -28,6 +33,7 @@
         };
     },
     
+
     
     addTasks : function(taskDetails ,projectDetails,token , cb){
 
@@ -78,7 +84,7 @@
       .then(
         function (res) {
           console.log(res);
-          cb(res);
+          cb(res.data);
         },
         function (err) {
           return err;

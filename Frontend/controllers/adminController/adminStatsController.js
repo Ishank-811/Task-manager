@@ -28,11 +28,7 @@ myApp.controller(
       }, 800);
     };
 
-    $scope.statusFunctionOfProject = function (
-      projectName,
-      projectId,
-      monthValue
-    ) {
+    $scope.statusFunctionOfProject = function (projectName, projectId,monthValue) {
       $scope.projectName = projectName;
       $scope.projectId = projectId;
       $scope.monthValue=monthValue ; 
@@ -130,10 +126,7 @@ myApp.controller(
 
     adminServices.statistics(
       token,
-      function (
-        perUserProject,
-        top3Employees,
-        fastestPaceProject,
+      function (perUserProject,top3Employees,fastestPaceProject,
         projectStatusNumber,
         isUpcomingProjects,
         overDueProjects

@@ -1,10 +1,8 @@
 var countBystatus = function(managerId){
     return [
         {
-
           $match :{isDeleted:false , 
             'project.projectManager':managerId
-        
         }
         },
         {

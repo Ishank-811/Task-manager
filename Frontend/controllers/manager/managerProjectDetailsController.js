@@ -117,8 +117,8 @@ myApp.controller(
       }
         $scope.getTasks = function (userId) {
           $scope.showNoTaskAssigned=true; 
-          managerServices.viewAssignedTask(userId,$stateParams.projectId, function (response) {
-            if (response.data.length == 0) {
+          managerServices.viewAssignedTask(userId,$stateParams.projectId, function (viewTask) {
+            if (viewTask.length == 0) {
               $scope.getTasksObject = {
                 showNoTaskAssigned:false, 
                 viewTask:[]
@@ -126,7 +126,7 @@ myApp.controller(
             } else {
               $scope.getTasksObject = {
                 showNoTaskAssigned:true, 
-                viewTask:response.data
+                viewTask:viewTask
               }
             }
           }); 

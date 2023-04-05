@@ -5,9 +5,8 @@ myApp.controller("adminController", function ($scope, $window,$timeout ,  adminS
   $scope.organization = sessionStorage.getItem("organization"); 
   var token = sessionStorage.getItem("token");
 
-  adminServices.readingData(token, function (data) {
-    var userData = data.data.response ; 
-    if (data.data.role != "Admin") {
+  adminServices.readingData(token, function (userData , userRole) {
+    if (userRole != "Admin") {
       $window.location.href = "#!/singinAsUsers";
     } 
     else {
@@ -25,13 +24,11 @@ myApp.controller("adminController", function ($scope, $window,$timeout ,  adminS
   });
 
   if (role != undefined && role == "Admin") {
-    // $window.location.href = "#!/AdminDashboard";
   } else {
     $window.location.href = "#!/singinAsUsers";
   }
   
-  $scope.fastestPaceProjectFunction = function(){
-  }
+
   $scope.deleteProject = function (val) {
     console.log(val);
   };

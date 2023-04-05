@@ -5,7 +5,6 @@ myApp.controller(
     $stateParams,
     adminServices,
     managerServices,
-    updateProjectDetailsServices
   ) {
     var token = sessionStorage.getItem("token");
 
@@ -20,9 +19,6 @@ myApp.controller(
     $scope.employeeAddedChange = function () {
       $scope.object.allEmployeesChanged = false;
     };
-
-
-
 
     //time left logic starts
 
@@ -40,37 +36,22 @@ myApp.controller(
     };
     //time left logic ends
 
-
-
-
-
-
-    
     $scope.employeesOfProject = [];
     $scope.employeesAsignedFiltered = [];
-    var storingArray = [];
     $scope.loaderObject = {
       projectSpecificationLoader: false,
       showprojectSpecification: true,
     };
 
 
-
-
-    adminServices.fetchProjectDetails(
-      $stateParams.projectId,
-      token,
-      function (response) {
-        var data = response.data;
-        $scope.employeesOfProject = data.usersData;
-        $scope.projectDetails = data.projectData;
+    adminServices.fetchProjectDetails($stateParams.projectId,token,
+      function (employeesOfProject , projectDetails , storingArray) {
+        $scope.employeesOfProject = employeesOfProject;
+        $scope.projectDetails = projectDetails;
         $scope.loaderObject = {
           projectSpecificationLoader: true,
           showprojectSpecification: false,
         };
-        storingArray = data.usersData.map(function (element) {
-          return element.assignedTo.assignedUserId;
-        });
         $scope.employeesAsignedFiltered = $scope.employeesAsigned.filter(
           function (element) {
             return !storingArray.includes(element._id);
@@ -79,29 +60,20 @@ myApp.controller(
       }
     );
 
-
-
-
-
-
-
+    
     $scope.viewAssignedTask = function (userId, projectId) {
       $scope.object.viewTask = "";
       $scope.object.showNoTaskAssigned = true;
-      managerServices.viewAssignedTask(userId, projectId, function (response) {
-        if (response.data.length == 0) {
+      managerServices.viewAssignedTask(userId, projectId, function (viewTask) {
+        if (viewTask.length == 0) {
           $scope.object.showNoTaskAssigned = false;
           $scope.object.viewTask = "";
         } else {
-          $scope.object.viewTask = response.data;
+          $scope.object.viewTask = viewTask;
           $scope.object.showNoTaskAssigned = true;
         }
       });
     };
-
-
-
-
 
 
     $scope.employeeProjectStatus = function (projectId, employeeDetails) {
@@ -111,26 +83,19 @@ myApp.controller(
       adminServices.viewTicket(
         projectId,
         employeeDetails.assignedUserId,
-        function (response) {
+        function (employeeProjectStatusDetails) {
           $scope.object.showstatusLoader = true;
           $scope.object.showInformation = true;
           $scope.object.viewTask = "";
-          $scope.employeeProjectStatusDetails = response.data;
+          $scope.employeeProjectStatusDetails = employeeProjectStatusDetails;
         }
       );
     };
 
-
-
-
-
-
-
-
     $scope.addEmployeesSubmit = function ($event) {
       $event.preventDefault();
       var userDetails = JSON.parse($scope.employeeAdded);
-      updateProjectDetailsServices.addEmployees(
+      adminServices.addEmployees(
         $scope.projectDetails,
         userDetails,
         function (response) {
@@ -145,35 +110,27 @@ myApp.controller(
       );
     };
 
-
-
-
-    $scope.showProjectTask = function(projectName,projectId){
-    
-      $scope.projectName = projectName; 
-        managerServices.showProjectTask(projectId,token, function(response){
-         
-        $scope.viewTask = response.data; 
-        })
-}
-$scope.progressDivs  = ['Inactive' , 'Started' , 'working', 'completed'];
-
-
-    $scope.deleteAssingedUser = function(projectId,  userId ,firstName, index){
-      if($scope.employeesOfProject.length>1){
-      adminServices.deleteuser(projectId,  userId  , function(){
-       alert("employee Deleted"); 
-       $(function () {
-        $("#myModal3").modal("hide");
+    $scope.showProjectTask = function (projectName, projectId) {
+      $scope.projectName = projectName;
+      managerServices.showProjectTask(projectId, token, function (response) {
+        $scope.viewTask = response.data;
       });
-       $scope.employeesOfProject.splice(index, 1);  
-       $scope.employeesAsignedFiltered.push({firstName, _id:userId}) ; 
-       
-      })
-      }else{
-        alert("Add more employee to delete this user") ; 
+    };
+    $scope.progressDivs = ["Inactive", "Started", "working", "completed"];
+
+    $scope.deleteAssingedUser = function (projectId, userId, firstName, index) {
+      if ($scope.employeesOfProject.length > 1) {
+        adminServices.deleteuser(projectId, userId, function () {
+          alert("employee Deleted");
+          $(function () {
+            $("#myModal3").modal("hide");
+          });
+          $scope.employeesOfProject.splice(index, 1);
+          $scope.employeesAsignedFiltered.push({ firstName, _id: userId });
+        });
+      } else {
+        alert("Add more employee to delete this user");
       }
-      
-    }
+    };
   }
 );

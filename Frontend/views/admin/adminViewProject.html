@@ -84,56 +84,60 @@
                   {{item.firstName}}
                 </option>
               </select>
-           
+
               <label>Employee Assigned</label>
-              <input ng-model="searchQuery" ng-click="onfocusfun()" ng-model-options="{ debounce: 500 }">
-                
-            </input>
-           
+              <input
+                ng-model="searchQuery"
+                ng-click="onfocusfun()"
+                ng-model-options="{ debounce: 500 }"
+              />
+
               <div
-              ng-show="displayUserList"
+                ng-show="displayUserList"
                 style="
                   margin: 10px;
                   background-color: #fefefe;
                   border-radius: 10px;
-                  height:150px; 
+                  height: 150px;
                   overflow: scroll;
                   display: flex;
                   width: 100%;
                   flex-direction: row;
                 "
-             
               >
-              <div style="width:50% ;">
-              <p style="color:red">{{((employeesAsigned | filter:searchQuery).length)<=0 ? "No employee":"" }}</p>
-                <label
-                  style="display: flex; width: 10%; margin: 10px ;"
-                  ng-repeat="item in employeesAsigned |filter:searchQuery "
-                
-                > 
-                <label style="cursor: pointer;" ng-click=assignedUserChecksChange($index)  ng-model="createProjectObject.assignedUserChecks[$index]">{{item.firstName}}</label>
-                 
-                </label>
-             
+                <div style="width: 50%">
+                  <p style="color: red">
+                    {{((employeesAsigned | filter:searchQuery).length)<=0 ? "No employee":"" }}
+                  </p>
+                  <label
+                    style="display: flex; width: 10%; margin: 10px"
+                    ng-repeat="item in employeesAsigned |filter:searchQuery "
+                  >
+                    <label
+                      style="cursor: pointer"
+                      ng-click="assignedUserChecksChange($index)"
+                      ng-model="createProjectObject.assignedUserChecks[$index]"
+                      >{{item.firstName}}</label
+                    > 
+                  </label>
+                </div>
+                <div
+                  style="display: flex;flex-direction: column;border-left: 1px solid rgba(49, 49, 49, 0.752);"
+                >
+                  <h6>Selected Employees:</h6>
+                  <div ng-repeat="selected in selectedUser track by $index">
+                    <div style="display: flex; margin-top: 10px">
+                      <h6>{{selected.firstName}}</h6>
+                      <i
+                        style="color: red; margin-left: 14px"
+                        class="fa-sharp fa-solid fa-trash"
+                        ng-click="undoSelected($index)"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style="display: flex; flex-direction: column;">
-                <h6>Selected Employees:</h6>
-              <div  ng-repeat="selected in selectedUser track by $index">
-                <div style="display: flex; margin-top:10px">
-                <h6>{{selected.firstName}}</h6>
-                <i style="color:red ; margin-left:14px ; "
-                class="fa-sharp fa-solid fa-trash"
-                ng-click="undoSelected($index)"
-              ></i>
-              </div>
-              </div>
-            </div>
-              </div>
-           
-           
-              <div ng-repeat="item in employeeObject.employeeList track by $index">
-                <h5>{{item}}</h5>
-              </div>
+
               <label>Priority</label>
               <select
                 ng-required="true"
@@ -203,22 +207,22 @@
         ng-hide="allProjectDetailsLoader"
         class="loader"
       ></div>
-      <div class="projectDetailsClass"  ng-repeat="project in project ">
-         
-        <div  ng-class="{'displayHeader': project.isCompleted.status==true}" class="projectHeader">
-          
+      <div class="projectDetailsClass" ng-repeat="project in project ">
+        <div
+          ng-class="{'displayHeader': project.isCompleted.status==true}"
+          class="projectHeader"
+        >
           <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
-          <div style="display: flex; flex-direction: column;">
-          <h4
-            style="font-weight: bold; margin-top: 10px; cursor: pointer"
-            ui-sref="AdminDashboard.ViewProjectDetails({projectId:project._id})"
-          >
-            {{project.projectName}} 
-            
-          </h4>
-         
-          <h6 ng-show="project.isCompleted.status">(Completed)</h6>
-        </div>
+          <div style="display: flex; flex-direction: column">
+            <h4
+              style="font-weight: bold; margin-top: 10px; cursor: pointer"
+              ui-sref="AdminDashboard.ViewProjectDetails({projectId:project._id})"
+            >
+              {{project.projectName}}
+            </h4>
+
+            <h6 ng-show="project.isCompleted.status">(Completed)</h6>
+          </div>
           <div class="projectActions">
             <h3 style="color: rgb(227, 79, 79); margin-top: 10px">
               <!-- <i
@@ -239,13 +243,13 @@
         <hr />
         <div class="Detailing">
           <progress
-            style="width: 80%; background-color: whitesmoke;"
+            style="width: 80%; background-color: whitesmoke"
             id="progressOfProject"
             value="{{timeleft(project.endDate)}}"
             max="{{getDaysDiff(project.startDate , project.endDate)}}"
           ></progress>
 
-          <h6 
+          <h6
             ng-init="number=timeleft(project.endDate)"
             ng-class="{'dayleft':number>=0  ,'noDaysLeft':number<0 }"
           >
@@ -300,14 +304,14 @@
               </div>
               <label>Priority:-</label>
               <select
-              style="width: 90%"
-              ng-model="updateProjectObject.priority"
-              class="searchClass"
-            >
-              <option value="High" name="role">High</option>
-              <option value="Medium" name="role">Medium</option>
-              <option value="Low" name="role">Low</option>
-            </select>
+                style="width: 90%"
+                ng-model="updateProjectObject.priority"
+                class="searchClass"
+              >
+                <option value="High" name="role">High</option>
+                <option value="Medium" name="role">Medium</option>
+                <option value="Low" name="role">Low</option>
+              </select>
               <label>Start Date:-</label>
               <div style="display: flex; width: 100%">
                 <input
@@ -470,7 +474,7 @@
               Filter
             </button>
           </form>
-        </div> 
+        </div>
 
         <!-- Modal footer -->
         <div class="modal-footer">

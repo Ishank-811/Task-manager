@@ -31,10 +31,9 @@ myApp.controller(
         return Math.round(diff / 86400000);
         }
 
-        $scope.projectFilterFunction = function(projectFilter){
-          fetchingProjects($scope.currentPage , $scope.sortedFormObject  , projectFilter);
-        }
-
+      $scope.projectFilterFunction = function(projectFilter){
+        fetchingProjects($scope.currentPage , $scope.sortedFormObject  , projectFilter);
+      }
 
 
       var numberOfPages = function(count){
@@ -43,7 +42,7 @@ myApp.controller(
           $scope.pages = [];
           for (var i = 1; i <= $scope.totalPages; i++) {
             $scope.pages.push(i);
-          }
+        }
       }
 
 
@@ -60,17 +59,21 @@ myApp.controller(
 
       $scope.currentPage = 1;
       var fetchingProjects = function(currentPage ,sortedFormObject , projectFilter ){
-      employeeServices.readingdata(currentPage ,sortedFormObject,projectFilter ,  token, function (response) {
-        $scope.projectAssigned = response.data.projectDetails;
-        numberOfPages(response.data.countNum); 
+      employeeServices.readingdata(currentPage ,sortedFormObject,projectFilter, token, function (projectDetails , countNum) {
+        $scope.projectAssigned = projectDetails;
+        numberOfPages(countNum); 
       });
     }
+
+
     fetchingProjects($scope.currentPage , $scope.sortedFormObject); 
     $scope.setPage = function (pageNumber) {
       $scope.currentPage = pageNumber;
       fetchingProjects( $scope.currentPage);
     };
 
+
+    
       $scope.startTicket = function (index) {
         employeeServices.addTicket(
           $scope.projectAssigned[index],

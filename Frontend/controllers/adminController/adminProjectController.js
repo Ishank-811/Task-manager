@@ -18,7 +18,7 @@ myApp.controller(
       var startTimestamp = Date.parse(startDate);
       var endTimestamp = Date.parse(endDate);
       var diff = endTimestamp - startTimestamp;
-      return Math.round(diff / 86400000); // Convert milliseconds to days
+      return Math.round(diff / 86400000); 
     };
     $scope.timeleft = function (endDate) {
       var today = new Date();
@@ -28,17 +28,13 @@ myApp.controller(
     };
     //time left logic ends
     $scope.assignedCheck = true;
-    $scope.selectedUser=[]; 
+    $scope.selectedUser=[];  
     
-    $scope.assignedUserChecksChange = function (index) {
-      console.log(index); 
-   
-     
-      $scope.selectedUser.push($scope.employeesAsigned[index]); 
-      $scope.employeesAsigned.splice(index,1) ;
-      $scope.assignedCheck = false;
-      console.log($scope.selectedUser); 
-    };
+      $scope.assignedUserChecksChange = function (index) {
+        $scope.selectedUser.push($scope.employeesAsigned[index]); 
+        $scope.employeesAsigned.splice(index,1) ;
+        $scope.assignedCheck = false;
+      };
 
     $scope.displayUserList = false;
     $scope.onfocusfun = function () {
@@ -54,22 +50,15 @@ myApp.controller(
 
     //create Project Starts
 
-  
-    $scope.employeeObject = {
-      employees: [],
-      employeeList: [],
-    };
     $scope.errorHandlingObject = {
       showError: false,
       createProjectLoader: true,
     };
     $scope.resetFunction = function () {
-      console.log($scope.employeesAsignedStore) ; 
       $scope.searchQuery = "";
       $scope.displayUserList = false;
       $scope.createProjectObject = {
         assignedTo: [],
-        assignedUserChecks: [],
       };
       $scope.employeesAsigned= $scope.employeesAsignedStore ; 
       $scope.projectManager = "";
@@ -93,16 +82,10 @@ myApp.controller(
       ) {
         $scope.errorHandlingObject.createProjectLoader = false;
         if (
-          $scope.createProjectObject.startDate <=
-          $scope.createProjectObject.endDate
+          $scope.createProjectObject.startDate <=$scope.createProjectObject.endDate
         ) {
-          
-          $scope.createProjectObject["assignedTo"] =
-            $scope.selectedUser;
-            console.log($scope.createProjectObject["assignedTo"]) ; 
-          adminServices.creatingPorject(
-            $scope.createProjectObject,
-            $scope.projectManger,
+          $scope.createProjectObject["assignedTo"] =$scope.selectedUser;
+          adminServices.creatingPorject($scope.createProjectObject,$scope.projectManger,
             function (data) {
               if (data.status == 404) {
                 $scope.errorHandlingObject.showError = true;
@@ -113,10 +96,6 @@ myApp.controller(
                 $scope.errorHandlingObject = {
                   showError: false,
                   createProjectLoader: true,
-                };
-                $scope.employeeObject = {
-                  employees: [],
-                  employeeList: [],
                 };
                 $scope.project.pop();
                 $scope.project.unshift(data.data);
@@ -182,17 +161,13 @@ myApp.controller(
             $(function () {
               $("#myModal3").modal("hide");
             });
-            $scope.project[$scope.updatedIndex].projectName =
-              $scope.updateProjectObject.projectName;
-            $scope.project[$scope.updatedIndex].priority =
-              $scope.updateProjectObject.priority;
+            $scope.project[$scope.updatedIndex].projectName =$scope.updateProjectObject.projectName;
+            $scope.project[$scope.updatedIndex].priority = $scope.updateProjectObject.priority;
             if ($scope.updateProjectObject.startDate) {
-              $scope.project[$scope.updatedIndex].startDate =
-                $scope.updateProjectObject.startDate;
+              $scope.project[$scope.updatedIndex].startDate = $scope.updateProjectObject.startDate;
             }
             if ($scope.updateProjectObject.endDate) {
-              $scope.project[$scope.updatedIndex].endDate =
-                $scope.updateProjectObject.endDate;
+              $scope.project[$scope.updatedIndex].endDate = $scope.updateProjectObject.endDate;
             }
             $scope.timeleft($scope.updateProjectObject.endDate);
             $scope.getDaysDiff(

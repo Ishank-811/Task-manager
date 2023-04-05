@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const managerController = require("./managerController");
 
-router.get(
+router.post(
   "/fetchingProjects",
   passport.authenticate("level2", { session: false }),
   managerController.fetchingProjects

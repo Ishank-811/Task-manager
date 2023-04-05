@@ -1,210 +1,316 @@
 <div ng-controller="managerProjectListController">
-<div
-ng-hide="errorHandlingObject.viewManagerDashBoardLoader"
-style="margin: auto; margin-top: 10px; height: 120px; width: 120px"
-class="loader"
-></div>
-<div style="padding-bottom:50px">
-  <input
-        style="width: 20%; margin:auto ; display: flex; margin-bottom:30px"
-        class="searchClass"
-        placeholder="Search Project"
-        ng-model="searchProject"
-        ng-change="searchProjectFunction(searchProject)"
-      />
-<h3 ng-show="errorHandlingObject.showNoProjectAssigned" style="color:#f63333 ; display: flex; justify-content: center;">No project assigned by the admin</h3>
+  <div
+    ng-hide="errorHandlingObject.viewManagerDashBoardLoader"
+    style="margin: auto; margin-top: 10px; height: 120px; width: 120px"
+    class="loader"
+  ></div>
+  <div style="padding-bottom: 50px">
+    <div style="display: flex; justify-content: space-evenly;">
+    <input
+      style="width: 20%; display: flex; margin-bottom: 30px"
+      class="searchClass"
+      placeholder="Search Project"
+      ng-model="searchProject"
+      ng-change="searchProjectFunction(searchProject)"
+    />
+    <button data-toggle="modal" data-target="#filterProjectList" style="width:10% ; height:45px" class="createButton">Filter</button>
+  </div>
+    <h3
+      ng-show="errorHandlingObject.showNoProjectAssigned"
+      style="color: #f63333; display: flex; justify-content: center"
+    >
+      No project assigned by the admin
+    </h3>
 
-<table  class="content-table">
-  <thead>
-    <tr>
-      <th>Projects Assigned</th>
-      <th>Employee Assigned</th>
-      <th>Time left</th>
-      <th>Assigned At</th>
-      <th>Status</th>
-      <th>Add Tasks</th>
-    </tr>
-  </thead>
+    <table class="content-table">
+      <thead>
+        <tr>
+          <th>Projects Assigned</th>
+          <th>Employee Assigned</th>
+          <th>Time left</th>
+          <th>Assigned At</th>
+          <th>Status</th>
+          <th>Add Tasks</th>
+        </tr>
+      </thead>
 
-  <tbody>
-   
-    <tr ng-repeat="project in response">
-    
-      <td>{{project.projectName}}</td>
+      <tbody>
+        <tr ng-repeat="project in response">
+          <td>{{project.projectName}}</td>
 
-      <td>
-        <li style="display: flex" ng-repeat="item in project.documents">
-          {{item.assignedTo.name}}
-          <h6 style="margin: 4px" ng-hide="item.assignedTo.isStarted">
-            (not started)
-          </h6>
-        </li>
-      </td>
-      <td>
-        {{timeleft(project.endDate)>=0?timeleft(project.endDate):(-timeleft(project.endDate))}}
-
-            {{timeleft(project.endDate)>=0?"days lefts":"days overdue"
-            }}
-   
-      </td>
-      <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
-      <td>
-        <button class="displayTicketsClass" ng-click="sendAssignedData(project.documents)" ui-sref="MangerDashboard.viewProjectDetails({projectId:project._id})">
-          Status
-        </button>
-      </td>
-      <td>
-        <button
-          class="displayTicketsClass"
-          data-toggle="modal"
-          data-target="#addTaskModal"
-          ng-click="addTasks(project._id ,project.projectName , 
+          <td>
+            <li style="display: flex" ng-repeat="item in project.documents">
+              {{item.assignedTo.name}}
+              <h6 style="margin: 4px" ng-hide="item.assignedTo.isStarted">
+                (not started)
+              </h6>
+            </li>
+          </td>
+          <td>
+            {{timeleft(project.endDate)>=0?timeleft(project.endDate):(-timeleft(project.endDate))}}
+            {{timeleft(project.endDate)>=0?"days lefts":"days overdue" }}
+          </td>
+          <td>{{project.createdAt | date:"dd/MM/yyyy"}}</td>
+          <td>
+            <button
+              class="displayTicketsClass"
+              ng-click="sendAssignedData(project.documents)"
+              ui-sref="MangerDashboard.viewProjectDetails({projectId:project._id})"
+            >
+              Status
+            </button>
+          </td>
+          <td>
+            <button
+              class="displayTicketsClass"
+              data-toggle="modal"
+              data-target="#addTaskModal"
+              ng-click="addTasks(project._id ,project.projectName , 
           project.projectManger.projectMangerId , project.projectManger.username , project.projectManger.name , project.documents)"
+            >
+              Add Task
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-----------------------pagination starts--------------------------------------------->
+
+    <ul class="pagination">
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(1)"
         >
-          Add Task
+          First
         </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<!-----------------------pagination starts--------------------------------------------->
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == 1}"
+          ng-click="setPage(currentPage - 1)"
+        >
+          Previous
+        </button>
+      </li>
+      <li
+        ng-repeat="page in pages track by $index"
+        ng-class="{active: currentPage == page}"
+      >
+        <button ng-click="setPage(page)">{{page}}</button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(currentPage + 1)"
+        >
+          Next
+        </button>
+      </li>
+      <li>
+        <button
+          ng-class="{disabledPage: currentPage == totalPages}"
+          ng-click="setPage(totalPages)"
+        >
+          Last
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!---------------------------------- modal starts ----------------------------------->
+
+  <div class="modal" id="addTaskModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Assign Task</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <button
+            style="width: 20%; text-align: center"
+            ng-click="resetFunction()"
+            class="createButton"
+          >
+            Reset
+          </button>
+          <h4 style="text-align: center">
+            {{projectDetails.projectName | uppercase}}
+          </h4>
+          <form class="projectClass" name="addTaskForm" role="form">
+            <label>Task Name</label>
+            <input
+              type="text"
+              ng-model="addTaskObject.taskName"
+              name="taskName"
+              ng-required="true"
+              style="text-align: center"
+            />
+            <label>Task Description</label>
+            <input
+              type="text"
+              ng-model="addTaskObject.taskDescription"
+              name="taskDescription"
+              ng-required="true"
+              style="text-align: center"
+            />
+
+            <label> Employee Assigned</label>
+            <input
+              ng-model="searchQuery"
+              ng-click="onfocusfun()"
+              ng-model-options="{ debounce: 500 }"
+            />
+
+            <div
+              style="
+                margin: 10px;
+                background-color: #fefefe;
+                border-radius: 10px;
+                height: 150px;
+                overflow: scroll;
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+              "
+              ng-show="displayUserList"
+            >
+              <div style="width:50%">
+                <p style="color: red">
+                  {{((employeesAssignedToTask | filter:searchQuery).length)<=0 ?
+                  "No employee Found":"" }}
+                </p>
+                <label
+                  style="display: flex; width: 10%; margin: 10px"
+                  ng-repeat="item in employeesAssignedToTask |filter:searchQuery"
+                  ng-click="assignedUserChecksChange($index)"
+                 
+                >
+                  <label>{{item.name}}</label>
+
+                </label>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  border-left: 1px solid rgba(49, 49, 49, 0.752);
+                "
+              >
+                <h6>Selected Employees:</h6>
+                <div ng-repeat="selected in selectedUser track by $index">
+                  <div style="display: flex; margin-top: 10px">
+                    <h6>{{selected.name}}</h6>
+                    <i
+                      style="color: red; margin-left: 14px"
+                      class="fa-sharp fa-solid fa-trash"
+                      ng-click="undoSelected($index)"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            <label>Start Date</label>
+            <input
+              type="Date"
+              ng-model="addTaskObject.startDate"
+              name="taskStartDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+
+            <label>End Date</label>
+            <input
+              type="Date"
+              ng-model="addTaskObject.endDate"
+              name="TaskendDate"
+              placeholder="Start Date"
+              ng-required="true"
+              style="text-align: center"
+            />
+            <button
+              class="createButton"
+              type="submit"
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              ng-disabled="addTaskForm.$invalid"
+              ng-click="addTaskFunction($event)"
+            >
+              Create Task
+            </button>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!------------------------------------ modal ends ------------------------------------->
 
 
-<ul class="pagination">
-  
-<li>
-<button  ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(1)">First</button>
-</li>
-<li >
-<button ng-class="{disabledPage: currentPage == 1}"  ng-click="setPage(currentPage - 1)">Previous</button>
-</li>
-<li ng-repeat="page in pages track by $index" ng-class="{active: currentPage == page}">
-<button ng-click="setPage(page)">{{page}}</button>
-</li>
-<li>
-<button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(currentPage + 1)">Next</button>
-</li>
-<li>
-<button  ng-class="{disabledPage: currentPage == totalPages}" ng-click="setPage(totalPages)">Last</button>
-</li>
-</ul>
-</div>
 
- <!---------------------------------- modal starts ----------------------------------->
 
- <div class="modal" id="addTaskModal">
+<!---------------------filter modal starts----------------->
+
+
+<div class="modal" id="filterProjectList">
   <div class="modal-dialog">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Assign Task</h4>
+        <h4 class="modal-title">Filter Project</h4>
         <button type="button" class="close" data-dismiss="modal">
           &times;
-        </button>
+        </button> 
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
-        <h4 style="text-align: center">{{projectDetails.projectName | uppercase}}</h4>
-        <form
+        <button style="width:30%" ng-click="resetFilter()" class="createButton">Reset</button>
+      <form>
+       
+        <label>Name Of Employee:</label>
+        <input
+        style="width: 90%"
+        type="text"
+        class="searchClass"
+        ng-model="filterObject.nameOfEmployee"
+      />
+      <label>Priority</label>
+        <select ng-model="filterObject.priority">
+          <option value="" disabled selected></option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <label>SortBy:-</label>
+        <select ng-model="filterObject.sortBy">
+          <option value="" disabled selected></option>
+        <option Value="deadlines">Incoming Deadlines</option>
+        <option value="overDue">Overdue Projects</option>
+      </select>
+      <button style="width:30%" class="createButton" ng-click="filterFunction()">Filter</button>
+      </form>
 
-          class="projectClass"
-          name="addTaskForm"
-          role="form"
-        >
-        <label>Task Name</label>
-          <input
-            type="text"
-            ng-model="addTaskObject.taskName"
-            name="taskName"
-           
-            ng-required="true"
-            style="text-align:center"
-          />
-          <label>Task Description</label>
-          <input 
-            type="text"
-            ng-model="addTaskObject.taskDescription"
-            name="taskDescription"
-            ng-required="true"
-            style="text-align: center"
-          />
-    
-          
-          <label> Employee Assigned</label>
-          <input ng-model="searchQuery" ng-click="onfocusfun()" ng-model-options="{ debounce: 500 }">
-                
-            </input>
-          <div
-                style="
-                  margin: 10px;
-                  background-color: #fbfbfb;
-                  border-radius: 10px;
-                 
-                 
-                "
-                 ng-style="{'display': displayUserList ? 'block' : 'none'}"
-              >
-              <p style="color:red">{{((employeesAssignedToTask | filter:searchQuery).length)<=0 ? "No employee Found":"" }}</p>
-                <label
-                  style="display: flex; width: 10%; margin: 10px ;"
-                  ng-repeat="item in employeesAssignedToTask |filter:searchQuery"
-                
-                >
-                  <label>{{item.assignedTo.name}}</label>
-                  <input
-                    style="
-                      margin-top: 0px;
-                      margin-left: 10px;
-                      height: 30px;
-                      box-shadow: 0px 0px 0px 0px white;                     
-                    "
-                    type="checkbox"
-                   
-                    ng-model="employeeObject.taskeEmployeesAssigned[$index]"
-                    ng-true-value="{{item}}"
-                  />
-                  <br />
-                </label>
-              </div>
-
-          <div ng-repeat="item in employeeListObject.taskEmployeeListView track by $index">
-            <h5>{{item}}</h5>
-          </div>
-
-          <label>Start Date</label>
-          <input
-            type="Date"
-            ng-model="addTaskObject.startDate"
-            name="taskStartDate"
-            placeholder="Start Date"
-            ng-required="true"
-            style="text-align: center"
-          />
-
-          <label>End Date</label>
-          <input
-            type="Date"
-            ng-model="addTaskObject.endDate"
-            name="TaskendDate"
-            placeholder="Start Date"
-            ng-required="true"
-            style="text-align: center"
-          />
-          <button
-            class="createButton"
-            type="submit"
-            style="
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            "
-            ng-disabled="addTaskForm.$invalid"
-            ng-click="addTaskFunction($event)"
-          >
-            Create Task
-          </button>
-        </form>
       </div>
 
       <!-- Modal footer -->
@@ -217,7 +323,11 @@ class="loader"
   </div>
 </div>
 
-<!------------------------------------ modal ends ------------------------------------->
+
+
+
+<!--------------------------------- filter modal ends-------------------------->
+
 
 
 

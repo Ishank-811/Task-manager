@@ -8,10 +8,10 @@ myApp.controller(
       
       employeeServices.viewTicket( 
          $stateParams.id, token ,
-        function (response) {
-          $scope.ticketDetails = response;
-          $scope.progressBar = response.progress.percentage;
-          $scope.progressBarStore = response.progress.percentage;
+        function (ticketDetails , progressPercentage) {
+          $scope.ticketDetails = ticketDetails;
+          $scope.progressBar = progressPercentage;
+          $scope.progressBarStore = progressPercentage;
         }
       ); 
       
@@ -29,8 +29,6 @@ myApp.controller(
             $scope.progressBar=100; 
           }
           $scope.progressStatus = "";
-          
-          // $scope.progressBar=100; 
         });
       };
 
