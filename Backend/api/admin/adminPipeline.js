@@ -47,7 +47,7 @@ var top3Employees = function(){
 var projectStatusNumber= function(){
     [
         {
-          $match: { endDate: { $gte: new Date() } },
+          $match: { endDate: { $gte: new Date() }  , isDeleted:false},
         },
         {
           $project: {
@@ -78,6 +78,7 @@ var projectStatusNumber= function(){
 }
 var projectStatusNumber = function(){
 return [
+  { $match: {isDeleted:false} },
     {
       $group: {
         _id: "$status",
@@ -89,7 +90,7 @@ return [
 
 var isUpcoming = function(){
     return [
-        { $match: { "isCompleted.status": false } },
+        { $match: { "isCompleted.status": false  , isDeleted:false} },
         {
           $project: {
             projectName: 1,
@@ -112,7 +113,7 @@ var isUpcoming = function(){
 }
 var overDueProjects = function(){
     return [
-        { $match: { "isCompleted.status": false } },
+        { $match: { "isCompleted.status": false , isDeleted:false } },
         {
           $project: {
             projectName: 1,
@@ -137,7 +138,7 @@ var overDueProjects = function(){
 var fastestPaceProject = function(){
     return [
         {
-          $match: { endDate: { $gte: new Date() } },
+          $match: { endDate: { $gte: new Date() }  , isDeleted:false },
         },
         {
           $project: {

@@ -16,8 +16,9 @@ var countBystatus = function(managerId){
 
 var isUpcomingProject = function(managerId){
     return [
-        { $match: { "isCompleted.status": false ,
-        'projectManger.projectMangerId':managerId} },
+        { $match: { "isCompleted.status": false , isDeleted:false,
+        'projectManger.projectMangerId':managerId},
+      },
         {
           $project: {
             projectName: 1,
@@ -40,8 +41,9 @@ var isUpcomingProject = function(managerId){
 }
 var overDueProject =  function(managerId){
     return [
-        { $match: { "isCompleted.status": false ,
+        { $match: { "isCompleted.status": false , isDeleted:false,
         'projectManger.projectMangerId':managerId },
+       
        
     },
         {

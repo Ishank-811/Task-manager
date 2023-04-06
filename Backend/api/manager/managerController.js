@@ -231,12 +231,12 @@ var fetchProjectDetail = function (req, res) {
 var showAllAssignedProjects = function (req, res) {
   var LIMIT = 8;
   var startIndex = (Number(req.query.currentPage) - 1) * 8;
-  ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
+  ProjectDetails.find({ "projectManger.projectMangerId": req.user._id , isDeleted:false})
     .sort({ _id: -1 })
     .skip(startIndex)
     .limit(LIMIT)
     .then(function (response) {
-      ProjectDetails.find({ "projectManger.projectMangerId": req.user._id })
+      ProjectDetails.find({ "projectManger.projectMangerId": req.user._id, isDeleted:false })
         .count()
         .then(function (countNum) {
           res.status(200).send({ projectData: response, countNum });

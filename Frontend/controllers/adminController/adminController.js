@@ -1,4 +1,4 @@
-myApp.controller("adminController", function ($scope, $window,$timeout ,  adminServices) {
+myApp.controller("adminController", function ($scope, $window,$timeout ,  adminServices , adminFactory) {
 
   var role = sessionStorage.getItem("role");
   $scope.username = sessionStorage.getItem("username");  
@@ -11,15 +11,11 @@ myApp.controller("adminController", function ($scope, $window,$timeout ,  adminS
     } 
     else {
      $scope.totalEmployees= userData  ;
-    $scope.employeesAsigned = userData.filter(function (val) {
-        return val.role == "Employee";
-      });
-      $scope.response = userData.filter(function (val) {
-        return val.role == "Manager";
-      });
-     $scope.employeesAsignedStore= userData.filter(function (val) {
-      return val.role == "Employee";
-    });
+     adminFactory.employeeFilter(userData,  function(employeesAsigned , managerAssigned ,employeesAsignedStore ){
+      $scope.employeesAsigned = employeesAsigned ; 
+      $scope.response  = managerAssigned  ;
+      $scope.employeesAsignedStore = employeesAsignedStore  ;
+     })
     }
   });
 
@@ -29,7 +25,5 @@ myApp.controller("adminController", function ($scope, $window,$timeout ,  adminS
   }
   
 
-  $scope.deleteProject = function (val) {
-    console.log(val);
-  };
+
 });

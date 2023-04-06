@@ -5,6 +5,8 @@ myApp.controller(
     $stateParams,
     adminServices,
     managerServices,
+    adminFactory,
+    managerFactory
   ) {
     var token = sessionStorage.getItem("token");
 
@@ -23,16 +25,10 @@ myApp.controller(
     //time left logic starts
 
     $scope.getDaysDiff = function (startDate, endDate) {
-      var startTimestamp = Date.parse(startDate);
-      var endTimestamp = Date.parse(endDate);
-      var diff = endTimestamp - startTimestamp;
-      return Math.round(diff / 86400000); // Convert milliseconds to days
+     return  adminFactory.getDaysDiff(startDate , endDate); 
     };
     $scope.timeleft = function (endDate) {
-      var today = new Date();
-      var endTimestamp = Date.parse(endDate);
-      var diff = endTimestamp - today.getTime();
-      return Math.round(diff / 86400000);
+     return managerFactory.timeleft(endDate); 
     };
     //time left logic ends
 
@@ -91,7 +87,7 @@ myApp.controller(
         }
       );
     };
-
+ 
     $scope.addEmployeesSubmit = function ($event) {
       $event.preventDefault();
       var userDetails = JSON.parse($scope.employeeAdded);

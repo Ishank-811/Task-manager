@@ -3,7 +3,6 @@ const project = require("../../model/projects");
 var ticket = require("../../model/ticketModel");
 var projectDetails = require("../../model/projectDetails");
 const { aggregate } = require("../../model/projects");
-const ProjectDetails = require("../../model/projectDetails");
 var task = require("../../model/taskModel");
 var mongoose = require("mongoose");
 var adminPipeLine = require("./adminPipeline"); 
@@ -32,6 +31,7 @@ const creatingPorject = function (req, res) {
     .findOne({
       projectName: data.projectName,
       "organization.organizationId": organizationId,
+      isDeleted:false
     })
     .then(function (projectExist) {
       if (projectExist) {
@@ -116,7 +116,7 @@ const fetchProjects = function (req, res) {
   projectDetails
         .find({
           $and: [
-            { "organization.organizationId": req.user.organization.organizationId },
+            { "organization.organizationId": req.user.organization.organizationId , isDeleted:false},
             filters,
           ]
         })
@@ -206,6 +206,7 @@ const showEmployeeProjects = function (req, res) {
       .find({
         "organization.organizationId": req.query.organizationId,
         "projectManger.projectMangerId": req.query.employeeId,
+        isDeleted:false
       })
       .sort({ _id: -1 })
       .limit(LIMIT)
@@ -215,6 +216,7 @@ const showEmployeeProjects = function (req, res) {
           .find({
             "organization.organizationId": req.query.organizationId,
             "projectManger.projectMangerId": req.query.employeeId,
+            isDeleted:false
           })
           .count()
           .then(function (count) {
@@ -246,12 +248,7 @@ const showEmployeeProjects = function (req, res) {
 };
 
 var fastestPaceProject = function (req, res) {
-  // .then(function (response) {
-  //   res.status(202).send(response);
-  // })
-  // .catch(function (error) {
-  //   console.log(error);
-  // });
+
 };
 var fetchProjectDetails = function (req, res) {
   organizationId = req.user.organization.organizationId;
@@ -291,7 +288,7 @@ var searchProject = function (req, res) {
   var data = req.query;
   var regex = new RegExp(data.projectName, "i");
   projectDetails
-    .find({ projectName: regex })
+    .find({ projectName: regex , isDeleted:false })
     .then(function (response) {
       console.log(response);
       res.status(200).send(response);
@@ -355,7 +352,7 @@ var updateProject = function (req, res) {
     .then(function (response) {
       if (response.projectName != updatedProject.projectName) {
         projectDetails
-          .findOne({ projectName: updatedProject.projectName })
+          .findOne({ projectName: updatedProject.projectName , isDeleted:false })
           .then(function (response) {
             if (response) {
               res.status(204).json({ data: "Project Already Present" });
@@ -403,6 +400,7 @@ var monthWiseAnalysis = function(req,res){
           $gte: new Date("2023-"+currentMonth+"-01"),
           $lt: new Date("2023-"+nextMonth+"-01"),
         },
+        isDeleted:false
       },
     },
     {
@@ -499,6 +497,23 @@ task.aggregate([
 }
 
 
+const deleteProject = function(req,res){
+mongoose.startSession().then(function (session) {
+  session.startTransaction();
+Promise.all([
+  projectDetails.updateMany({_id:mongoose.Types.ObjectId(req.params.projectId)} , {isDeleted:true}, {new:true}),
+  project.updateMany({'project.projectId':mongoose.Types.ObjectId(req.params.projectId)} , {isDeleted:true}, {new:true}), 
+  task.updateMany({'project.projectId':mongoose.Types.ObjectId(req.params.projectId)}, {isDeleted:true} , {new:true}),
+  ticket.updateMany({'project.projectId':mongoose.Types.ObjectId(req.params.projectId)}, {isDeleted:true} , {new:true}),
+]).then(function(response){
+  res.status(200).send(response);  
+}).catch(function(error){
+  session.abortTransaction();
+res.stauts(404).send(error);  
+}) 
+})
+}
+
 
 module.exports = {
   stats,
@@ -515,5 +530,6 @@ module.exports = {
   monthWiseAnalysis,
   updateProject,
   projectWiseAnalysis,
+  deleteProject,
   
 };

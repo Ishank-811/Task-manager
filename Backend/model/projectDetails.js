@@ -50,6 +50,11 @@ const ProjectDetailSchema =  mongoose.Schema({
     isCompleted:{
         status:{type:Boolean ,required:true , default:false}, 
         updatedAt:{type:Date ,required:true,  default:new Date()}
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+        required:true
     }
 })
 

@@ -207,28 +207,28 @@
         ng-hide="allProjectDetailsLoader"
         class="loader"
       ></div>
-      <div class="projectDetailsClass" ng-repeat="project in project ">
+      <div class="projectDetailsClass" ng-repeat="project in project  ">
         <div
           ng-class="{'displayHeader': project.isCompleted.status==true}"
           class="projectHeader"
         >
           <div class="divCenter"><i class="fa-solid fa-list-check"></i></div>
           <div style="display: flex; flex-direction: column">
-            <h4
+            <h5
               style="font-weight: bold; margin-top: 10px; cursor: pointer"
               ui-sref="AdminDashboard.ViewProjectDetails({projectId:project._id})"
             >
               {{project.projectName}}
-            </h4>
+            </h5>
 
             <h6 ng-show="project.isCompleted.status">(Completed)</h6>
           </div>
           <div class="projectActions">
             <h3 style="color: rgb(227, 79, 79); margin-top: 10px">
-              <!-- <i
+              <i
                 class="fa-sharp fa-solid fa-trash"
-                ng-click="deleteProject(project._id)"
-              ></i> -->
+                ng-click="deleteProject(project._id , $index)"
+              ></i>
             </h3>
             <h3
               style="color: rgb(3, 127, 59); cursor: pointer; margin-top: 10px"

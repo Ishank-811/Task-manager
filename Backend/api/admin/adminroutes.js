@@ -26,5 +26,6 @@ router.patch("/updateProject/:projectId" ,passport.authenticate("level2", { sess
 router.get("/stats" , adminController.stats); 
 router.get("/monthWiseAnalysis/:currentMonthValue" , adminController.monthWiseAnalysis) ; 
 router.get("/projectWiseAnalysis" , adminController.projectWiseAnalysis); 
+router.patch("/deleteProject/:projectId" , adminController.deleteProject); 
 
 module.exports = router;

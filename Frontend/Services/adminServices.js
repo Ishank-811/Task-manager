@@ -350,6 +350,17 @@ var fac = function ($http) {
           }
         );
     },
+    deleteProject:function(projectId , cb){
+      $http.patch(`http://localhost:8080/admin/deleteProject/${projectId}`).then(
+        function (res) {
+          console.log(res);
+          cb(res);
+        },
+        function (err) {
+          return err;
+        }
+      ); 
+    }
   };
 };
 

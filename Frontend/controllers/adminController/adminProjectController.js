@@ -1,6 +1,6 @@
 myApp.controller(
   "adminProjectController",
-  function ($scope, $timeout, $window, adminServices) {
+  function ($scope, $timeout, $window, adminServices , managerFactory , adminFactory) {
     var token = sessionStorage.getItem("token");
  
    
@@ -15,16 +15,10 @@ myApp.controller(
     //time left logic starts
 
     $scope.getDaysDiff = function (startDate, endDate) {
-      var startTimestamp = Date.parse(startDate);
-      var endTimestamp = Date.parse(endDate);
-      var diff = endTimestamp - startTimestamp;
-      return Math.round(diff / 86400000); 
+      return  adminFactory.getDaysDiff(startDate , endDate); 
     };
     $scope.timeleft = function (endDate) {
-      var today = new Date();
-      var endTimestamp = Date.parse(endDate);
-      var diff = endTimestamp - today.getTime();
-      return Math.round(diff / 86400000);
+      return managerFactory.timeleft(endDate); 
     };
     //time left logic ends
     $scope.assignedCheck = true;
@@ -61,7 +55,7 @@ myApp.controller(
         assignedTo: [],
       };
       $scope.employeesAsigned= $scope.employeesAsignedStore ; 
-      $scope.projectManager = "";
+      $scope.projectManager = {};
       $scope.assignedCheck = true;
       $scope.selectedUser=[]; 
     };
@@ -73,26 +67,19 @@ myApp.controller(
         username: JSON.parse(managerDetails).username,
       };
     };
-
+ 
     $scope.ProjectFormDetails = function ($event) {
       $event.preventDefault();
-      if (
-        Date.now() <= $scope.createProjectObject.startDate &&
-        Date.now() <= $scope.createProjectObject.endDate
-      ) {
-        $scope.errorHandlingObject.createProjectLoader = false;
-        if (
-          $scope.createProjectObject.startDate <=$scope.createProjectObject.endDate
-        ) {
-          $scope.createProjectObject["assignedTo"] =$scope.selectedUser;
-          adminServices.creatingPorject($scope.createProjectObject,$scope.projectManger,
+      adminFactory.projectValidation($scope.createProjectObject , $scope.selectedUser, function(valid,createProjectObject ){
+        if(valid){
+          $scope.errorHandlingObject.createProjectLoader = false;
+          adminServices.creatingPorject(createProjectObject,$scope.projectManger,
             function (data) {
               if (data.status == 404) {
                 $scope.errorHandlingObject.showError = true;
                 $scope.errorHandlingObject.createProjectLoader = true;
               } else {
-                $scope.createProjectObject.assignedTo = []; 
-                $scope.projectManger = {};
+                $scope.resetFunction(); 
                 $scope.errorHandlingObject = {
                   showError: false,
                   createProjectLoader: true,
@@ -103,26 +90,19 @@ myApp.controller(
                   $("#myModal2").modal("hide");
                 });
                 alert("Project created");
-                $scope.projectManager = "";
-                $scope.employeesAssigned = "";
               }
             }
           );
-        } else {
-          alert("Enter the valid Date");
+        }else{
+          alert("enter the valid date") ; 
         }
-      } else {
-        alert("Enter the valid Date");
-      }
+      })
     };
 
     //create project Ends
 
     function formatDateForInputDate(date) {
-      var year = date.getFullYear();
-      var month = ("0" + (date.getMonth() + 1)).slice(-2);
-      var day = ("0" + date.getDate()).slice(-2);
-      return year + "-" + month + "-" + day;
+     return managerFactory.formatDateForInputDate(date); 
     }
 
     $scope.editProject = function (
@@ -149,10 +129,7 @@ myApp.controller(
     $scope.projectPresent = false;
     $scope.updateFormSubmit = function ($event) {
       $event.preventDefault();
-      adminServices.updateProject(
-        $scope.updateProjectObject,
-        $scope.projectId,
-        token,
+      adminServices.updateProject($scope.updateProjectObject,$scope.projectId,token,
         function (response) {
           if (response.status == 204) {
             $scope.projectPresent = true;
@@ -161,14 +138,10 @@ myApp.controller(
             $(function () {
               $("#myModal3").modal("hide");
             });
-            $scope.project[$scope.updatedIndex].projectName =$scope.updateProjectObject.projectName;
-            $scope.project[$scope.updatedIndex].priority = $scope.updateProjectObject.priority;
-            if ($scope.updateProjectObject.startDate) {
-              $scope.project[$scope.updatedIndex].startDate = $scope.updateProjectObject.startDate;
-            }
-            if ($scope.updateProjectObject.endDate) {
-              $scope.project[$scope.updatedIndex].endDate = $scope.updateProjectObject.endDate;
-            }
+           adminFactory.updateFrontEnd($scope.project  ,$scope.updateProjectObject ,
+             $scope.updatedIndex , function(project){
+            $scope.project = project ; 
+           })
             $scope.timeleft($scope.updateProjectObject.endDate);
             $scope.getDaysDiff(
               $scope.updateProjectObject.startDate,
@@ -253,6 +226,13 @@ myApp.controller(
       } else {
         alert("Invalid Date Input");
       }
+    };
+
+    $scope.deleteProject = function (projectId, index) {
+     adminServices.deleteProject(projectId,  function(response){
+      $scope.project.splice(index, 1) ;  
+      alert("project Deleted")
+     })
     };
     $scope.formReset = function () {
       $scope.filterObject = {
