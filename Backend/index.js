@@ -18,7 +18,7 @@ app.get("/" , function(req,res){
   res.send("app is running");
 })
 app.use("/", require("./api/singup/singupRoutes"));
-app.use("/signin", require("./api/singin/singinRoute"));
+
 app.use("/signinAsUser", require("./api/singin/singinAsUsersRoute"));
 app.use("/organization", require("./api/OrganizationAPI/organizationRoutes"));
 app.use("/admin", require("./api/admin/adminroutes"));

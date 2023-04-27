@@ -1,16 +1,27 @@
 var myApp = angular.module("mymodule", ["ui.router"]);
-myApp.config(function ($stateProvider , $urlRouterProvider){
-  // $urlRouterProvider.otherwise('signinAsOrganization'); 
+
+myApp.factory('authInterceptor', function() {
+    return {
+      request: function(config) {
+        var token = sessionStorage.getItem("token");
+        if (token) {
+          config.headers = config.headers || {};
+          config.headers.Authorization = 'Bearer ' + token;
+        }
+        return config;
+      },
+    };
+  });
+
+  
+myApp.config(function ($stateProvider , $urlRouterProvider , $httpProvider){
+  $httpProvider.interceptors.push('authInterceptor');
   $urlRouterProvider.when('/AdminDashboard', '/AdminDashboard/projectList');
   $urlRouterProvider.when('/MangerDashboard', '/MangerDashboard/projectsList');
   $urlRouterProvider.when('/EmployeeDashboard', '/EmployeeDashboard/home');
   $urlRouterProvider.when("/organizationDashboard", 'organizationDashboard/employees');
   $stateProvider
-    .state("signinAsOrganization", {
-      url: "/signinAsOrganization",
-      templateUrl: "views/signinAsOrganization.html",
-      controller: "signinAsOrganizationController",
-    })
+ 
     .state("superAdmin", {  
       url: "/superAdmin",
       templateUrl: "views/superAdmin.html",
@@ -21,11 +32,7 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
       templateUrl: "views/signup.html",
       controller: "signupController",
     })
-    .state("organization", {
-      url: "/organizationDashboard",
-      templateUrl: "views/organizationViews/organizationPage.html",
-      controller: "organizationController",
-    })
+  
     .state("organization.employee" ,  {
       url: "/employees",
       templateUrl: "views/organizationViews/organizationEmployees.html",
@@ -80,8 +87,13 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
       url: "/AdminDashboard",
       templateUrl: "views/admin/adminView.html",
     })
+    .state("AdminDashboard.allEmployees", {
+      url: "/allEmployees",
+      templateUrl: "views/organizationViews/organizationEmployees.html",
+      controller:"organizationController"
+    })
     .state("AdminDashboard.projectList", {
-      url: "/projectList",
+      url: "/projectList",  
       templateUrl: "views/admin/adminViewProject.html",
     })
     .state("AdminDashboard.statistics", {
@@ -94,11 +106,7 @@ myApp.config(function ($stateProvider , $urlRouterProvider){
       templateUrl: "views/admin/adminProjectDetails.html",
       controller: "adminProjectDetailsController",
     })
-    .state("AdminDashboard.employees", {
-      url: "/employees",
-      templateUrl: "views/admin/employees.html",
-      controller: "adminEmployeesController",
-    })
+   
     .state("MangerDashboard.viewTask", {
       url: "/viewTask",
       templateUrl: "views/manager/managerViewTask.html",

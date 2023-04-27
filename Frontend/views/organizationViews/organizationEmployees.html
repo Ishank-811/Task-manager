@@ -19,7 +19,7 @@
         ng-change="filterEmployeeChange(filterEmployee)"
         ng-model="filterEmployee"
       >
-        <option value="Admin">Admin</option>
+
         <option value="Manager">Manager</option>
         <option value="Employee">Employee</option>
       </select>
@@ -47,47 +47,13 @@
   >
     No Employee Added yet
   </h1>
-  <div class="employeeCard" ng-repeat="res in response |filter:{role:'Admin'}">
-    <div class="profileAvtar">
-      <image
-        class="imageAvtar"
-        src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
-        alt="Avatar"
-      ></image>
-      <div class="profileAvtarRatings">
-        <h4
-          ng-click="deleteUser(res._id , res.role)"
-          style="color: rgb(227, 79, 79); margin-right: 10px; cursor: pointer"
-        >
-          <i class="fa-sharp fa-solid fa-trash"></i>
-        </h4>
-        <h4
-          data-toggle="modal"
-          data-target="#myModal"
-          style="color: rgb(227, 79, 79); cursor: pointer"
-          ng-click="updateUser(res)"
-        >
-          <i class="fa-solid fa-pen-to-square"></i>
-        </h4>
-      </div>
-    </div>
-    <div class="employeeDetails">
-      <h2>{{res.firstName}}</h2>
-      <h5 class="profileRole">{{res.role}}</h5>
-      <hr />
-      <p style="font-size: 17px">Vestibulum ante ipsum primis</p>
-      <div>
-        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
-        <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
-      </div>
-    </div>
-  </div>
 
   <div
     class="employeeCard"
     ng-repeat="res in response | filter:{role:'Manager'}"
   >
-    <div class="profileAvtar">
+    <div ng-class="{'displayDeleted': res.isDeleted==true}" class="profileAvtar">
+ 
       <image
         class="imageAvtar"
         src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
@@ -96,6 +62,7 @@
       <div class="profileAvtarRatings">
         <h4
           ng-click="deleteUser(res._id , res.role)"
+          ng-style="{'display': res.isDeleted ? 'none' : 'block'}"
           style="color: rgb(227, 79, 79); margin-right: 10px; cursor: pointer"
         >
           <i class="fa-sharp fa-solid fa-trash"></i>
@@ -103,6 +70,7 @@
         <h4
           data-toggle="modal"
           data-target="#myModal"
+          ng-style="{'display': res.isDeleted ? 'none' : 'block'}"
           style="color: rgb(227, 79, 79); cursor: pointer"
           ng-click="updateUser(res)"
         >
@@ -114,9 +82,9 @@
       <h2>{{res.firstName}}</h2>
       <h5 class="profileRole">{{res.role}}</h5>
       <hr />
-      <p style="font-size: 17px">Vestibulum ante ipsum primis</p>
+      <p    ng-class="{'displayDeleted': res.isDeleted==true}" style="font-size: 17px">Vestibulum ante ipsum primis</p>
       <div>
-        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
+        <button  ng-click="fetchUserDetails(res , 1)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
         <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
       </div>
     </div>
@@ -158,12 +126,12 @@
       
       class="employeeDetails"
     >
-      <h2 ng-class="{'displayDeleted': res.isDeleted==true}">{{res.firstName}}</h2>
-      <h5 ng-class="{'displayDeleted': res.isDeleted==true}" class="profileRole">{{res.role}}</h5>
+      <h2>{{res.firstName}}</h2>
+      <h5  class="profileRole">{{res.role}}</h5>
       <hr />
       <p  ng-class="{'displayDeleted': res.isDeleted==true}" style="font-size: 17px">Vestibulum ante ipsum primis</p>
       <div>
-        <button  ng-click="profileViewFunction(res)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
+        <button  ng-click="fetchUserDetails(res , 1)" data-target="#viewProfile" data-toggle="modal" ng-style="{'display': res.isDeleted ? 'none' : 'block'}" class="employeeCardButton">Profile</button>
         <button  style="background-color:rgba(253, 35, 35, 0.915)" ng-click="activateUser(res._id)" ng-style="{'display': res.isDeleted ? 'block' : 'none'}" class="employeeCardButton">Activate</button>
       </div>
     </div>
@@ -350,7 +318,7 @@
 
 <!----------------------------------------- view profile employee modal ------------------------------------->
 <div class="modal" id="viewProfile">
-  <div class="modal-dialog">
+  <div style="width:45%" class="modal-dialog modal-lg">
     <div class="modal-content">
       <!-- Modal Header -->
       <div class="modal-header">
@@ -362,15 +330,114 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        <h5>FirstName:</h5>
-        <h6>{{employeeDetails.firstName}}</h6>
-        <h5>LastName:</h5>
-        <h6>{{employeeDetails.lastName}}</h6>
-        <h5>Username:</h5>
-        <h6>{{employeeDetails.username}}</h6>
-        <h5>Role:</h5>
-        <h6>{{employeeDetails.role}}</h6>
+    
+
+
+        <div class="modal-body">
+          <div  class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+            <div style="border:none" class="card p-4">
+              <div
+                class="imageInModal d-flex flex-column justify-content-center align-items-center"
+              >
+                <button class="avtarbtn btn-secondary">
+                  <img
+                    style="border-radius: 50%"
+                    src="https://www.pixelwibes.com/template/my-task/html/dist/assets/images/lg/avatar3.jpg"
+                    height="100"
+                    width="100"
+                  />
+                </button>
+                <span class="name mt-3">{{employeeHandlingObject.userData.firstName}}</span>
+                <span class="idd">{{employeeHandlingObject.userData.username}}</span>
+                <div
+                  class="d-flex flex-row justify-content-center align-items-center gap-2"
+                >
+                  <span class="idd1">Oxc4c16a645_b21a</span>
+                </div>
+                <h5 style="color: red" ng-hide="employeeHandlingObject.showError">
+                  No project Assinged yet
+                </h5>
+                <table
+                  class="projectofemployees"
+                  style="margin: 10px ; width: 300px;"
+                  ng-hide="employeeHandlingObject.showEmployeeTicketTable"
+                >
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th ng-hide="employeeHandlingObject.userData.firstName==employeeProjects[0].projectManger.name" >Manager</th>
+                      <th>Priority</th>
+                      <th>start Date</th>
+                      <th>End Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="projects in employeeProjects">
+                      <td style="padding: 10px; text-align: center">
+                        {{projects.project.projectName==undefined?projects.projectName:projects.project.projectName}}
+                      </td>
+                      <td ng-hide="employeeHandlingObject.userData.firstName==projects.projectManger.name">{{projects.projectManger.name}}</td>
+                      <td ng-class="{'highPriority': projects.priority=='High' ,
+                      'MediumPriority':projects.priority=='Medium' , 'lowPriority':projects.priority=='Low'}">{{projects.priority}}</td>
+
+                      <td>{{projects.startDate | date:"dd/MM/yyyy"}}</td>
+                      <td>{{projects.endDate | date:"dd/MM/yyyy"}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ul style="padding: 0px" class="pagination">
+                  <li>
+                    <button
+                      ng-class="{disabledPage: currentPageForProject == 1}"
+                      ng-click="setPageForProjects(1)"
+                    >
+                      First
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      ng-class="{disabledPage: currentPageForProject == 1}"
+                      ng-click="setPageForProjects(currentPageForProject - 1)"
+                    >
+                      Previous
+                    </button>
+                  </li>
+                  <li
+                    ng-repeat="page in pagesForProject track by $index"
+                    ng-class="{active: currentPageForProject == page}"
+                  >
+                    <button ng-click="setPageForProjects(page)">{{page}}</button>
+                  </li>
+                  <li>
+                    <button
+                      ng-class="{disabledPage: currentPageForProject == totalPagesForProjects}"
+                      ng-click="setPageForProjects(currentPageForProject + 1)"
+                    >
+                      Next
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      ng-class="{disabledPage: currentPageForProject == totalPagesForProjects}"
+                      ng-click="setPageForProjects(totalPagesForProjects)"
+                    >
+                      Last
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="px-2 rounded mt-4 date">
+                  <span class="join">Joined May,2021</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
+
+
 
       <!-- Modal footer -->
       <div class="modal-footer">

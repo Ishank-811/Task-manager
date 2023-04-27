@@ -106,7 +106,6 @@ const viewTicket = function (req, res) {
 };
 
 const addComment = function (req, res) {
-  console.log(req.body); 
   var response = new comments({
     organization:{
       name:req.user.organization.name,
@@ -135,28 +134,49 @@ const addComment = function (req, res) {
 };
 
 var updatingStatus = function (req, res) {
+var data={
+  status:req.body.projectStatus
+}; 
 
-  var data = {
-    status: req.body.projectStatus,
-  };
   if(req.body.projectStatus=='completed'){
     var progress= {
       percentage:100,
       UpdatedAt: new Date() 
     }
+    data.status=req.body.projectStatus ; 
     data.progress=progress;
   }
 
-  if (req.body.projectStatus == "complete") {
-    ProjectDetails.findByIdAndUpdate(req.body.projectId, {
-      $inc: { "progress.percentage": req.body.progressBarDiff },
-      "progress.UpdatedAt": new Date(),
+  if (req.body.projectStatus == "completed") {
+    task.countDocuments({
+      "user.userId": new mongodb.ObjectId(req.user._id),
+      "project.projectId": req.body.projectId, 
+      "isCompleted.status": false
+    }).then(function(response){
+      if(response==0){
+        res.status(201).send(data); 
+        ProjectDetails.findByIdAndUpdate(req.body.projectId, {
+          $inc: { "progress.percentage": req.body.progressBarDiff },
+          "progress.UpdatedAt": new Date(),
+        })
+          .then(function (response) {})
+          .catch(function (error) {
+            console.log(error);
+          });
+    ticket
+    .findByIdAndUpdate(req.params.ticketId, {status:"completed"}, { new: true })
+    .then(function (response) {
+      res.status(202).send(response);
     })
-      .then(function (response) {})
-      .catch(function (error) {
-        console.log(error);
-      });
+    .catch(function (error) {
+      console.log(error);
+    });
+      }else{
+        res.status(404).json({message:"Some task are incomplete"}) ; 
+      }
+    })
   }
+  if(req.body.projectStatus!='completed'){
   ticket
     .findByIdAndUpdate(req.params.ticketId, data, { new: true })
     .then(function (response) {
@@ -165,6 +185,7 @@ var updatingStatus = function (req, res) {
     .catch(function (error) {
       console.log(error);
     });
+  }
 };
 
 var uploadFileToUrl = async (req, res) => {
@@ -221,7 +242,6 @@ const updateProgress = function (req, res) {
     "progress.UpdatedAt": new Date(),
   })
     .then(function (response) {
-      console.log(response);
     })
     .catch(function (error) {
       console.log(error);

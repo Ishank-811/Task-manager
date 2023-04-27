@@ -28,9 +28,9 @@
   <tbody>
     <tr ng-repeat="organization in organizationDetails track by $index">
       <td>{{organization.organizationName}}</td>
-      <td>{{organization.organizationUsername}}</td>
+      <td>{{organization.adminUsername}}</td>
       <td ng-hide="organization.valid">
-        <button ng-click="createOrganization(organization._id)">Create</button>
+        <button ng-click="createOrganization(organization ,  $index)">Create</button>
       </td>
       <td ng-show="organization.valid">
         <button
@@ -39,7 +39,7 @@
           style="margin:0px"
           class="createButton"
           ng-click="updateOrganizationDetails(organization.organizationName 
-        ,organization.organizationUsername  ,organization._id  )"
+        ,organization.adminUsername  ,organization._id  )"
         >
           Update
         </button>

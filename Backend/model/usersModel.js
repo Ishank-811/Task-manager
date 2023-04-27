@@ -24,7 +24,7 @@ const userSchema =  mongoose.Schema({
         type:String,
          required:true,  
          default : "Employee",
-         enum : ["Employee", "Manager" ,"Admin" ]
+         enum : ["Employee", "Manager" ,"Admin","SuperAdmin" ]
     },
     isDeleted:{
         type:Boolean,

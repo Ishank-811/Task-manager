@@ -3,10 +3,10 @@ const organizationSchema =  mongoose.Schema({
     organizationName:{
         type : String, required:  true , trim:true
     },
-    organizationUsername :{
+    adminUsername :{
         type:String, required:  true, trim:true,  unique:true
     },
-    organizationPassword : {
+    adminPassword : {
         type:String, required:true , trim:true
     },
     valid :{

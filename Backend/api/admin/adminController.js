@@ -17,6 +17,7 @@ const fetchingUsers = function (req, res) {
       $and: [
         { "organization.organizationId": req.user.organization.organizationId , isDeleted:false },
         { $or: [{ role: "Manager" }, { role: "Employee" }] },
+        
 
       ],
     })
@@ -125,7 +126,7 @@ const fetchProjects = function (req, res) {
         .skip(startIndex)
         .then(function (projectList) {
           projectDetails.countDocuments({$and: [
-            { "organization.organizationId": req.user.organization.organizationId },
+            { "organization.organizationId": req.user.organization.organizationId  , isDeleted:false},
             filters,
           ]}).then(function(projectCount){
             res.status(202).json({ projectList, projectCount });
@@ -238,6 +239,7 @@ const showEmployeeProjects = function (req, res) {
           .find({
             "organization.organizationId": req.query.organizationId,
             "assignedTo.assignedUserId": req.query.employeeId,
+            isDeleted:false
           })
           .count()
           .then(function (count) {
@@ -370,13 +372,14 @@ var updateProject = function (req, res) {
 };
 
 var stats = function (req, res) {
+  var organizationId = (req.user.organization.organizationId); 
   Promise.all([
-    project.aggregate(adminPipeLine.perUserProject()),
-    task.aggregate(adminPipeLine.top3Employees()),
-    projectDetails.aggregate(adminPipeLine.fastestPaceProject()),
-    projectDetails.aggregate(adminPipeLine.projectStatusNumber()),
-    projectDetails.aggregate(adminPipeLine.isUpcoming()),
-    projectDetails.aggregate(adminPipeLine.overDueProjects()),
+    project.aggregate(adminPipeLine.perUserProject(organizationId)),
+    task.aggregate(adminPipeLine.top3Employees(organizationId)),
+    projectDetails.aggregate(adminPipeLine.fastestPaceProject(organizationId)),
+    projectDetails.aggregate(adminPipeLine.projectStatusNumber(organizationId)),
+    projectDetails.aggregate(adminPipeLine.isUpcoming(organizationId)),
+    projectDetails.aggregate(adminPipeLine.overDueProjects(organizationId)),
   ]).then(function (response) {
     res.status(200).json({
       perUserProject: response[0],

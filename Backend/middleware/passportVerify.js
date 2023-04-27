@@ -10,20 +10,18 @@ opts.secretOrKey = "random string";
 passport.use(
   new JwtStrategy(opts, function (jwt_payload, done) {
  
-    organization.findOne(
-      { organizationUsername: jwt_payload.username },
-      function (err, organization) {
-        if (err) {
-          return done(err, false);
-        }
-        if (organization) {
+    // organization.findOne(
+    //   { adminUsername: jwt_payload.username },
+    //   function (err, organization) {
+    //     if (err) {
+    //       return done(err, false);
+    //     }
+    //     if (organization) {
         
-          return done(null, organization);
-        } else {
-          return done(null, { valid: false });
-        }
-      }
-    );
+    //       return done(null, organization);
+    //     } 
+    //   }
+    // );
   })
 );
 passport.use(
@@ -38,8 +36,6 @@ passport.use(
         }
         if (organization) {
           return done(null, organization);
-        } else {
-          return done(null, { valid: false });
         }
       }
     );

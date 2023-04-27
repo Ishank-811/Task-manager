@@ -24,7 +24,11 @@ myApp.controller(
     $scope.assignedCheck = true;
     $scope.selectedUser=[];  
     
-      $scope.assignedUserChecksChange = function (index) {
+      $scope.assignedUserChecksChange = function (employeesAsigned, employeeIdForindex) {
+        console.log(employeeIdForindex) ;
+        var index = employeesAsigned.findIndex(function(element){
+          return element._id==employeeIdForindex ; 
+        })
         $scope.selectedUser.push($scope.employeesAsigned[index]); 
         $scope.employeesAsigned.splice(index,1) ;
         $scope.assignedCheck = false;
@@ -156,6 +160,7 @@ myApp.controller(
       $scope.pageSize = 8;
       $scope.totalPages = Math.ceil(count / $scope.pageSize);
       $scope.pages = [];
+      console.log(count); 
       for (var i = 1; i <= $scope.totalPages; i++) {
         $scope.pages.push(i);
       }

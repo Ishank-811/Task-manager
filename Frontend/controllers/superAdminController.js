@@ -85,26 +85,24 @@ myApp.controller(
             $scope.emailValid = "";
             $scope.Password = "";
             $scope.confirmPassword = "";
+            $(function () {
+              $("#myModal3").modal("hide");
+            });
+            $scope.organizationDetails.push(data.data); 
             alert("Successfully created");
           }
         });
       };
 
-      $scope.createOrganization = function (val) {
+      $scope.createOrganization = function (val , index) {   
         superAdminServices.AllowOrganization(val, function (response) {
-       
-          $scope.organizationDetails.forEach(function (element) {
-            if (element._id == val) {
-              element.valid = true;
-            }
-          });
+          console.log(response)  ;
+          $scope.organizationDetails.splice(index , 1  , response.data); 
           alert("organization Created");
         });
       };
 
-      $scope.updateOrganizationName;
-      $scope.updateOrganizationUsername;
-      $scope.updateOrganizationId;
+  
       $scope.updateOrganizationDetails = function (
         updateOrganizationName,
         updateOrganizationUsername,
@@ -117,11 +115,10 @@ myApp.controller(
 
       $scope.UpdateOrganizationFunction = function ($event) {
         $event.preventDefault();
-       
         var data = {
           organizationId: $scope.updateOrganizationId,
           organizationName: $scope.updateOrganizationName,
-          organizationUsername: $scope.updateOrganizationUsername,
+          adminUsername: $scope.updateOrganizationUsername,
         };
         superAdminServices.updateOrganization(data, function (response) {
          
@@ -132,8 +129,8 @@ myApp.controller(
             $scope.organizationDetails.forEach(function (element) {
               if (element._id == response.data._id) {
                 element.organizationName = response.data.organizationName;
-                element.organizationUsername =
-                  response.data.organizationUsername;
+                element.adminUsername =
+                  response.data.adminUsername;
               }
             });
             alert("Organization Updated");

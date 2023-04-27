@@ -1,26 +1,24 @@
 const organization = require("../../model/oganizationModel");
 
 const registerAsorganization = function(req, res){
+  console.log(req.body) ;
   organization
-    .findOne({ organizationUsername: req.body.email })
+    .findOne({ adminUsername: req.body.email  })
     .then(function (userdetail) {
-      if (userdetail) {
+      if (userdetail) { 
         res.status(400).send("Organzation already exsist"); 
-        console.log("user already exsist");
       } else {
         var response = new organization({
-          organizationUsername: req.body.email,
-          organizationPassword: req.body.password,
+          adminUsername: req.body.email,
+          adminPassword: req.body.password,
           organizationName: req.body.organizationName,
         });
-        response
-          .save()
-          .then(function () {
-            res.send(response);
-          })
-          .catch(function (e) {
-            console.log(e);
-          });
+        response.save().then(function(){
+          res.status(202).send(response); 
+        })
+        .catch(function(error){
+          console.log(error); 
+        })
       }
     })
     .catch(function (e) {

@@ -1,6 +1,6 @@
 myApp.controller(
   "organizationController",
-  function ($scope, $window, $timeout, organizationServices) {
+  function ($scope, $window, $timeout, organizationServices , adminServices) {
     var token = sessionStorage.getItem("token");
 
     if (token != null) {
@@ -20,29 +20,23 @@ myApp.controller(
           filterEmployee,
           token,
           function (data) {
-            if (data.data.validity) {
               if (!data.data.roleAsOrganization) {
-                $window.location.href = "#!/signinAsOrganization";
               } else {
                 numberOfPages(data.data.countNum);
                 $scope.response = data.data.usersdata;
                 $scope.adminId = data.data.adminId;
-              
                 if ($scope.response.length == 0) {
                   $scope.showNoEmployees = true;
                 } else {
                   $scope.showNoEmployees = false;
                 }
               }
-            } else {
-              $window.location.href = "#!/signinAsOrganization";
             }
-          }
         );
       };
       readingData($scope.currentPage, $scope.filterEmployee);
     } else {
-      location.href = "#!/signinAsOrganization";
+      location.href = "#!/signinAsUsers";
     }
 
     var numberOfPages = function (count) {
@@ -153,9 +147,50 @@ myApp.controller(
     }
     };
 
-    $scope.profileViewFunction = function(employeeDetails){
-      $scope.employeeDetails = employeeDetails ; 
+
+
+    var numberOfPagesForProject = function(count){
+      $scope.pageSizeForProject = 5;
+        $scope.totalPagesForProjects = Math.ceil(count/ $scope.pageSizeForProject);
+        console.log($scope.totalPagesForProjects); 
+        $scope.pagesForProject = [];
+        for (var i = 1; i <= $scope.totalPagesForProjects; i++) {
+          $scope.pagesForProject.push(i);
+        }
     }
+  
+  $scope.currentPage = 1 ; 
+    $scope.fetchUserDetails = function (userData , currentPage) {
+      $scope.employeeHandlingObject = {
+        showError:true ,
+        userData,
+        EmployeeticketDetails:[],
+        showEmployeeTicketTable:true
+      }
+      adminServices.showEmployeeProjects(userData._id, userData.organization.organizationId,currentPage, userData.role,
+        function (response) {
+          $scope.employeeProjects = response.projectData;
+          console.log(response.count); 
+          numberOfPagesForProject(response.count);
+          if (response.count == 0) {
+            $scope.employeeHandlingObject.showError = false;
+            $scope.showEmployeeTicketTable = true;
+          } else {
+            $scope.employeeHandlingObject.showError = true;
+            $scope.employeeHandlingObject.showEmployeeTicketTable = false;
+            $scope.employeeHandlingObject.EmployeeticketDetails = response;
+          }
+        }
+      );
+      
+    };
+  
+    $scope.setPageForProjects = function (pageNumber) {
+      $scope.currentPageForProject = pageNumber;
+      $scope.fetchUserDetails( $scope.employeeHandlingObject.userData ,$scope.currentPageForProject);
+    };
+
+
     
   }
 );

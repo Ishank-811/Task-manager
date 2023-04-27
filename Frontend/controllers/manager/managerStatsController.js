@@ -56,7 +56,7 @@ myApp.controller(
         managerServices.searchEmployee(nameOfEmployee, function(response){
           $scope.employeeList = response.data;
         })
-      }, 800);
+      }, 500);
     }
     
 

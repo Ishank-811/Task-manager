@@ -240,21 +240,18 @@
               </tr>
             </tbody>
           </table>
-          <select
-            ng-change="employeeAddedChange(employeeAdded)"
-            ng-model="employeeAdded"
-            ng-required="true"
-            style="margin-top: 30px"
-          >
-            <option value="" disabled selected>Add Employees</option>
-            <option
-              ng-repeat="item in employeesAsignedFiltered track by $index "
-              value="{{item}}"
-              name="role"
-            >
+          <div style="display: flex; flex-direction: column ;">
+          <label>Name of Employee:</label>
+          <input style="width:90%" class="searchClass" ng-model="searchQuery" ng-click="addInputChange()" ng-model-options="{ debounce: 500 }"/>
+          <div ng-show="showList">
+            <div style="display: flex; flex-direction: column;">
+            <label ng-repeat="item in employeesAsignedFiltered |filter:searchQuery ">
+              <input type="radio" name="employeeRadio" ng-click="employeeAddedChange(item , $index)" /> 
               {{item.firstName}}
-            </option>
-          </select>
+            </label>
+          </div>
+          </div>
+        </div>
           <button
             type="submit"
             style="

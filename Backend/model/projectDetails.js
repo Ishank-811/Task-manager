@@ -44,7 +44,6 @@ const ProjectDetailSchema =  mongoose.Schema({
     status:{
         type: String,
         required: true,
-        enum:['started' , 'progress' , 'completed'],
         default: "started",
     },
     isCompleted:{

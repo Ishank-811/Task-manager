@@ -8,7 +8,7 @@ var fac = function ($http) {
           cb(res);
         },
         function (err) {
-          return err;
+          cb(err);
         }
       );
     },

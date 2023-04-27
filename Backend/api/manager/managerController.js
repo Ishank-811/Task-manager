@@ -262,8 +262,6 @@ var showProjectTask = function (req, res) {
 };
 
 var searchProject = function (req, res) {
-  console.log(req.query);
-
   var regex = new RegExp(req.query.projectName, "i");
   project
     .aggregate([
@@ -271,7 +269,6 @@ var searchProject = function (req, res) {
         $match: {
           "projectManger.projectMangerId": mongoose.Types.ObjectId(req.query.managerId),
           "project.projectName": regex,
-          
           isDeleted:false ,
         },
         
@@ -434,7 +431,7 @@ var userStats = function(req,res){
 
 var searchEmployee=  function(req,res){
   var regex = new RegExp(req.params.name, "i");
-  users.find({username:regex , role:'Employee' , isDeleted:false}).then(function(response){
+  users.find({ username:regex , role:'Employee' , isDeleted:false}).then(function(response){
     res.status(200).send(response); 
   }).catch(function(error){
     res.status(404).send(error); 

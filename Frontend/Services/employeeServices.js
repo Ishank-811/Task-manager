@@ -133,7 +133,7 @@ var fac = function ($http) {
             cb(res.data.status);
           },
           function (err) {
-            return err;
+           cb(err.status); 
           }
         );
     },

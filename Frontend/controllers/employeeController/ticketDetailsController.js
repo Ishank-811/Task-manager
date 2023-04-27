@@ -22,13 +22,20 @@ myApp.controller(
         $scope.updateStatusLoader = false; 
         employeeServices.updatingStatus( $scope.progressBarStore,
           $stateParams.id , $scope.progressStatus , $scope.ticketDetails._id,token, function (status) {
-          $scope.ticketDetails.status = status;
-          $scope.updateStatusLoader = true;
-          alert("status updated");
-          if($scope.progressStatus=='completed'){
-            $scope.progressBar=100; 
-          }
-          $scope.progressStatus = "";
+            if(status==404){
+              alert("Complete all task") ;
+              $scope.updateStatusLoader = true; 
+              $scope.progressStatus = "";
+            }else{
+              $scope.ticketDetails.status = status;
+              $scope.updateStatusLoader = true;
+              alert("status updated");
+              if($scope.progressStatus=='completed'){
+                $scope.progressBar=100; 
+              }
+              $scope.progressStatus = "";
+            }
+        
         });
       };
 

@@ -125,8 +125,7 @@ class="loader"
                     data-target="#myModal"
                     style="margin: 10px; color: #af0000; cursor: pointer"
                     class="fa-solid fa-pen-to-square"
-                    ng-click="taskDetails(projectTask._id , projectTask.task.taskName, projectTask.task.taskDescription,
-                    projectTask.endDate , projectTask.startDate)"
+                    ng-click="taskDetails(projectTask)"
                   ></i>
                   <i
                   style="margin: 10px; color: #af0000; cursor: pointer"
@@ -204,16 +203,16 @@ class="loader"
               type="Date"
               ng-model="updateTaskObject.updatedStartDate"
               name="updatedStartDate"
-              value="{{updateTaskObject.StartDateValue}}"
+              ng-value="updateTaskObject.StartDateValue"
               placeholder="Start Date"
               style="text-align: center"
             />
-
+ 
             <label>End Date</label>
             <input
               type="Date"
               ng-model="updateTaskObject.updatedEndDate"
-              value="{{updateTaskObject.EndDateValue}}"
+              ng-value="updateTaskObject.EndDateValue"
               name="updatedEndDate"
               placeholder="updatedEndDate"
               style="text-align: center"

@@ -8,11 +8,13 @@ const { default: mongoose } = require("mongoose");
 
 const registeringUsers = function (req, res) {
   console.log(req.body);
+
+  console.log(req.user) ; 
   users
     .findOne({
-      "organization.organizationId": req.user._id,
+      "organization.organizationId": req.user.organization.organizationId,
       username: req.body.email,
-      isDeleted:false , 
+      isDeleted:false ,   
     })
     .then(function (userdetail) {
       if (userdetail) {
@@ -20,8 +22,8 @@ const registeringUsers = function (req, res) {
       } else {
         var response = new users({
           organization: {
-            name: req.user.organizationName,
-            organizationId: req.user._id,
+            name:req.user.organization.name,
+            organizationId: req.user.organization.organizationId,
           },
           firstName: req.body.firstName,
           lastName: req.body.lastName,
@@ -47,16 +49,15 @@ const registeringUsers = function (req, res) {
 const fetchingUsers = function (req, res) {
   var LIMIT = 8;
   var startIndex = (Number(req.query.currentPage) - 1) * 8;
-
-  if (req.user.valid == true) {
     var filter = {
-      "organization.organizationId": req.user._id,
+      "organization.organizationId": req.user.organization.organizationId,
+      role: {$in: ["Employee", "Manager"], $ne: "Admin"}
     };
     if (req.query.filterEmployee != "null") {
       filter.role = req.query.filterEmployee;
     }
 
-    var id = req.user._id;
+    var id = req.user.organization.organizationId;
     users
       .find(filter)
       .skip(startIndex)
@@ -77,9 +78,7 @@ const fetchingUsers = function (req, res) {
       .catch(function (e) {
         console.log(e);
       });
-  } else if (!req.user.valid) {
-    res.status(404).json({ validity: false });
-  }
+  
 };
 
 const updatingUser = function (req, res) {

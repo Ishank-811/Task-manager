@@ -23,7 +23,7 @@ router.get("/fetchProjectDetails/:projectId",passport.authenticate("level2", { s
 router.get("/viewTicket",  adminController.viewTicket); 
 router.get("/searchProject" , adminController.searchProject) ; 
 router.patch("/updateProject/:projectId" ,passport.authenticate("level2", { session: false }) , adminController.updateProject ); 
-router.get("/stats" , adminController.stats); 
+router.get("/stats" ,passport.authenticate("level2", { session: false }), adminController.stats); 
 router.get("/monthWiseAnalysis/:currentMonthValue" , adminController.monthWiseAnalysis) ; 
 router.get("/projectWiseAnalysis" , adminController.projectWiseAnalysis); 
 router.patch("/deleteProject/:projectId" , adminController.deleteProject); 

@@ -50,8 +50,52 @@ return {
         if (indexToReplace !== -1) {
             viewTask.splice(indexToReplace, 1, response);
           }
-          cb(viewTask)
-    }   
+       cb(viewTask); 
+    },
+
+    updateTaskValidationForProject:function(updateTaskObject, cb){
+       
+        if(updateTaskObject.updatedStartDate==undefined && updateTaskObject.updatedEndDate==undefined){
+            if(new Date(updateTaskObject.StartDateValue) <=new Date(updateTaskObject.EndDateValue) ){
+                cb( true); 
+            }else{
+                cb( false);  
+            }
+        }
+        else if(updateTaskObject.updatedStartDate!=undefined && updateTaskObject.updatedEndDate==undefined){
+            if(updateTaskObject.updatedStartDate <=new Date(updateTaskObject.EndDateValue) ){
+                cb( true); 
+            }else{
+                cb(false);  
+            }
+        }else if(updateTaskObject.updatedStartDate==undefined && updateTaskObject.updatedEndDate!=undefined){
+            if(new Date(updateTaskObject.StartDateValue) <=updateTaskObject.updatedEndDate ){
+                cb( true); 
+            }else{
+                cb(false);  
+            }
+        }
+        else if(updateTaskObject.updatedStartDate!=undefined && updateTaskObject.updatedEndDate!=undefined){
+            if(updateTaskObject.updatedStartDate <=updateTaskObject.updatedEndDate ){
+                cb( true); 
+            }else{
+                cb(false);  
+            }
+        }
+    },
+
+    updateTaskObjectFunction:function(taskData , cb){
+      
+        var updateTaskObject  = {
+            taskId:taskData._id,
+            updatedTaskName:taskData.task.taskName,
+            updatedTaskDescription:taskData.task.taskDescription,
+            EndDateValue:this.formatDateForInputDate(new Date(taskData.endDate)),
+            StartDateValue:this.formatDateForInputDate(new Date(taskData.startDate)),
+        }
+        
+        cb(updateTaskObject); 
+    }
 }
 }
 

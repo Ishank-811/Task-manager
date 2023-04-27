@@ -69,8 +69,10 @@
                 <th style="color: red">username</th>
                 <th>Show Task</th>
                 <th>Assign Task</th>
+                <th>comments</th>
               </tr>
             </thead>
+           
             <tbody>
               <tr
                 ng-repeat="employee in employeesAsignedFiltered track by $index"
@@ -97,6 +99,7 @@
                     Assign Task
                   </button>
                 </td>
+                <td><button style="margin: 0px" class="createButton" ng-disabled="true">Comments</button></td>
               </tr>
             </tbody>
           </table>
@@ -105,12 +108,15 @@
     </div>
 
     <div>
+      <h5 style="margin-left:90px">Employees started the project:</h5>
       <table
         ng-show="employeesOfProject.length"
-        style="margin: 60px"
+        style="margin: 60px; margin-top:10px!important"
         class="content-table"
       >
+      
         <thead>
+         
           <tr>
             <th>Name</th>
             <th>username</th>
@@ -121,8 +127,11 @@
             <th>Assign Task</th>
           </tr>
         </thead>
+        
         <tbody>
+         
           <tr ng-repeat="employee in employeesOfProject track by $index">
+            
             <td>{{employee.user.name}}</td>
             <td>{{employee.user.username}}</td>
             <td>{{employee.createdAt | date:"dd/MM/yyyy" }}</td>
@@ -134,7 +143,7 @@
                 data-toggle="modal"
                 data-target="#commentModal"
                 class="createButton"
-                ng-click="viewComments(employee._id)"
+                ng-click="viewComments(employee._id , employee.user.name)"
               >
                 Show Comments
               </button>
@@ -188,7 +197,7 @@
           data-target="#myModal"
           style="margin: 10px; color: #af0000; cursor: pointer"
           class="fa-solid fa-pen-to-square"
-          ng-click="taskDetails(item._id , item.task.taskName, item.task.taskDescription, item.endDate , item.startDate ,$index)"
+          ng-click="taskDetails(item,$index)"
         ></i>
         <i
           style="margin: 10px; color: #af0000; cursor: pointer"
@@ -223,7 +232,7 @@
       <div class="modal-content">
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Comments</h4>
+          <h4 class="modal-title">Comments on {{projectDetails.projectName}} by {{employeeName}}</h4>
           <button type="button" class="close" data-dismiss="modal">
             &times;
           </button>
@@ -287,7 +296,7 @@
             &times;
           </button>
         </div>
-
+ 
         <!-- Modal body -->
         <div class="modal-body">
           <form
@@ -316,9 +325,9 @@
             <label>Start Date</label>
             <input
               type="Date"
-              ng-model="updatedStartDate"
-              name="updatedStartDate"
-              value="{{updateTaskObject.StartDateValue}}"
+              ng-model="updateTaskObject.updatedStartDate"
+              name="updateTaskObject.updatedStartDate"
+              ng-value="updateTaskObject.StartDateValue"
               placeholder="Start Date"
               style="text-align: center"
             />
@@ -326,8 +335,8 @@
             <label>End Date</label>
             <input
               type="Date"
-              ng-model="updatedEndDate"
-              value="{{updateTaskObject.EndDateValue}}"
+              ng-model="updateTaskObject.updatedEndDate"
+              ng-value="updateTaskObject.EndDateValue"
               name="updatedEndDate"
               placeholder="updatedEndDate"
               style="text-align: center"

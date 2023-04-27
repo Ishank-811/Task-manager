@@ -1,34 +1,4 @@
 const jwt = require("jsonwebtoken");
-const organization = require("../../model/oganizationModel");
-const users = require("../../model/usersModel");
-const singinAsOrganization = function (req, res) {
-  organization
-    .findOne({
-      organizationUsername: req.user.organizationUsername,
-      organizationPassword: req.user.organizationPassword,
-    })
-    .then(function (organizationDetail) {
-      if (organizationDetail) {
-       
-        var dataToSendForJwt = {
-          id: organizationDetail._id,
-          roleAsOrganization: true,
-          username: organizationDetail.organizationUsername,
-        };
-        const token = jwt.sign(dataToSendForJwt, "random string", {
-          expiresIn: "1d",
-        });
-       
-        return res.json({ token, roleAsOrganization: true });
-      } else {
-        res.status(404).send({ message: "user not authorized" });
-      }
-    })
-    .catch(function (e) {
-      console.log(e);
-    });
-};
-
 const singinAsUsers = function (req, res) {
   if (req.user) {
     if(!(req.user.isDeleted)){
@@ -51,4 +21,4 @@ const singinAsUsers = function (req, res) {
     res.status(404).send({ message: "user not authorized" });
   }
 };
-module.exports = { singinAsOrganization, singinAsUsers };
+module.exports = {singinAsUsers };

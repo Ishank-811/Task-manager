@@ -1,6 +1,6 @@
-var top3Employees = function(){
+var top3Employees = function(organizationId){
    return [{
-    $match: { isDeleted: false },
+    $match: { isDeleted: false , 'organization.organizationId':organizationId },
   },
   {
     $group: {
@@ -44,10 +44,10 @@ var top3Employees = function(){
     $limit: 3,
   }]
 }
-var projectStatusNumber= function(){
+var projectStatusNumber= function(organizationId){
     [
         {
-          $match: { endDate: { $gte: new Date() }  , isDeleted:false},
+          $match: { endDate: { $gte: new Date() }  , isDeleted:false  , 'organization.organizationId':organizationId},
         },
         {
           $project: {
@@ -76,9 +76,9 @@ var projectStatusNumber= function(){
         },
       ]
 }
-var projectStatusNumber = function(){
+var projectStatusNumber = function(organizationId){
 return [
-  { $match: {isDeleted:false} },
+  { $match: {isDeleted:false  ,'organization.organizationId':organizationId} },
     {
       $group: {
         _id: "$status",
@@ -88,9 +88,9 @@ return [
   ]
 }
 
-var isUpcoming = function(){
+var isUpcoming = function(organizationId){
     return [
-        { $match: { "isCompleted.status": false  , isDeleted:false} },
+        { $match: { 'organization.organizationId':organizationId , "isCompleted.status": false  , isDeleted:false} },
         {
           $project: {
             projectName: 1,
@@ -111,9 +111,9 @@ var isUpcoming = function(){
         { $limit: 5 },
       ]
 }
-var overDueProjects = function(){
+var overDueProjects = function(organizationId){
     return [
-        { $match: { "isCompleted.status": false , isDeleted:false } },
+        { $match: { 'organization.organizationId':organizationId , "isCompleted.status": false , isDeleted:false } },
         {
           $project: {
             projectName: 1,
@@ -135,10 +135,10 @@ var overDueProjects = function(){
       ]
 }
 
-var fastestPaceProject = function(){
+var fastestPaceProject = function(organizationId){
     return [
         {
-          $match: { endDate: { $gte: new Date() }  , isDeleted:false },
+          $match: { 'organization.organizationId':organizationId , endDate: { $gte: new Date() }  , isDeleted:false },
         },
         {
           $project: {
@@ -168,9 +168,10 @@ var fastestPaceProject = function(){
       ]
 }
 
-var perUserProject=  function(){
+var perUserProject=  function(organizationId){
    return [
-        { $match: { isDeleted: false } },
+        { $match: { isDeleted: false  , 
+          'organization.organizationId':organizationId} },
         {
           $group: {
             _id: "$assignedTo.assignedUserId",

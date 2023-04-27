@@ -93,11 +93,11 @@ var fac = function ($http) {
           taskDescription: updateTask.updatedTaskDescription,
         },
       };
-      if (updateTask.StartDateValue != undefined) {
-        data.startDate = updateTask.StartDateValue;
+      if (updateTask.updatedStartDate != undefined) {
+        data.startDate = updateTask.updatedStartDate;
       }
-      if (updateTask.EndDateValue != undefined) {
-        data.endDate = updateTask.EndDateValue;
+      if (updateTask.updatedEndDate != undefined) {
+        data.endDate = updateTask.updatedEndDate;
       }
 
       $http

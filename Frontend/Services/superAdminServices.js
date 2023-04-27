@@ -21,7 +21,7 @@ var fac = function ($http) {
     },
     AllowOrganization: function (data, cb) {
       $http
-        .patch(`http://localhost:8080/superAdmin/AllowOrganization/${data}`)
+        .post(`http://localhost:8080/superAdmin/AllowOrganization/` , data)
         .then(
           function (res) {
             console.log(res);
@@ -33,6 +33,7 @@ var fac = function ($http) {
         );
     },
     addOrganization: function (data, cb) {
+      console.log(data); 
       $http
         .post("http://localhost:8080/superAdmin/addOrganization/", data)
         .then(

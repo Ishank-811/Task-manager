@@ -1119,3 +1119,7 @@ margin:20px;
   opacity: 0.4;
  cursor: not-allowed;
 }
+.projectofemployees tbody td{
+padding:12px;
+text-align: center;
+}

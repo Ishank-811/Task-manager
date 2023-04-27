@@ -28,6 +28,7 @@
     <hr />
     <div class="addTags">
       <form name="progressForm" role="form" style="text-align: center">
+         <label>Tag:</label>
         <select
           ng-required="true"
           ng-model="progressStatus"
@@ -227,7 +228,7 @@
           >
             <div style="display: flex; justify-content: space-between">
               <h5>{{item.task.taskName}}</h5>
-
+             
               <select
                 ng-required="true"
                 ng-model="taskStatus"

@@ -34,9 +34,10 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="./Factory/authInterceptor.js"></script>
     <script src="./controllers/routesController.js"></script>
     <script src="./imageDirective.js"></script>
-    <script src="./controllers/singinAsOrganizationController.js"></script>
     <script src="./controllers/signupController.js"></script>
     <script src="./controllers/OrganizationController/organizationController.js"></script>
     <script src="./controllers/OrganizationController/organizationStatsController.js"></script>
@@ -51,7 +52,6 @@
     <script src="./controllers/adminController/adminProjectController.js"></script>
     <script src="./controllers/adminController/adminStatsController.js"></script>
     <script src="./controllers/adminController/adminProjectDetailsController.js"></script>
-    <script src="./controllers/adminController/adminEmployeesController.js"></script>
     <script src="./controllers/employeeController/employeeController.js"></script>
     <script src="./controllers/employeeController/employeeTaskListController.js"></script>
     <script src="./controllers/employeeController/ticketDetailsController.js"></script>
@@ -103,8 +103,7 @@
       <h1  class="logo"><a href="#">PROJECT MANAGEMENT</a></h1>
       <div ng-hide="loggedin">
         <ul class="main-nav">
-          <li><a ui-sref="signinAsOrganization">SIGNIN AS ORGANIZATION</a></li>
-          <li><a ui-sref="signinAsUsers">SIGNIN AS USERS</a></li>
+          <li><a ui-sref="signinAsUsers">SIGNIN</a></li>
           <li><a ui-sref="singup">SIGNUP</a></li>
         </ul>
       </div>

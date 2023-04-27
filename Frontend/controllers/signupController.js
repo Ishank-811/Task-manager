@@ -60,7 +60,16 @@ myApp.controller("signupController", function ($scope, singupServices) {
     };
 
     singupServices.sendingdata(newUser, function (data) {
-      alert("Successfully signup");
+      console.log(data);  
+      if(data.status==400){
+        alert("user already exist"); 
+      }else{
+      alert("signup request send to admin");
+      $scope.organizationName=""; 
+      $scope.emailValid=""; 
+      $scope.Password=""; 
+      $scope.confirmPassword=""; 
+      }
     });
   };
 });

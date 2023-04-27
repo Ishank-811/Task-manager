@@ -18,9 +18,8 @@ myApp.controller(
       viewTask: "",
     };
 
-    $scope.employeeAddedChange = function () {
-      $scope.object.allEmployeesChanged = false;
-    };
+   
+
 
     //time left logic starts
 
@@ -87,10 +86,21 @@ myApp.controller(
         }
       );
     };
- 
+    $scope.showList=false; 
+    $scope.addInputChange =function(){
+      $scope.showList=true  ; 
+    }
+
+    $scope.employeeAddedChange = function (employeeAdded , index) {
+      $scope.indexToReplace= index; 
+      $scope.employeeAdded = employeeAdded  ;
+      $scope.object.allEmployeesChanged = false;
+    };
+    
     $scope.addEmployeesSubmit = function ($event) {
-      $event.preventDefault();
-      var userDetails = JSON.parse($scope.employeeAdded);
+    $event.preventDefault();
+    $scope.employeesAsignedFiltered.splice($scope.indexToReplace , 1) ; 
+      var userDetails = $scope.employeeAdded;
       adminServices.addEmployees(
         $scope.projectDetails,
         userDetails,
@@ -112,6 +122,7 @@ myApp.controller(
         $scope.viewTask = response.data;
       });
     };
+
     $scope.progressDivs = ["Inactive", "Started", "working", "completed"];
 
     $scope.deleteAssingedUser = function (projectId, userId, firstName, index) {

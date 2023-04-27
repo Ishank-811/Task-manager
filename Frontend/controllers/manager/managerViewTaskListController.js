@@ -37,49 +37,43 @@ myApp.controller(
       };
 
 
-
-
-        $scope.progressDivs  = ['Inactive' , 'Started' , 'working', 'completed'];
-        function formatDateForInputDate(date) {
-          return managerFactory.formatDateForInputDate(date)
+      $scope.progressDivs  = ['Inactive' , 'Started' , 'working', 'completed'];
+      $scope.showProjectTask = function(projectName,projectId){
+        $scope.projectName = projectName; 
+          managerServices.showProjectTask(projectId,token, function(response){
+          $scope.viewTask = response.data; 
+          })
           }
-          
-        $scope.taskDetails = function (taskId ,updatedTaskName  ,updatedTaskDescription , EndDateValue ,StartDateValue ) {
-          $('#viewTaskModal').addClass('show');
 
-            $scope.updateTaskObject = {
-              taskId,
-              updatedTaskName,
-              updatedTaskDescription,
-              EndDateValue:formatDateForInputDate(new Date(EndDateValue)),
-              StartDateValue:formatDateForInputDate(new Date(StartDateValue)),
-            }
+
+
+        
+        $scope.taskDetails = function (taskDetails) {
+          $('#viewTaskModal').addClass('show');
+          managerFactory.updateTaskObjectFunction(taskDetails , function(updateTaskObject){
+            $scope.updateTaskObject =updateTaskObject ; 
+          })
           };
-        $scope.showProjectTask = function(projectName,projectId){
-          $scope.projectName = projectName; 
-            managerServices.showProjectTask(projectId,token, function(response){
-            $scope.viewTask = response.data; 
-            })
-    }
-        $scope.updateTaskFunction = function ($event) {
-             
+
+            $scope.updateTaskFunction = function ($event) {
             $event.preventDefault();
-            if($scope.updatedEndDate!=undefined){
-              $scope.updateTaskObject['EndDateValue']=$scope.updatedEndDate;
-            }
-            if($scope.updatedStartDate!=undefined){
-              $scope.updateTaskObject['StartDateValue']=$scope.updatedStartDate;
-            }
-            managerServices.updateTask($scope.updateTaskObject, function (response) {
-              managerFactory.updateTaskFrontEnd($scope.viewTask , $scope.updateTaskObject,response, function(viewTask){
-                $scope.viewTask = viewTask ; 
-              })
-               alert("Task updated");
-              $(function () {
-                $("#myModal").modal("hide");
-              });
-              $scope.updateTaskObject = {}
-            });
+            managerFactory.updateTaskValidationForProject($scope.updateTaskObject , function(valid){
+              if(valid){
+                managerServices.updateTask($scope.updateTaskObject, function (response) {
+                  managerFactory.updateTaskFrontEnd($scope.viewTask , $scope.updateTaskObject,response, function(viewTask){
+                      alert("Task updated");
+                      $(function () {
+                        $("#myModal").modal("hide");
+                      });
+                      $scope.updateTaskObject = {}
+                    $scope.viewTask = viewTask ;
+                  })
+                });
+              }else{
+                alert("Enter the valid Date"); 
+              }
+            })
+         
           };
 
 
@@ -107,13 +101,12 @@ myApp.controller(
         $timeout.cancel(debounceTimer);
       }
       debounceTimer = $timeout(function () {
-        console.log(projectNameValue); 
+       
         managerServices.searchProject(
           projectNameValue,
           $scope.managerId,
           function (response) {
             $scope.projectData = response;
-            console.log($scope.projectData); 
             numberOfPages($scope.projectData.length);
             if ($scope.projectData.length == 0) {
               $scope.errorHandlingObject = {

@@ -42,7 +42,6 @@ myApp.controller(
       $scope.response = [];
       managerServices.readingdata({ token, currentPage },filterObject, function (countNum ,projectDetails) {
         numberOfPages(countNum);
-        console.log(projectDetails); 
         $scope.response = projectDetails;
           if(projectDetails[0]){
         $scope.managerId = projectDetails[0].projectManger.projectMangerId;
@@ -102,7 +101,10 @@ myApp.controller(
   
 
     $scope.selectedUser=[];
-    $scope.assignedUserChecksChange = function (index) {
+    $scope.assignedUserChecksChange = function (employeesAssignedToTask,employeeIdForindex) {
+      var index = employeesAssignedToTask.findIndex(function(element){
+        return element.assignedUserId==employeeIdForindex ; 
+      })
       $scope.selectedUser.push($scope.employeesAssignedToTask[index]);
       $scope.employeesAssignedToTask.splice(index,1) ;
     };

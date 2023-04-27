@@ -5,12 +5,12 @@ require("../../middleware/passportVerify");
 const organizationController = require("./organizationController");
 router.get(
   "/fetchingUser",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("level2", { session: false }),
   organizationController.fetchingUsers
 );
 router.post(
   "/registeringUsers",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate("level2", { session: false }),
   organizationController.registeringUsers
 );
 router.get("/searchUser",organizationController.searchUser ); 

@@ -115,7 +115,7 @@
                   >
                     <label
                       style="cursor: pointer"
-                      ng-click="assignedUserChecksChange($index)"
+                      ng-click="assignedUserChecksChange(employeesAsigned ,item._id)"
                       ng-model="createProjectObject.assignedUserChecks[$index]"
                       >{{item.firstName}}</label
                     > 
@@ -182,7 +182,7 @@
                   ng-hide="errorHandlingObject.createProjectLoader"
                   style="margin-left: 20px"
                   class="loader"
-                ></div>
+                ></div> 
               </button>
             </form>
           </div>
@@ -220,6 +220,7 @@
             >
               {{project.projectName}}
             </h5>
+            manager:-{{(project.projectManger.name | date:"dd/MM/yyyy")}}
 
             <h6 ng-show="project.isCompleted.status">(Completed)</h6>
           </div>
@@ -272,7 +273,12 @@
             <i class="fa-sharp fa-solid fa-calendar-days"></i>
             {{(project.endDate | date:"dd/MM/yyyy")}}
           </h6>
+          <h6>
+          
+            
+          </h6>
         </div>
+
       </div>
       <div class="modal" id="myModal3">
         <div class="modal-dialog">
